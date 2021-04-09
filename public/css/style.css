@@ -1,0 +1,8 @@
+.bg-teal {
+  background-color: #009688 !important;
+  color: #fff; 
+}
+.bg-teal .content .text,
+  .bg-teal .content .number {
+    color: #fff !important; 
+}
