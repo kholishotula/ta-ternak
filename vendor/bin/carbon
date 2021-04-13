@@ -1,21 +1,10 @@
-#!/usr/bin/env php
-<?php
+#!/usr/bin/env sh
 
-$dir = __DIR__.'/..';
+dir=$(cd "${0%[/\\]*}" > /dev/null; cd "../nesbot/carbon/bin" && pwd)
 
-if (!file_exists($dir.'/autoload.php')) {
-    $dir = __DIR__.'/../vendor';
-}
+if [ -d /proc/cygdrive ] && [[ $(which php) == $(readlink -n /proc/cygdrive)/* ]]; then
+   # We are in Cgywin using Windows php, so the path must be translated
+   dir=$(cygpath -m "$dir");
+fi
 
-if (!file_exists($dir.'/autoload.php')) {
-    $dir = __DIR__.'/../../..';
-}
-
-if (!file_exists($dir.'/autoload.php')) {
-    echo 'Autoload not found.';
-    exit(1);
-}
-
-require $dir.'/autoload.php';
-
-exit((new \Carbon\Cli\Invoker())(...$argv) ? 0 : 1);
+"${dir}/carbon" "$@"
