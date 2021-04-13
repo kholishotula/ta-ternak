@@ -17,10 +17,10 @@ class PemilikDataTable extends DataTable
      * @param mixed $query Results from query() method.
      * @return \Yajra\DataTables\DataTableAbstract
      */
-    public function dataTable($query)
+    public function dataTable()
     {
         return datatables()
-            ->eloquent($query)
+            ->eloquent($this->query())
             ->addColumn('action', function($row){
                 // $btn = '<button type="button" name="view" id="'.$row->id.'" class="view btn btn-info btn-sm" ><i class="material-icons">remove_red_eye</i></button>';
                 $btn = '<button type="button" name="edit" id="'.$row->id.'" class="edit btn btn-warning btn-sm" style="margin: 2px;"><i class="material-icons">mode_edit</i></button>';
@@ -35,8 +35,9 @@ class PemilikDataTable extends DataTable
      * @param \App\PemilikDataTable $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Pemilik $model)
+    public function query()
     {
+        $model = new Pemilik();
         return $model->newQuery()->select('*');
     }
 

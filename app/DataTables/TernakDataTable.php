@@ -17,10 +17,10 @@ class TernakDataTable extends DataTable
      * @param mixed $query Results from query() method.
      * @return \Yajra\DataTables\DataTableAbstract
      */
-    public function dataTable($query)
+    public function dataTable()
     {
         return datatables()
-            ->eloquent($query)
+            ->eloquent($this->query())
             ->addIndexColumn()
             ->addColumn('action', function($row){
                 $btn = '<button type="button" name="view" id="'.$row->necktag.'" class="view btn btn-info btn-sm" ><i class="material-icons">remove_red_eye</i></button>';
@@ -36,8 +36,9 @@ class TernakDataTable extends DataTable
      * @param \App\TernakDataTable $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Ternak $model)
+    public function query()
     {
+        $model = new Ternak();
         $query = $model->newQuery()->select('*');
 
         // if($query->status_ada){

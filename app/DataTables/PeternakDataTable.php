@@ -17,10 +17,10 @@ class PeternakDataTable extends DataTable
      * @param mixed $query Results from query() method.
      * @return \Yajra\DataTables\DataTableAbstract
      */
-    public function dataTable($query)
+    public function dataTable()
     {
         return datatables()
-            ->eloquent($query)
+            ->eloquent($this->query())
             ->addColumn('action', function($row){
                 $btn = '<button type="button" name="edit" id="'.$row->id.'" class="edit btn btn-warning btn-sm" style="margin: 2px;"><i class="material-icons">mode_edit</i></button>';
                 $btn .= '<button type="button" name="delete" id="'.$row->id.'" class="delete btn btn-danger btn-sm"><i class="material-icons">delete</i></button>';
@@ -34,8 +34,9 @@ class PeternakDataTable extends DataTable
      * @param \App\PeternakDataTable $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model)
+    public function query()
     {
+        $model = new User();
         // return $model->newQuery()->select('id', 'name', 'peternakan_id', 'username', 'email', 'password_first', 'register_from_admin', 'created_at', 'updated_at')
         return $model->newQuery()->select('*')
                         ->where('role', '=', 'peternak');

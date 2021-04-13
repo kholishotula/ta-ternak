@@ -17,10 +17,10 @@ class RasDataTable extends DataTable
      * @param mixed $query Results from query() method.
      * @return \Yajra\DataTables\DataTableAbstract
      */
-    public function dataTable($query)
+    public function dataTable()
     {
         return datatables()
-            ->eloquent($query)
+            ->eloquent($this->query())
             ->addColumn('action', function($row){
                 $btn = '<button type="button" name="edit" id="'.$row->id.'" class="edit btn btn-warning btn-sm" style="margin: 2px;"><i class="material-icons">mode_edit</i></button>';
                 $btn .= '<button type="button" name="delete" id="'.$row->id.'" class="delete btn btn-danger btn-sm" style="margin: 2px;"><i class="material-icons">delete</i></button>';
@@ -34,8 +34,9 @@ class RasDataTable extends DataTable
      * @param \App\RasDataTable $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Ras $model)
+    public function query()
     {
+        $model = new Ras();
         return $model->newQuery()->select('*');
     }
 
