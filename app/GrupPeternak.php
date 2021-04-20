@@ -4,17 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Peternakan extends Model
+class GrupPeternak extends Model
 {
+    protected $table = 'grup_peternaks';
+    
     protected $fillable = [
     	'nama_peternakan', 'keterangan',
     ];
 
-    public function ternak(){
-        return $this->hasMany(Ternak::class);
-    }
-
     public function peternak(){
-        return $this->hasMany(Peternak::class);
+        return $this->hasMany(User::class);
     }
 }

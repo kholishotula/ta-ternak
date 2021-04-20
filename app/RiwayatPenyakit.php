@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Perkawinan extends Model
+class RiwayatPenyakit extends Model
 {
-    protected $table = 'perkawinans';
+    protected $table = 'riwayat_penyakits';
 	
     protected $fillable = [
-        'necktag', 'necktag_psg', 'tgl_kawin',
+    	'nama_penyakit', 'lama_sakit', 'obat', 'keterangan', 'tgl_sakit'
     ];
 
     public function ternak(){

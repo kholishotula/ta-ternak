@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pemilik extends Model
 {
-	protected $fillable = [
-    	'ktp', 'nama_pemilik',
+    protected $table = 'pemiliks';
+	
+    protected $fillable = [
+    	'ktp_pemilik', 'nama_pemilik', 'adalah_peternak'
     ];
 
     public function ternak(){

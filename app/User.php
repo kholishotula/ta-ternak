@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'role', 'peternakan_id', 'password_first', 'register_from_admin',
+        'ktp_user', 'name', 'username', 'email', 'password', 'role',
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -37,4 +37,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function ternak(){
+        return $this->hasMany(Ternak::class);
+    }
+
+    public function grup(){
+        return $this->belongsTo(GrupPeternak::class);
+    }
 }

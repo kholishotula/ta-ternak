@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Kematian extends Model
+class Penjualan extends Model
 {
-    protected $table = 'kematians';
-	
+    protected $table = 'penjualans';
+    
     protected $fillable = [
-    	'tgl_kematian', 'waktu_kematian', 'penyebab', 'kondisi', 
+        'tgl_terjual', 'ket_pembeli'
     ];
 
     public function ternak(){
