@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePeternakansTable extends Migration
+class CreateGrupPeternaksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class CreatePeternakansTable extends Migration
      */
     public function up()
     {
-        Schema::create('peternakans', function (Blueprint $table) {
+        Schema::create('grup_peternaks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama_peternakan', 100);
+            $table->string('nama_grup');
+            $table->string('alamat');
+            $table->string('provinsi', 50);
+            $table->string('kab_kota', 50);
+            $table->string('kecamatan', 50);
             $table->string('keterangan');
             $table->timestamps();
         });

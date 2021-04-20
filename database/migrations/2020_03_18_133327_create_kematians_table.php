@@ -15,11 +15,14 @@ class CreateKematiansTable extends Migration
     {
         Schema::create('kematians', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->char('necktag', 6);
             $table->date('tgl_kematian');
             $table->time('waktu_kematian')->nullable();
             $table->string('penyebab')->nullable();
             $table->string('kondisi')->nullable();
             $table->timestamps();
+
+            $table->foreign('necktag')->references('necktag')->on('ternaks')->onDelete('cascade');
         });
     }
 

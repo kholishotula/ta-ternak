@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePenyakitsTable extends Migration
+class CreatePenjualansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreatePenyakitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('penyakits', function (Blueprint $table) {
+        Schema::create('penjualans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama_penyakit', 50);
-            $table->string('ket_penyakit')->nullable();
+            $table->char('necktag', 6);
+            $table->date('tgl_terjual');
+            $table->string('ket_pembeli')->nullable();
             $table->timestamps();
+
+            $table->foreign('necktag')->references('necktag')->on('ternaks')->onDelete('cascade');
         });
     }
 
@@ -28,6 +31,6 @@ class CreatePenyakitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('penyakits');
+        Schema::dropIfExists('penjualans');
     }
 }

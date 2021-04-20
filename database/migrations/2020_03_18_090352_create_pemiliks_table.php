@@ -15,8 +15,9 @@ class CreatePemiliksTable extends Migration
     {
         Schema::create('pemiliks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('ktp', 16);
+            $table->char('ktp_pemilik', 16);
             $table->string('nama_pemilik', 100);
+            $table->boolean('adalah_peternak')->default(false);
             $table->timestamps();
         });
     }

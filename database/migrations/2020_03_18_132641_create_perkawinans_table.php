@@ -16,10 +16,11 @@ class CreatePerkawinansTable extends Migration
         Schema::create('perkawinans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('necktag', 6);
-            $table->foreign('necktag')->references('necktag')->on('ternaks')->onDelete('cascade');
             $table->char('necktag_psg', 6);
-            $table->date('tgl')->nullable();
+            $table->date('tgl_kawin')->nullable();
             $table->timestamps();
+
+            $table->foreign('necktag')->references('necktag')->on('ternaks')->onDelete('cascade');
         });
     }
 

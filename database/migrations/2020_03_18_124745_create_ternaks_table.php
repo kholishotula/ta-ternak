@@ -15,10 +15,9 @@ class CreateTernaksTable extends Migration
     {
         Schema::create('ternaks', function (Blueprint $table) {
             $table->char('necktag', 6)->primary();
-            $table->bigInteger('pemilik_id')->unsigned()->nullable();
-            $table->bigInteger('peternakan_id')->unsigned();
             $table->bigInteger('ras_id')->unsigned();
-            $table->bigInteger('kematian_id')->unsigned()->nullable();
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('pemilik_id')->unsigned();
             $table->string('jenis_kelamin', 20);
             $table->date('tgl_lahir')->nullable();
             $table->float('bobot_lahir')->nullable();
@@ -26,22 +25,17 @@ class CreateTernaksTable extends Migration
             $table->integer('lama_dikandungan')->nullable();
             $table->integer('lama_laktasi')->nullable();
             $table->date('tgl_lepas_sapih')->nullable();
-            $table->char('blood', 1);
             $table->char('necktag_ayah', 6)->nullable();
             $table->char('necktag_ibu', 6)->nullable();
-            $table->float('bobot_tubuh')->nullable();
-            $table->float('panjang_tubuh')->nullable();
-            $table->float('tinggi_tubuh')->nullable();
             $table->string('cacat_fisik')->nullable();
             $table->string('ciri_lain')->nullable();
             $table->boolean('status_ada')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('pemilik_id')->references('id')->on('pemiliks')->onDelete('cascade');
-            $table->foreign('peternakan_id')->references('id')->on('peternakans')->onDelete('cascade');
             $table->foreign('ras_id')->references('id')->on('ras')->onDelete('cascade');
-            $table->foreign('kematian_id')->references('id')->on('kematians')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('pemilik_id')->references('id')->on('pemiliks')->onDelete('cascade');
         });
     }
 
