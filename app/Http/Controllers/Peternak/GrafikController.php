@@ -8,7 +8,6 @@ use App\Charts\RasChart;
 use App\Charts\UmurChart;
 use App\Charts\KelahiranChart;
 use App\Charts\KematianChart;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

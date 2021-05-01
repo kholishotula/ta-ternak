@@ -30,12 +30,12 @@ trait Chart
      * @return self
      */
     public function title(
-         string $title,
-         int $font_size = 16,
-         string $color = '#3D4852',
-         bool $bold = true,
-         string $font_family = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
-     ) {
+        string $title,
+        int $font_size = 16,
+        string $color = '#3D4852',
+        bool $bold = true,
+        string $font_family = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+    ) {
         return $this->options([
             'caption'          => $title,
             'captionFontSize'  => $font_size,
@@ -57,12 +57,12 @@ trait Chart
      * @return self
      */
     public function subtitle(
-         string $subtitle,
-         int $font_size = 12,
-         string $color = '#3D4852',
-         bool $bold = true,
-         string $font_family = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
-     ) {
+        string $subtitle,
+        int $font_size = 12,
+        string $color = '#3D4852',
+        bool $bold = true,
+        string $font_family = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+    ) {
         return $this->options([
             'subCaption'          => $subtitle,
             'subCaptionFontSize'  => $font_size,

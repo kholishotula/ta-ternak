@@ -20,7 +20,7 @@ class CreateGrupPeternaksTable extends Migration
             $table->string('provinsi', 50);
             $table->string('kab_kota', 50);
             $table->string('kecamatan', 50);
-            $table->string('keterangan');
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

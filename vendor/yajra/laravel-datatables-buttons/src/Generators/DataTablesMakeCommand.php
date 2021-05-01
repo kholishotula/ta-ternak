@@ -2,9 +2,9 @@
 
 namespace Yajra\DataTables\Generators;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class DataTablesMakeCommand extends GeneratorCommand
 {
@@ -359,6 +359,11 @@ class DataTablesMakeCommand extends GeneratorCommand
 
         if ($this->option('model') != '') {
             return $this->option('model');
+        }
+
+        // check if model namespace is not set in command and Models directory already exists then use that directory in namespace.
+        if ($modelNamespace == '') {
+            $modelNamespace = is_dir(app_path('Models')) ? 'Models' : $rootNamespace;
         }
 
         return $model

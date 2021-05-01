@@ -13,6 +13,6 @@ class Pemilik extends Model
     ];
 
     public function ternak(){
-        return $this->hasMany(Ternak::class);
+        return $this->hasMany(Ternak::class, 'necktag');
     }
 }

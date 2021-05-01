@@ -36,10 +36,9 @@ class PeternakDataTable extends DataTable
      */
     public function query()
     {
-        $model = new User();
-        // return $model->newQuery()->select('id', 'name', 'peternakan_id', 'username', 'email', 'password_first', 'register_from_admin', 'created_at', 'updated_at')
-        return $model->newQuery()->select('*')
-                        ->where('role', '=', 'peternak');
+        $model = User::where('role', '<>', 'admin');
+
+        return $model;
     }
 
     /**
@@ -75,16 +74,14 @@ class PeternakDataTable extends DataTable
                 ->title('ID'),
             Column::make('name')
                 ->title('Nama'),
-            Column::make('peternakan_id')
-                ->title('ID Peternakan'),
-            Column::make('register_from_admin')
-                ->title('Admin Register'),
+            Column::make('grup_id')
+                ->title('ID Grup Peternak'),
             Column::make('username')
                 ->title('Username'),
             Column::make('email')
                 ->title('Email'),
-            Column::make('password_first')
-                ->title('Password'),
+            Column::make('verified_at')
+                ->title('Verified At'),
             Column::make('created_at')
                 ->title('Created At'),
             Column::make('updated_at')

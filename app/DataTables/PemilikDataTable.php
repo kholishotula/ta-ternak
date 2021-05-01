@@ -74,8 +74,8 @@ class PemilikDataTable extends DataTable
                 ->title('ID'),
             Column::make('nama_pemilik')
                 ->title('Nama'),
-            Column::make('ktp')
-                ->title('KTP'),
+            Column::make('ktp_pemilik')
+                ->title('No KTP'),
             Column::make('created_at')
                 ->title('Created At'),
             Column::make('updated_at')

@@ -21,8 +21,9 @@ class KematianController extends Controller
     {
         $title = 'TERNAK MATI';
         $page = 'Ternak Mati';
+        $ternaks = Ternak::all();
 
-        return $dataTable->render('data.kematian', ['title' => $title, 'page' => $page]);
+        return $dataTable->render('data.kematian', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks]);
     }
 
     /**
@@ -44,6 +45,7 @@ class KematianController extends Controller
     public function store(Request $request)
     {
         $rules = array(
+            'necktag' => 'required',
             'tgl_kematian' => 'required',
             'waktu_kematian' => 'required',
             'penyebab' => 'required',
@@ -57,6 +59,7 @@ class KematianController extends Controller
         }
 
         $form_data = array(
+            'necktag' => $request->necktag,
             'tgl_kematian' => $request->tgl_kematian,
             'waktu_kematian' => $request->waktu_kematian,
             'penyebab' => $request->penyebab,

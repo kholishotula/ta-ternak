@@ -11,4 +11,5 @@ return array(
     'Milon\\Barcode' => array($vendorDir . '/milon/barcode/src'),
     'Highlight\\' => array($vendorDir . '/scrivo/highlight.php'),
     'HighlightUtilities\\' => array($vendorDir . '/scrivo/highlight.php'),
+    'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
 );

@@ -10,6 +10,7 @@ use App\Exports\LaporanExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Ternak;
 use App\Perkawinan;
+use App\RiwayatPenyakit;
 
 class LaporanController extends Controller
 {
@@ -54,7 +55,7 @@ class LaporanController extends Controller
     public function kawin(Request $request)
     {
         if($request->ajax()){
-            $kawin = Perkawinan::whereBetween('tgl', [$request->datefrom, $request->dateto])->get();
+            $kawin = Perkawinan::whereBetween('tgl_kawin', [$request->datefrom, $request->dateto])->get();
 
             return DataTables::of($kawin)
                   ->make(true);
@@ -64,9 +65,7 @@ class LaporanController extends Controller
     public function sakit(Request $request)
     {
         if($request->ajax()){
-            $sakit = DB::table('riwayat_penyakits')->join('public.penyakits', 'penyakits.id', '=', 'riwayat_penyakits.penyakit_id')
-                    ->select('riwayat_penyakits.id', 'penyakits.nama_penyakit as penyakit_id', 'riwayat_penyakits.necktag', 'riwayat_penyakits.tgl_sakit', 'riwayat_penyakits.obat', 'riwayat_penyakits.lama_sakit', 'riwayat_penyakits.keterangan', 'riwayat_penyakits.created_at', 'riwayat_penyakits.updated_at')
-                    ->whereBetween('riwayat_penyakits.tgl_sakit', [$request->datefrom, $request->dateto])->get();
+            $sakit = RiwayatPenyakit::whereBetween('tgl_sakit', [$request->datefrom, $request->dateto])->get();
 
             return DDataTables::of($sakit)
                   ->make(true);

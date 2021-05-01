@@ -46,7 +46,7 @@ class PemilikController extends Controller
     {
         $rules = array(
             'nama_pemilik' => 'required',
-            'ktp' => 'required|digits:16|unique:pemiliks'
+            'ktp_pemilik' => 'required|digits:16|unique:pemiliks'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -57,7 +57,7 @@ class PemilikController extends Controller
 
         $form_data = array(
             'nama_pemilik' => $request->nama_pemilik,
-            'ktp' => $request->ktp
+            'ktp_pemilik' => $request->ktp_pemilik
         );
 
         Pemilik::create($form_data);
@@ -106,7 +106,7 @@ class PemilikController extends Controller
     {
         $rules = array(
             'nama_pemilik' => 'required',
-            'ktp' => 'required|digits:16'
+            'ktp_pemilik' => 'required|digits:16'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -117,7 +117,7 @@ class PemilikController extends Controller
 
         $form_data = array(
             'nama_pemilik' => $request->nama_pemilik,
-            'ktp' => $request->ktp
+            'ktp_pemilik' => $request->ktp_pemilik
         );
 
         Pemilik::whereId($id)->update($form_data);

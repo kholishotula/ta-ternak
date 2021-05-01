@@ -15,7 +15,7 @@ $('#tambah_data').click(function(){
     $('#register').show();
     // $('.reg-admin').hide();
 
-    $('#peternakan_id').val('').change();
+    $('#grup_peternak').val('').change();
     $('#formModal').modal('show');
 });
 
@@ -69,8 +69,20 @@ $(document).on('click', '.edit', function(){
         url: "/admin/peternak/"+id+"/edit",
         datatype: "json",
         success: function(data){
-            $('#peternakan_id').val(data.result.peternakan_id).change();
+            $('#grup_peternak').val(data.result.grup_peternak).change();
             $('#name').val(data.result.name);
+            if(data.result.verified_at){
+                $('#verify').prop('checked', true);
+            }
+            else{
+                $('#verify').prop('checked', false);
+            }
+            if(data.result.role == 'peternak'){
+                $('#ketua_grup').prop('checked', false);
+            }
+            else{
+                $('#ketua_grup').prop('checked', true);
+            }
             // $('.reg-admin').show();
             // $('#register_from_admin').val(data.result.register_from_admin).change();
 

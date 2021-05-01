@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Ternak;
+use App\Pemilik;
+use App\Ras;
+use App\User;
 use App\Perkawinan;
+use App\RiwayatPenyakit;
+use App\Kematian;
+use App\Perkembangan;
+use App\Penjualan;
 use App\DataTables\TernakDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -23,20 +30,18 @@ class TernakController extends Controller
     {
         $title = 'TERNAK';
         $page = 'Ternak';
-        $pemilik = DB::table('pemiliks')->orderBy('nama_pemilik', 'asc')->get();
-        $peternakan = DB::table('peternakans')->orderBy('nama_peternakan', 'asc')->get();
-        $ras = DB::table('ras')->orderBy('jenis_ras', 'asc')->get();
-        $kematian = DB::table('kematians')->orderBy('id', 'asc')->get();
+        $pemilik = Pemilik::all();
+        $ras = Ras::all();
+        $peternak = User::where('role', '<>', 'admin')->get();
         $datas = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')->get();
 
         return $dataTable->render('data.ternak', [
             'title' => $title, 
             'page' => $page, 
             'data' => $datas, 
-            'kematian' => $kematian, 
+            'peternak' => $peternak, 
             'ras' => $ras, 
             'pemilik' => $pemilik,
-            'peternakan' => $peternakan
         ]);
     }
 
@@ -60,9 +65,9 @@ class TernakController extends Controller
     {
         $rules = array(
             'ras_id' => 'required',
+            'pemilik_id' => 'required',
+            'peternak_id' => 'required',
             'jenis_kelamin' => 'required',
-            'blood' => 'required',
-            'tgl_lahir' => 'required',
             'status_ada' => 'required'
         );
 
@@ -79,10 +84,9 @@ class TernakController extends Controller
 
         $form_data = array(
             'necktag' => $necktag,
-            'pemilik_id' => $request->pemilik_id,
-            'peternakan_id' => $request->peternakan_id,
             'ras_id' => $request->ras_id,
-            'kematian_id' => $request->kematian_id,
+            'pemilik_id' => $request->pemilik_id,
+            'user_id' => $request->peternak_id,
             'jenis_kelamin' => $request->jenis_kelamin,
             'tgl_lahir' => $request->tgl_lahir,
             'bobot_lahir' => $request->bobot_lahir,
@@ -90,12 +94,8 @@ class TernakController extends Controller
             'lama_dikandungan' => $request->lama_dikandungan,
             'lama_laktasi' => $request->lama_laktasi,
             'tgl_lepas_sapih' => $request->tgl_lepas_sapih,
-            'blood' => $request->blood,
             'necktag_ayah' => $request->necktag_ayah,
             'necktag_ibu' => $request->necktag_ibu,
-            'bobot_tubuh' => $request->bobot_tubuh,
-            'panjang_tubuh' => $request->panjang_tubuh,
-            'tinggi_tubuh' => $request->tinggi_tubuh,
             'cacat_fisik' => $request->cacat_fisik,
             'ciri_lain' => $request->ciri_lain,
             'status_ada' => $request->status_ada,
@@ -117,6 +117,10 @@ class TernakController extends Controller
         if(request()->ajax()){
             $data = Ternak::findOrFail($id);
 
+            if($data->user_id != null){
+                $pid = DB::table('users')->where('id', $data->user_id)->first();
+                $data->user_id = $pid->name;
+            }
             if($data->pemilik_id != null){
                 $pid = DB::table('pemiliks')->where('id', $data->pemilik_id)->first();
                 $data->pemilik_id = $pid->nama_pemilik;
@@ -125,13 +129,17 @@ class TernakController extends Controller
                 $rid = DB::table('ras')->where('id', $data->ras_id)->first();
                 $data->ras_id = $rid->jenis_ras;
             }
-            if($data->peternakan_id != null){
-                $ptid = DB::table('peternakans')->where('id', $data->peternakan_id)->first();
-                $data->peternakan_id = $ptid->nama_peternakan;
+            if($data->grup_id != null){
+                $gid = DB::table('grup_ternaks')->where('id', $data->grup_id)->first();
+                $data->grup_id = $gid->nama_grup;
             }
             if($data->kematian_id != null){
                 $kid = DB::table('kematians')->where('id', $data->kematian_id)->first();
                 $data->kematian_id = $kid->tgl_kematian.' - '.$kid->waktu_kematian;
+            }
+            if($data->penjualan_id != null){
+                $jid = DB::table('penjualans')->where('id', $data->penjualan_id)->first();
+                $data->penjualan_id = $jid->tgl_terjual.' - dibeli oleh '.$jid->ket_pembeli;
             }
 
             if($data->status_ada == true){
@@ -140,7 +148,13 @@ class TernakController extends Controller
                 $data->status_ada = 'Tidak Ada';
             }
 
-            $rp = DB::select('SELECT public."rp_ternak"(?)', [$data->necktag]);
+            // $rp = DB::select('SELECT public."rp_ternak"(?)', [$data->necktag]);
+            if(RiwayatPenyakit::where('necktag', $id)->exists()){
+                $rp = RiwayatPenyakit::where('necktag', $id)->get();
+            }
+            else{
+                $rp = null;
+            }
 
             return response()->json(['result' => $data, 'riwayat' => $rp]);
         }
@@ -178,8 +192,9 @@ class TernakController extends Controller
     {
         $rules = array(
             'ras_id' => 'required',
+            'pemilik_id' => 'required',
+            'peternak_id' => 'required',
             'jenis_kelamin' => 'required',
-            'blood' => 'required',
             'tgl_lahir' => 'required',
             'status_ada' => 'required'
         );
@@ -196,10 +211,10 @@ class TernakController extends Controller
         }
 
         $form_data = array(
-            'necktag' => $request->necktag,
+            'necktag' => $id,
             'pemilik_id' => $request->pemilik_id,
             'ras_id' => $request->ras_id,
-            'kematian_id' => $request->kematian_id,
+            'user_id' => $request->peternak_id,
             'jenis_kelamin' => $request->jenis_kelamin,
             'tgl_lahir' => $request->tgl_lahir,
             'bobot_lahir' => $request->bobot_lahir,
@@ -207,16 +222,11 @@ class TernakController extends Controller
             'lama_dikandungan' => $request->lama_dikandungan,
             'lama_laktasi' => $request->lama_laktasi,
             'tgl_lepas_sapih' => $request->tgl_lepas_sapih,
-            'blood' => $request->blood,
             'necktag_ayah' => $request->necktag_ayah,
             'necktag_ibu' => $request->necktag_ibu,
-            'bobot_tubuh' => $request->bobot_tubuh,
-            'panjang_tubuh' => $request->panjang_tubuh,
-            'tinggi_tubuh' => $request->tinggi_tubuh,
             'cacat_fisik' => $request->cacat_fisik,
             'ciri_lain' => $request->ciri_lain,
             'status_ada' => $request->status_ada,
-            'peternakan_id' => $request->peternakan_id
         );
 
         Ternak::where('necktag',$id)->update($form_data);
@@ -234,7 +244,11 @@ class TernakController extends Controller
     {
         $data = Ternak::findOrFail($id);
 
-        if(Perkawinan::where('necktag', $id)->exists()){
+        if(Perkawinan::where('necktag', $id)->exists() ||
+           RiwayatPenyakit::where('necktag', $id)->exists() ||
+           Kematian::where('necktag', $id)->exists() ||
+           Perkembangan::where('necktag', $id)->exists() ||
+           Penjualan::where('necktag', $id)->exists() ){
             $err = 'Data ternak id '. $id .' tidak dapat dihapus.';
             return response()->json(['error' => $err]);
         }

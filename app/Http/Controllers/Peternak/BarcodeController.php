@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Peternak;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Ternak;
-// use PDF;
 use domPDF;
 use DNS1D;
 
@@ -30,7 +29,6 @@ class BarcodeController extends Controller
         foreach($ternak as $data){
             $html .= '<td>'.$no.'</td>';
             $html .= '<td align="center" style="border: lpx solid #ccc; padding-left: 10px; padding-right: 10px;">'.$data->necktag.'<br>';
-            // $html .= '<img style="padding: 10px;" src="data:image/png;base64,'.DNS1D::getBarcodePNG($data->necktag, "C128", 2, 40).'" alt="barcode"/>';
             $html .= '<div style="padding-top: 10px; padding-bottom: 10px;">'.DNS1D::getBarcodeHTML($data->necktag, "C128", 2, 40).'</div>';
             $html .= $data->necktag.'</td>';
 

@@ -16,7 +16,8 @@ class Ternak extends Model
     protected $table = 'ternaks';
     
     protected $fillable = [
-        'necktag', 'jenis_kelamin', 'tgl_lahir', 'bobot_lahir', 'pukul_lahir', 
+        'necktag', 'pemilik_id', 'ras_id', 'user_id', 'kematian_id', 'penjualan_id',
+        'jenis_kelamin', 'tgl_lahir', 'bobot_lahir', 'pukul_lahir', 
         'lama_dikandungan', 'lama_laktasi', 'tgl_lepas_sapih',
         'necktag_ayah', 'necktag_ibu', 'cacat_fisik', 'ciri_lain', 'status_ada'
     ];
@@ -50,6 +51,6 @@ class Ternak extends Model
     }
 
     public function peternak(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\DataTables\RiwayatDataTable;
-use App\Penyakit;
+use App\RiwayatPenyakit;
 use App\Ternak;
 use Carbon\Carbon;
 use Validator;
@@ -23,10 +23,10 @@ class RiwayatPenyakitController extends Controller
     {
         $title = 'RIWAYAT PENYAKIT';
         $page = 'Riwayat Penyakit';
-        $ternak = Ternak::all();
-        $penyakit = Penyakit::all();
+        $ternaks = Ternak::all();
+        $riwayat = RiwayatPenyakit::all();
         
-        return $dataTable->render('data.riwayat', ['title' => $title, 'page' => $page, 'ternak' => $ternak, 'penyakit' => $penyakit]);
+        return $dataTable->render('data.riwayat', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks, 'riwayat' => $riwayat]);
     }
 
     /**
@@ -48,7 +48,7 @@ class RiwayatPenyakitController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'penyakit_id' => 'required',
+            'nama_penyakit' => 'required',
             'necktag' => 'required',
             'tgl_sakit' => 'required'
         );
@@ -59,25 +59,16 @@ class RiwayatPenyakitController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
-        $s_penyakit = Penyakit::find($request->penyakit_id);
-
-        $s_penyakit->ternak()->attach($request->necktag, [
+        $form_data = array(
+            'necktag' => $request->necktag,
+            'nama_penyakit' => $request->nama_penyakit,
             'tgl_sakit' => $request->tgl_sakit,
             'obat' => $request->obat,
             'lama_sakit' => $request->lama_sakit,
-            'keterangan' => $request->keterangan 
-        ]);
+            'keterangan' => $request->keterangan,
+        );
 
-        // $form_data = array(
-        //     'penyakit_id' => $request->penyakit_id,
-        //     'necktag' => $request->necktag,
-        //     'tgl_sakit' => $request->tgl_sakit,
-        //     'obat' => $request->obat,
-        //     'lama_sakit' => $request->lama_sakit,
-        //     'keterangan' => $request->keterangan,
-        // );
-
-        // $riwayat = DB::table('riwayat_penyakits')->insert($form_data);
+        RiwayatPenyakit::create($form_data);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -102,7 +93,7 @@ class RiwayatPenyakitController extends Controller
     public function edit($id)
     {
         if(request()->ajax()){
-            $data = DB::table('riwayat_penyakits')->find($id);
+            $data = RiwayatPenyakit::find($id);
             return response()->json(['result' => $data]);
         }
     }
@@ -117,7 +108,7 @@ class RiwayatPenyakitController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'penyakit_id' => 'required',
+            'nama_penyakit' => 'required',
             'necktag' => 'required',
             'tgl_sakit' => 'required'
         );
@@ -129,7 +120,7 @@ class RiwayatPenyakitController extends Controller
         }
 
         $form_data = array(
-            'penyakit_id' => $request->penyakit_id,
+            'nama_penyakit' => $request->nama_penyakit,
             'necktag' => $request->necktag,
             'tgl_sakit' => $request->tgl_sakit,
             'obat' => $request->obat,
@@ -138,7 +129,7 @@ class RiwayatPenyakitController extends Controller
             'updated_at' => Carbon::now()
         );
 
-        DB::table('riwayat_penyakits')->whereId($id)->update($form_data);
+        RiwayatPenyakit::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -151,6 +142,7 @@ class RiwayatPenyakitController extends Controller
      */
     public function destroy($id)
     {
-        $data = DB::table('riwayat_penyakits')->where('id', $id)->delete();
+        $data = RiwayatPenyakit::findOrFail($id);
+        $data->delete();
     }
 }

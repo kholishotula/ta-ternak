@@ -9,7 +9,7 @@ class GrupPeternak extends Model
     protected $table = 'grup_peternaks';
     
     protected $fillable = [
-    	'nama_peternakan', 'keterangan',
+    	'nama_grup', 'alamat', 'provinsi', 'kab_kota', 'kecamatan', 'keterangan',
     ];
 
     public function peternak(){

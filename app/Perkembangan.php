@@ -9,7 +9,7 @@ class Perkembangan extends Model
     protected $table = 'perkembangans';
     
     protected $fillable = [
-    	'tgl_perkembangan', 'berat_badan', 'panjang_badan', 'lingkar_dada',
+    	'necktag', 'tgl_perkembangan', 'berat_badan', 'panjang_badan', 'lingkar_dada',
         'tinggi_pundak', 'lingkar_skrotum', 'keterangan', 'foto'
     ];
 

@@ -71,6 +71,8 @@ class KematianDataTable extends DataTable
         return [
             Column::make('id')
                 ->title('ID'),
+            Column::make('necktag')
+                ->title('Necktag'),
             Column::make('tgl_kematian')
                 ->title('Tanggal'),
             Column::make('waktu_kematian')

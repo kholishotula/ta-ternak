@@ -91,12 +91,14 @@ class TernakDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('pemilik_id')
                 ->title('ID Pemilik'),
-            Column::make('peternakan_id')
-                ->title('ID Peternakan'),
+            Column::make('user_id')
+                ->title('ID Peternak'),
             Column::make('ras_id')
                 ->title('ID Ras'),
             Column::make('kematian_id')
                 ->title('ID Kematian'),
+            Column::make('penjualan_id')
+                ->title('ID Penjualan'),
             Column::make('jenis_kelamin')
                 ->title('Jenis Kelamin'),
             Column::make('tgl_lahir')
@@ -111,18 +113,10 @@ class TernakDataTable extends DataTable
                 ->title('Lama Laktasi'),
             Column::make('tgl_lepas_sapih')
                 ->title('Tanggal Lepas Sapih'),
-            Column::make('blood')
-                ->title('Blood'),
             Column::make('necktag_ayah')
                 ->title('Ayah'),
             Column::make('necktag_ibu')
                 ->title('Ibu'),
-            Column::make('bobot_tubuh')
-                ->title('Bobot Tubuh'),
-            Column::make('panjang_tubuh')
-                ->title('Panjang Tubuh'),
-            Column::make('tinggi_tubuh')
-                ->title('Tinggi Tubuh'),
             Column::make('cacat_fisik')
                 ->title('Cacat Fisik'),
             Column::make('ciri_lain')

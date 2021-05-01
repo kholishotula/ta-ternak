@@ -26,20 +26,32 @@
                     @csrf
 
                     <div class="form-group">
-                        <label class="control-label">Peternakan</label>
+                        <label class="control-label">Grup Peternak</label>
                         <div>
-            							<select class="form-control js-select-search" name="peternakan_id" id="peternakan_id">
-            								<option></option>
-            							  	@foreach ($peternakan as $pid)
-            								    <option value="{{ $pid->id }}">{{ $pid->id }} - {{ $pid->nama_peternakan }}</option>
-            								  @endforeach
-            							</select>
-            						</div>
+            				<select class="form-control js-select-search" name="grup_peternak" id="grup_peternak">
+            					<option></option>
+            				  	@foreach ($grupPeternak as $grupId)
+        						    <option value="{{ $grupId->id }}">{{ $grupId->id }} - {{ $grupId->nama_grup }}</option>
+    							@endforeach
+            				</select>
+        				</div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Nama Peternak</label>
-                        <div class="form-line col-md-8">
-                            <input type="text" name="name" id="name" class="form-control">
+                        <label class="control-label">Verifikasi Akun</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-addon align-left">
+                                <input type="checkbox" class="filled-in" name="verify" id="verify">
+                                <label for="verify">Verified</label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Jadikan sebagai Ketua Grup</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-addon align-left">
+                                <input type="checkbox" class="filled-in" name="ketua_grup" id="ketua_grup">
+                                <label for="ketua_grup">Ketua Grup</label>
+                            </span>
                         </div>
                     </div>
 

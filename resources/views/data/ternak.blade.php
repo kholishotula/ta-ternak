@@ -39,10 +39,9 @@
                         <th>No.</th>
                         <th>Necktag</th>
                         <th>ID Pemilik</th>
-                        <th>ID Peternakan</th>
+                        <th>ID Peternak</th>
                         <th>ID Ras</th>
                         <th>Jenis Kelamin</th>
-                        <th>Blood</th>
                         <th>Ayah</th>
                         <th>Ibu</th>
                         <th>Status Ada</th>
@@ -72,13 +71,7 @@
 				<span id="form_result"></span>
 				<form method="post" id="tambah_data_form">
 					@csrf
-
-					<div class="form-group" id="necktag_form">
-						<label class="control-label">Necktag</label>
-						<div class="form-line col-md-8">
-							<input type="text" name="necktag" id="necktag" class="form-control">
-						</div>
-					</div>
+					
 					<div class="form-group">
 						<label class="control-label">Pemilik</label>
 						<div>
@@ -91,12 +84,12 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Peternakan</label>
+						<label class="control-label">Peternak</label>
 						<div>
-							<select class="form-control js-select-search" name="peternakan_id" id="peternakan_id">
+							<select class="form-control js-select-search" name="peternak_id" id="peternak_id">
 								<option></option>
-							  	@foreach ($peternakan as $pid)
-							    <option value="{{ $pid->id }}">{{ $pid->id }} - {{ $pid->nama_peternakan }}</option>
+							  	@foreach ($peternak as $pid)
+							    <option value="{{ $pid->id }}">{{ $pid->id }} - {{ $pid->name }}</option>
 								@endforeach    
 							</select>
 						</div>
@@ -108,17 +101,6 @@
 								<option></option>
 							  	@foreach ($ras as $rid)
 							    <option value="{{ $rid->id }}">{{ $rid->jenis_ras }}</option>
-								@endforeach    
-							</select>
-						</div>
-					</div>
-					<div class="form-group" id="kematian_form">
-						<label class="control-label">Kematian</label>
-						<div>
-							<select class="form-control js-select-search" name="kematian_id" id="kematian_id">
-								<option></option>
-							  	@foreach ($kematian as $kid)
-							    <option value="{{ $kid->id }}">{{ $kid->id }}. {{ $kid->tgl_kematian }} - {{ $kid->waktu_kematian }} - {{ $kid->penyebab }} - {{ $kid->kondisi }}</option>
 								@endforeach    
 							</select>
 						</div>
@@ -184,12 +166,6 @@
                         </div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Blood</label>
-						<div class="form-line col-md-8">
-							<input type="text" name="blood" id="blood" class="form-control" placeholder="golongan darah">
-						</div>
-					</div>
-					<div class="form-group">
 						<label class="control-label">Ayah</label>
 						<div>
 							<select class="form-control js-select-search" name="necktag_ayah" id="necktag_ayah">
@@ -213,24 +189,6 @@
 								    @endif
 								@endforeach
 							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label">Bobot Tubuh</label>
-						<div class="form-line col-md-8">
-							<input type="text" name="bobot_tubuh" id="bobot_tubuh" class="form-control" placeholder="dalam kilogram">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label">Panjang Tubuh</label>
-						<div class="form-line col-md-8">
-							<input type="text" name="panjang_tubuh" id="panjang_tubuh" class="form-control" placeholder="dalam centimeter">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label">Tinggi Tubuh</label>
-						<div class="form-line col-md-8">
-							<input type="text" name="tinggi_tubuh" id="tinggi_tubuh" class="form-control" placeholder="dalam centimeter">
 						</div>
 					</div>
 					<div class="form-group">
@@ -282,9 +240,9 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">Peternakan</label>
+					<label class="control-label">Peternak</label>
 					<div class="form-line col-md-8">
-						<input type="text" name="peternakan_id" id="vpeternakan_id" class="form-control" readonly="true">
+						<input type="text" name="peternak_id" id="vpeternak_id" class="form-control" readonly="true">
 					</div>
 				</div>
 				<div class="form-group">
@@ -297,6 +255,12 @@
 					<label class="control-label">Kematian</label>
 					<div class="form-line col-md-8">
 						<input type="text" name="kematian_id" id="vkematian_id" class="form-control" readonly="true">
+					</div>
+				</div>
+				<div class="form-group" id="penjualan_form">
+					<label class="control-label">Penjualan</label>
+					<div class="form-line col-md-8">
+						<input type="text" name="penjualan_id" id="vpenjualan_id" class="form-control" readonly="true">
 					</div>
 				</div>
 				<div class="form-group">
@@ -357,12 +321,6 @@
                     </div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">Blood</label>
-					<div class="form-line col-md-8">
-						<input type="text" name="blood" id="vblood" class="form-control" readonly="true">
-					</div>
-				</div>
-				<div class="form-group">
 					<label class="control-label">Ayah</label>
 					<div class="form-line col-md-8">
 						<input type="text" name="necktag_ayah" id="vnecktag_ayah" class="form-control" readonly="true">
@@ -372,24 +330,6 @@
 					<label class="control-label">Ibu</label>
 					<div class="form-line col-md-8">
 						<input type="text" name="necktag_ibu" id="vnecktag_ibu" class="form-control" readonly="true">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">Bobot Tubuh</label>
-					<div class="form-line col-md-8">
-						<input type="text" name="bobot_tubuh" id="vbobot_tubuh" class="form-control" readonly="true">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">Panjang Tubuh</label>
-					<div class="form-line col-md-8">
-						<input type="text" name="panjang_tubuh" id="vpanjang_tubuh" class="form-control" readonly="true">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">Tinggi Tubuh</label>
-					<div class="form-line col-md-8">
-						<input type="text" name="tinggi_tubuh" id="vtinggi_tubuh" class="form-control" readonly="true">
 					</div>
 				</div>
 				<div class="form-group">
@@ -424,7 +364,7 @@
 				</div>
 
 				<!-- riwayat -->
-				<div>
+				<!-- <div>
 					<label class="control-label">Riwayat Penyakit</label>
 					<div>
 						<span id="span-rp"></span>
@@ -433,7 +373,7 @@
 						</table>
 					</div>
 				</div>
-				<br>
+				<br> -->
 			</div>
 		</div>
 	</div>

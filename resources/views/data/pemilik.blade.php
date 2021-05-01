@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label class="control-label">KTP</label>
                         <div class="form-line col-md-8">
-                            <input type="text" name="ktp" id="ktp" class="form-control">
+                            <input type="text" name="ktp_pemilik" id="ktp_pemilik" class="form-control">
                         </div>
                     </div>
                     <br>
@@ -67,7 +67,7 @@
                 <div class="form-group">
                     <label class="control-label">KTP</label>
                     <div class="form-line col-md-8">
-                        <input type="text" name="ktp" id="vktp" class="form-control" readonly="true">
+                        <input type="text" name="ktp_pemilik" id="vktp_pemilik" class="form-control" readonly="true">
                     </div>
                 </div>
                 <div class="form-group">

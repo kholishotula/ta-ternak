@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\GrupPeternak;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -45,7 +46,13 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('guest');
+        // 
+    }
+
+    public function showRegistrationForm(){
+        $grupPeternak = GrupPeternak::all();
+
+        return view('auth.register')->with('grupPeternak', $grupPeternak);
     }
 
     /**
@@ -57,10 +64,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'ktp' => ['required', 'string', 'max:16'],
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'grup_peternak' => ['required'],
         ]);
     }
 
@@ -72,11 +81,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = new User([
+            'ktp_user' => $data['ktp'],
             'name' => $data['name'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        $grupPeternak = GrupPeternak::find($data['grup_peternak']);
+        $grupPeternak->peternak()->save($user);
+
+        return $user;
     }
 }

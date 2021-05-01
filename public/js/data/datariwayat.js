@@ -26,7 +26,6 @@ $('#tambah_data').click(function(){
 	$('#form_result').html('');
 
 	$('#tambah_data_form')[0].reset();
-	$('#penyakit_id').val('').change();
 	$('#necktag').val('').change();
 	
 	$('#formModal').modal('show');
@@ -85,8 +84,8 @@ $(document).on('click', '.edit', function(){
 		url: url_seg+"/riwayat/"+id+"/edit",
 		datatype: "json",
 		success: function(data){
-			$('#penyakit_id').val(data.result.penyakit_id).change();
 			$('#necktag').val(data.result.necktag).change();
+			$('#nama_penyakit').val(data.result.nama_penyakit);
 			$('#tgl_sakit').val(data.result.tgl_sakit);
 			$('#obat').val(data.result.obat);
 			$('#lama_sakit').val(data.result.lama_sakit);

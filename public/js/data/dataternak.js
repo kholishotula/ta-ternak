@@ -1,3 +1,5 @@
+// const { method } = require("lodash");
+
 $.ajaxSetup({
 	headers: {
 		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -27,10 +29,9 @@ function tongsampahDT() {
 		        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
 		        {data: 'necktag', name: 'necktag'},
 		        {data: 'pemilik_id', name: 'pemilik_id'},
-                {data: 'peternakan_id', name: 'peternakan_id'},
+                {data: 'user_id', name: 'peternak_id'},
 		        {data: 'ras_id', name: 'ras_id'},
 		        {data: 'jenis_kelamin', name: 'jenis_kelamin'},
-		        {data: 'blood', name: 'blood'},
 		        {data: 'necktag_ayah', name: 'necktag_ayah'},
 		        {data: 'necktag_ibu', name: 'necktag_ibu'},
 		        {data: 'status_ada', name: 'status_ada'},
@@ -62,7 +63,7 @@ $('#tambah_data').click(function(){
     $('#tambah_data_form')[0].reset();
     $('#necktag').val('').change();
     $('#pemilik_id').val('').change();
-    $('#peternakan_id').val('').change();
+    $('#peternak_id').val('').change();
     $('#ras_id').val('').change();
     $('#kematian_id').val('').change();
     $('#necktag_ayah').val('').change();
@@ -139,7 +140,7 @@ $(document).on('click', '.view', function(){
 		datatype: "json",
 		success: function(data){
 			$('#vpemilik_id').val(data.result.pemilik_id);
-            $('#vpeternakan_id').val(data.result.peternakan_id);
+            $('#vpeternak_id').val(data.result.user_id);
 			$('#vras_id').val(data.result.ras_id);
 			$('#vkematian_id').val(data.result.kematian_id);
 			$('#vjenis_kelamin').val(data.result.jenis_kelamin);
@@ -161,31 +162,31 @@ $(document).on('click', '.view', function(){
 			$('#vcreated_at').val(data.result.created_at);
 			$('#vupdated_at').val(data.result.updated_at);
 
-            if(data.riwayat != ''){
-                $('#riwayat-penyakit').empty().append(txt);
-                $.each(data.riwayat, function(i, val) {
-                    var rp1 = data.riwayat[i].rp_ternak.split('(');
-                    var rp2 = rp1[1].split(')');
-                    rp[i] = rp2[0].split(',');
-                    //1: nama penyakit, 2: date, 3: obat, 4: lama sakit, 5: ket
+            // if(data.riwayat != ''){
+            //     $('#riwayat-penyakit').empty().append(txt);
+            //     $.each(data.riwayat, function(i, val) {
+            //         var rp1 = data.riwayat[i].rp_ternak.split('(');
+            //         var rp2 = rp1[1].split(')');
+            //         rp[i] = rp2[0].split(',');
+            //         //1: nama penyakit, 2: date, 3: obat, 4: lama sakit, 5: ket
 
-                    txt2 = '<tr>'; 
-                    for(var j = 1; j <= 5; j++){ 
-                        if(rp[i][j-1] == ""){
-                            rp[i][j-1] = '-';
-                        } 
-                        txt2 += '<td>' + rp[i][j-1] + '</td>';
-                    }
-                    txt2 += '</tr>';
-                    $('#riwayat-penyakit').append(txt2);
-                    $('#riwayat-penyakit').show();
-                });
-                $('#span-rp').empty();
-            }
-            else{
-                $('#span-rp').html('<p align="center">Tidak ada data riwayat penyakit</p>');
-                $('#riwayat-penyakit').hide();
-            }
+            //         txt2 = '<tr>'; 
+            //         for(var j = 1; j <= 5; j++){ 
+            //             if(rp[i][j-1] == ""){
+            //                 rp[i][j-1] = '-';
+            //             } 
+            //             txt2 += '<td>' + rp[i][j-1] + '</td>';
+            //         }
+            //         txt2 += '</tr>';
+            //         $('#riwayat-penyakit').append(txt2);
+            //         $('#riwayat-penyakit').show();
+            //     });
+            //     $('#span-rp').empty();
+            // }
+            // else{
+            //     $('#span-rp').html('<p align="center">Tidak ada data riwayat penyakit</p>');
+            //     $('#riwayat-penyakit').hide();
+            // }
 
 			$('.modal-title').text('Data Ternak - '+id);
 	    	$('#viewModal').modal('show');
@@ -206,9 +207,8 @@ $(document).on('click', '.edit', function(){
 		success: function(data){
 			$('#necktag').val(data.result.necktag);
 			$('#pemilik_id').val(data.result.pemilik_id).change();
-            $('#peternakan_id').val(data.result.peternakan_id).change();
+            $('#peternak_id').val(data.result.user_id).change();
             $('#ras_id').val(data.result.ras_id).change();
-			$('#kematian_id').val(data.result.kematian_id).change();
 			$('#jenis_kelamin').val(data.result.jenis_kelamin);
 			$('#tgl_lahir').val(data.result.tgl_lahir);
 			$('#bobot_lahir').val(data.result.bobot_lahir);
@@ -216,12 +216,8 @@ $(document).on('click', '.edit', function(){
 			$('#lama_dikandungan').val(data.result.lama_dikandungan);
 			$('#lama_laktasi').val(data.result.lama_laktasi);
 			$('#tgl_lepas_sapih').val(data.result.tgl_lepas_sapih);
-			$('#blood').val(data.result.blood);
 			$('#necktag_ayah').val(data.result.necktag_ayah).change();
 			$('#necktag_ibu').val(data.result.necktag_ibu).change();
-			$('#bobot_tubuh').val(data.result.bobot_tubuh);
-			$('#panjang_tubuh').val(data.result.panjang_tubuh);
-			$('#tinggi_tubuh').val(data.result.tinggi_tubuh);
 			$('#cacat_fisik').val(data.result.cacat_fisik);
 			$('#ciri_lain').val(data.result.ciri_lain);
 			$('#status_ada').val(data.result.status_ada);

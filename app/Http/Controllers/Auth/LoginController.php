@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Peternak;
 use Redirect;
 
 // use App\Providers\RouteServiceProvider;
@@ -45,13 +44,13 @@ class LoginController extends Controller
         // return $this->redirectTo;
 
         else if(Auth::user()->role == 'peternak'){
-            if(Auth::user()->register_from_admin){
+            if(Auth::user()->verified_at){
                 $this->redirectTo = route('peternak');
                 return $this->redirectTo;
             }
 
             Auth::logout();
-            session()->flash('failure', 'Tidak terauthorisasi - Register dari Admin!');
+            session()->flash('failure', 'Tidak terauthorisasi - Akun Anda belum terverifikasi!');
             $this->redirectTo = route('login');
             return $this->redirectTo;            
         }

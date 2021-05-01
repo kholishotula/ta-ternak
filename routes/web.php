@@ -46,11 +46,10 @@
 			Route::delete('ternak/fdelete/{id}', 'TernakController@fdelete')->name('ternak.fdelete');
 			Route::delete('ternakfdelete', 'TernakController@fdeleteAll')->name('ternak.fdeleteAll');
 			Route::resource('ras', 'RasController')->except(['create', 'show']);
-			Route::resource('penyakit', 'PenyakitController')->except(['create']);
 			Route::resource('riwayat', 'RiwayatPenyakitController')->except(['create', 'show']);
 			Route::resource('kematian', 'KematianController')->except(['create', 'show']);
 			Route::resource('pemilik', 'PemilikController')->except(['create']);
-			Route::resource('peternakan', 'PeternakanController')->except(['create']);
+			Route::resource('grup-peternak', 'GrupPeternakController')->except(['create']);
 			Route::resource('perkawinan', 'PerkawinanController')->except(['create', 'show']);
 			Route::get('perkawinan/pasangan/{id}', 'PerkawinanController@getPasangan');
 
@@ -106,7 +105,6 @@
 			Route::delete('ternak/fdelete/{id}', 'TernakController@fdelete')->name('ternak.fdelete');
 			Route::delete('ternakfdelete', 'TernakController@fdeleteAll')->name('ternak.fdeleteAll');
 			Route::resource('ras', 'RasController')->except(['create', 'show']);
-			Route::resource('penyakit', 'PenyakitController')->except(['create']);
 			Route::resource('riwayat', 'RiwayatPenyakitController')->except(['create', 'show']);
 			Route::resource('kematian', 'KematianController')->except(['create', 'show']);
 			Route::resource('pemilik', 'PemilikController')->except(['create']);

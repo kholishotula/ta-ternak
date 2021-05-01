@@ -9,7 +9,7 @@ class RiwayatPenyakit extends Model
     protected $table = 'riwayat_penyakits';
 	
     protected $fillable = [
-    	'nama_penyakit', 'lama_sakit', 'obat', 'keterangan', 'tgl_sakit'
+    	'necktag', 'nama_penyakit', 'lama_sakit', 'obat', 'keterangan', 'tgl_sakit'
     ];
 
     public function ternak(){

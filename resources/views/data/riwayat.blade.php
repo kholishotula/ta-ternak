@@ -26,25 +26,20 @@
 					@csrf
 
 					<div class="form-group">
-						<label class="control-label">Penyakit</label>
+						<label class="control-label">Necktag</label>
 						<div>
-							<select class="form-control js-select-search" name="penyakit_id" id="penyakit_id">
+							<select class="form-control js-select-search" name="necktag" id="necktag">
 								<option></option>
-							  	@foreach ($penyakit as $pid)
-							    <option value="{{ $pid->id }}">{{ $pid->nama_penyakit }}</option>
+							  	@foreach ($ternaks as $ternaks)
+							    <option value="{{ $ternaks->necktag }}">{{ $ternaks->necktag }}</option>
 								@endforeach    
 							</select>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Necktag</label>
-						<div>
-							<select class="form-control js-select-search" name="necktag" id="necktag">
-								<option></option>
-							  	@foreach ($ternak as $tid)
-							    <option value="{{ $tid->necktag }}">{{ $tid->necktag }} - Ras {{ $tid->ras_id }}</option>
-								@endforeach    
-							</select>
+						<label class="control-label">Nama Penyakit</label>
+						<div class="form-line col-md-8">
+							<input type="text" name="nama_penyakit" id="nama_penyakit" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">

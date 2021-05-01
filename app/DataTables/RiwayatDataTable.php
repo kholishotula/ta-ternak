@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use Illuminate\Support\Facades\DB;
+use App\RiwayatPenyakit;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -20,7 +20,7 @@ class RiwayatDataTable extends DataTable
     public function dataTable()
     {
         return datatables()
-            ->queryBuilder($this->query())
+            ->eloquent($this->query())
             ->addColumn('action', function($row){
                 $btn = '<button type="button" name="edit" id="'.$row->id.'" class="edit btn btn-warning btn-sm" ><i class="material-icons">mode_edit</i></button>';
                 $btn .= '<button type="button" name="delete" id="'.$row->id.'" class="delete btn btn-danger btn-sm" ><i class="material-icons">delete</i></button>';
@@ -36,11 +36,8 @@ class RiwayatDataTable extends DataTable
      */
     public function query()
     {
-         $data = DB::table('riwayat_penyakits')->join('public.penyakits', 'penyakits.id', '=', 'riwayat_penyakits.penyakit_id')
-                ->select('riwayat_penyakits.id', 'penyakits.nama_penyakit as penyakit_id', 'riwayat_penyakits.necktag', 'riwayat_penyakits.tgl_sakit', 'riwayat_penyakits.obat', 'riwayat_penyakits.lama_sakit', 'riwayat_penyakits.keterangan', 'riwayat_penyakits.created_at', 'riwayat_penyakits.updated_at');
-                // ->get();
-
-        return $data;
+        $model = new RiwayatPenyakit();
+        return $model->newQuery()->select('*');
     }
 
     /**
@@ -74,10 +71,10 @@ class RiwayatDataTable extends DataTable
         return [
             Column::make('id')
                 ->title('ID'),
-            Column::make('penyakit_id')
-                ->title('Penyakit'),
             Column::make('necktag')
                 ->title('Necktag'),
+            Column::make('nama_penyakit')
+                ->title('Nama Penyakit'),
             Column::make('tgl_sakit')
                 ->title('Tanggal Sakit'),
             Column::make('obat')

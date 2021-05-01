@@ -18,8 +18,8 @@ class HomeController extends Controller
                         ->whereNotNull('tgl_lahir')
                         ->selectRaw('count(*)')->first();
 
-        $kawin = Perkawinan::where('tgl', '>', date("Y-m-d", strtotime('-29 days')))
-                        ->whereNotNull('tgl')
+        $kawin = Perkawinan::where('tgl_kawin', '>', date("Y-m-d", strtotime('-29 days')))
+                        ->whereNotNull('tgl_kawin')
                         ->selectRaw('count(*)/2 as count')->first();
 
         $mati = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')

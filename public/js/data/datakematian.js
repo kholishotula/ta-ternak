@@ -81,6 +81,7 @@ $(document).on('click', '.edit', function(){
         url: url_seg+"/kematian/"+id+"/edit",
         datatype: "json",
         success: function(data){
+			$('#necktag').val(data.result.necktag).change();
             $('#tgl_kematian').val(data.result.tgl_kematian);
             $('#waktu_kematian').val(data.result.waktu_kematian);
             $('#penyebab').val(data.result.penyebab);

@@ -160,10 +160,9 @@
                         </a>
                         <ul class="ml-menu">
                             @can('isAdmin')
-                            <li><a href="{{ route('admin.peternakan.index') }}">Peternakan</a></li>
+                            <li><a href="{{ route('admin.grup-peternak.index') }}">Grup Peternak</a></li>
                             <li><a href="{{ route('admin.kematian.index') }}">Kematian</a></li>
                             <li><a href="{{ route('admin.pemilik.index') }}">Pemilik</a></li>
-                            <li><a href="{{ route('admin.penyakit.index') }}">Penyakit</a></li>
                             <li><a href="{{ route('admin.perkawinan.index') }}">Perkawinan</a></li>
                             <li><a href="{{ route('admin.ras.index') }}">Ras</a></li>
                             <li><a href="{{ route('admin.riwayat.index') }}">Riwayat Penyakit</a></li>
@@ -171,7 +170,6 @@
                             @elsecan('isPeternak')
                             <li><a href="{{ route('peternak.kematian.index') }}">Kematian</a></li>
                             <li><a href="{{ route('peternak.pemilik.index') }}">Pemilik</a></li>
-                            <li><a href="{{ route('peternak.penyakit.index') }}">Penyakit</a></li>
                             <li><a href="{{ route('peternak.perkawinan.index') }}">Perkawinan</a></li>
                             <li><a href="{{ route('peternak.ras.index') }}">Ras</a></li>
                             <li><a href="{{ route('peternak.riwayat.index') }}">Riwayat Penyakit</a></li>

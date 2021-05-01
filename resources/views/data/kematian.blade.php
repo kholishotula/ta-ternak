@@ -26,6 +26,17 @@
                     @csrf
 
                     <div class="form-group">
+                        <label class="control-label">Necktag</label>
+                        <div class="form-line">
+                            <select class="form-control js-select-search" name="necktag" id="necktag">
+                                <option></option>
+                                @foreach ($ternaks as $ternak)
+                                <option value="{{ $ternak->necktag }}">{{ $ternak->necktag }}</option>
+                                @endforeach  
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">Tanggal Kematian</label>
                         <div class="input-group">
                             <span class="input-group-addon">

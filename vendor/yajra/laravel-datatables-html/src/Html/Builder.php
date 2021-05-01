@@ -260,7 +260,8 @@ class Builder
     {
         $script = '';
         foreach ($data as $key => $value) {
-            $script .= PHP_EOL . "data.{$key} = '{$value}';";
+            $dataValue = $this->isCallbackFunction($value, $key) ? $value : "'{$value}'";
+            $script .= PHP_EOL . "data.{$key} = {$dataValue};";
         }
 
         return $script;
@@ -273,8 +274,16 @@ class Builder
      */
     public function asOptions()
     {
-        $this->setTemplate('datatables::options');
+        return $this->setTemplate('datatables::options');
+    }
 
-        return $this;
+    /**
+     * Wrap dataTable scripts with a function.
+     *
+     * @return $this
+     */
+    public function asFunction()
+    {
+        return $this->setTemplate('datatables::function');
     }
 }

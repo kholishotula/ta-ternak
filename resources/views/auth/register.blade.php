@@ -17,6 +17,18 @@
 <form class="login100-form validate-form" method="POST" action="{{ route('register') }}">
     @csrf
 
+    <div class="wrap-input100 validate-input m-b-26" data-validate="KTP is required">
+        <span class="label-input100">{{ __('No KTP') }}</span>
+        <input class="input100 @error('ktp') is-invalid @enderror" id="ktp" type="text" name="ktp" value="{{ old('ktp') }}" required autocomplete="ktp" autofocus placeholder="masukkan no KTP">
+        <span class="focus-input100"></span>
+
+        @error('ktp')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
+
     <div class="wrap-input100 validate-input m-b-26" data-validate="Name is required">
         <span class="label-input100">{{ __('Nama') }}</span>
         <input class="input100 @error('name') is-invalid @enderror" id="name" type="text" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="masukkan nama">
@@ -69,6 +81,25 @@
         <span class="label-input100">{{ __('Konfirmasi Password') }}</span>
         <input class="input100" id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="konfirmasi password">
         <span class="focus-input100"></span>
+    </div>
+
+    <div class="wrap-input100 validate-input m-b-18" data-validate = "Grup Peternak is required">
+        <span class="label-input100">{{ __('Grup Peternak') }}</span>
+        <select class="input100 form-control js-select-search @error('grup_peternak') is-invalid @enderror" id="grup_peternak" name="grup_peternak" required>
+            <option></option>
+            @forelse($grupPeternak as $grup)
+                <option value="{{ $grup->id }}">{{ $grup->nama_grup }}</option>
+            @empty
+                Tidak ada Grup Peternak
+            @endforelse
+        </select>
+        <span class="focus-input100"></span>
+
+        @error('grup_peternak')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
     </div>
 
     <div class="container-login100-form-btn">

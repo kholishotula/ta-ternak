@@ -75,7 +75,7 @@ class PerkawinanDataTable extends DataTable
                 ->title('Necktag'),
             Column::make('necktag_psg')
                 ->title('Necktag Pasangan'),
-            Column::make('tgl')
+            Column::make('tgl_kawin')
                 ->title('Tanggal'),
             Column::make('created_at')
                 ->title('Created At'),

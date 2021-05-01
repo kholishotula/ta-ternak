@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Peternakan;
+use App\GrupPeternak;
+use App\Ternak;
 use App\User;
 use App\DataTables\PeternakDataTable;
 use App\Http\Controllers\Controller;
@@ -23,12 +24,12 @@ class PeternakController extends Controller
     {
         $title = 'PETERNAK';
         $page = 'Peternak';
-        $peternakan = Peternakan::orderBy('nama_peternakan', 'asc')->get();
+        $grupPeternak = GrupPeternak::orderBy('nama_grup', 'asc')->get();
 
         return $dataTable->render('data.peternak', [
             'title' => $title, 
             'page' => $page,
-            'peternakan' => $peternakan
+            'grupPeternak' => $grupPeternak
         ]);
     }
 
@@ -51,7 +52,7 @@ class PeternakController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'peternakan_id' => 'required',
+            'grup_peternak_id' => 'required',
             'name' => 'required',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users'
@@ -68,7 +69,7 @@ class PeternakController extends Controller
         $form_data = array(
             'name' => $request->name,
             'username' => $request->username,
-            'peternakan_id' => $request->peternakan_id,
+            'grup_peternak_id' => $request->grup_peternak_id,
             'email' => $request->email,
             'password_first' => $password,
             'password' => Hash::make($password),
@@ -118,8 +119,9 @@ class PeternakController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'peternakan_id' => 'required',
-            'name' => 'required'
+            'grup_peternak' => 'required',
+            'verify' => 'required',
+            'ketua_grup' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -129,11 +131,12 @@ class PeternakController extends Controller
         }
 
         $form_data = array(
-            'peternakan_id' => $request->peternakan_id,
-            'name' => $request->name
+            'grup_id' => $request->grup_peternak,
+            'verify' => $request->verify,
+            'ketua_grup' => $request->ketua_grup
         );
 
-        User::whereId($id)->update($form_data);
+        $user = User::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -147,6 +150,13 @@ class PeternakController extends Controller
     public function destroy($id)
     {
         $data = User::findOrFail($id);
-        $data->delete();
+
+        if(Ternak::where('user_id', $id)->exists()){
+            $err = 'Data grup peternak id '. $id .' tidak dapat dihapus.';
+            return response()->json(['error' => $err]);
+        }
+        else{
+            $data->delete();
+        }
     }
 }

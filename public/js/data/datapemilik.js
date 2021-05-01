@@ -88,7 +88,7 @@ $(document).on('click', '.view', function(){
         datatype: "json",
         success: function(data){
             $('#vnama_pemilik').val(data.result.nama_pemilik);
-            $('#vktp').val(data.result.ktp);
+            $('#vktp_pemilik').val(data.result.ktp_pemilik);
             $('#vcreated_at').val(data.result.created_at);
             $('#vupdated_at').val(data.result.updated_at);
 
@@ -135,7 +135,7 @@ $(document).on('click', '.edit', function(){
         datatype: "json",
         success: function(data){
             $('#nama_pemilik').val(data.result.nama_pemilik);
-            $('#ktp').val(data.result.ktp);
+            $('#ktp_pemilik').val(data.result.ktp_pemilik);
             $('#hidden_id').val(id);
             $('#action').val('Edit');
             $('#action_button').val('Ubah');
