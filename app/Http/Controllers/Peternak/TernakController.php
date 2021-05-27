@@ -14,6 +14,7 @@ use App\Penjualan;
 use App\DataTables\TernakDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
@@ -34,8 +35,9 @@ class TernakController extends Controller
         $ras = Ras::all();
         $peternak = User::where('role', '<>', 'admin')->get();
         $datas = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')->get();
+        $id = Auth::id();
 
-        return $dataTable->render('data.ternak', [
+        return $dataTable->with('id', $id)->render('data.ternak', [
             'title' => $title, 
             'page' => $page, 
             'data' => $datas, 

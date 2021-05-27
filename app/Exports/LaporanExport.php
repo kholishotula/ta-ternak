@@ -25,6 +25,7 @@ class LaporanExport implements WithMultipleSheets
 
         $sheets[] = new LaporanSheetLahir($this->start, $this->end);
         $sheets[] = new LaporanSheetMati($this->start, $this->end);
+        $sheets[] = new LaporanSheetJual($this->start, $this->end);
         $sheets[] = new LaporanSheetKawin($this->start, $this->end);
         $sheets[] = new LaporanSheetSakit($this->start, $this->end);
         $sheets[] = new LaporanSheetAda($this->start, $this->end);

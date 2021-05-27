@@ -37,38 +37,61 @@
         				</div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Verifikasi Akun</label>
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-addon align-left">
-                                <input type="checkbox" class="filled-in" name="verify" id="verify">
-                                <label for="verify">Verified</label>
-                            </span>
+                        <label class="control-label">Nama Peternak</label>
+                        <div class="form-line col-md-8">
+                            <input type="text" name="name" id="name" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Jadikan sebagai Ketua Grup</label>
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-addon align-left">
-                                <input type="checkbox" class="filled-in" name="ketua_grup" id="ketua_grup">
-                                <label for="ketua_grup">Ketua Grup</label>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- add edit authorization -->
-                    <!-- <div class="form-group reg-admin">
-                        <label class="control-label">Admin Register</label>
+                        <label class="control-label">Verifikasi Akun</label>
+                        <!-- <div class="input-group input-group-lg">
+                            <div class="col-md-4">
+                                <input type="radio" name="verify" id="verify_yes" value="ya">
+                                <label for="verify">Ya</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="radio" name="verify" id="verify_no" value="tidak">
+                                <label for="verify">Tidak</label>
+                            </div>
+                        </div> -->
                         <div>
-            							<select class="form-control js-select-search" name="register_from_admin" id="register_from_admin">
-                            <option value="true">Ya</option>
-            								<option value="false">Tidak</option>
-            							</select>
-            						</div>
-                    </div> -->
+            				<select class="form-control js-select-search" name="verify" id="verify">
+            					<option></option>
+            				  	<option value="ya">Ya</option>
+                                <option value="tidak">Tidak</option>
+            				</select>
+        				</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Jadikan sebagai Ketua Grup</label>
+                        <!-- <div class="input-group input-group-lg">
+                            <div class="col-md-4">
+                                <input type="radio" name="role" id="role_ketua" value="ketua grup">
+                                <label for="role">Ya</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="radio" name="role" id="role_peternak" value="peternak">
+                                <label for="role">Tidak</label>
+                            </div>
+                        </div> -->
+                        <div>
+            				<select class="form-control js-select-search" name="role" id="role">
+            					<option></option>
+            				  	<option value="ketua grup">Ya</option>
+                                <option value="peternak">Tidak</option>
+            				</select>
+        				</div>
+                    </div>
 
                     <div id="register">
 	                    <div>
 	                    	<h5 align="center">REGISTRASI AKUN PETERNAK</h5>
+	                    </div>
+                        <div class="form-group">
+	                        <label class="control-label">No KTP</label>
+	                        <div class="form-line col-md-8">
+	                            <input type="text" name="ktp_user" id="ktp_user" class="form-control">
+	                        </div>
 	                    </div>
 	                    <div class="form-group">
 	                        <label class="control-label">Username</label>

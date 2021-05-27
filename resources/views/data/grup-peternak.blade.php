@@ -37,34 +37,48 @@
                             <input type="text" name="alamat" id="alamat" class="form-control">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="control-label">Provinsi</label>
                         <div class="form-line col-md-8">
                             <input type="text" name="provinsi" id="provinsi" class="form-control">
                         </div>
-                    </div>
-                    <!-- <div class="form-group">
-                        <label class="control-label">Provinsi</label>
-                        <div class="form-line col-md-8">
-                            <select id="provinsi" class="form-control" name="provinsi"></select>
-                        </div>
                     </div> -->
                     <div class="form-group">
+                        <label class="control-label">Provinsi</label>
+                        <div>
+                            <select id="provinsi" class="form-control js-select-search" name="provinsi">
+                                @foreach ($provinsi as $prov)
+                                    <option value="{{ $prov->kode }}">{{ $prov->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
                         <label class="control-label">Kabupaten/Kota</label>
                         <div class="form-line col-md-8">
                             <input type="text" name="kab_kota" id="kab_kota" class="form-control">
                         </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label class="control-label">Kabupaten/Kota</label>
+                        <div>
+                            <select name="kab_kota" id="kab_kota" class="form-control js-select-search">
+
+                            </select>
+                        </div>
                     </div>
                     <!-- <div class="form-group">
-                        <label class="control-label">Kabupaten/Kota</label>
+                        <label class="control-label">Kecamatan</label>
                         <div class="form-line col-md-8">
-                            <select name="kab_kota" id="kab_kota" class="form-control"></select>
+                            <input type="text" name="kecamatan" id="kecamatan" class="form-control">
                         </div>
                     </div> -->
                     <div class="form-group">
                         <label class="control-label">Kecamatan</label>
-                        <div class="form-line col-md-8">
-                            <input type="text" name="kecamatan" id="kecamatan" class="form-control">
+                        <div>
+                            <select name="kecamatan" id="kecamatan" class="form-control js-select-search">
+
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">

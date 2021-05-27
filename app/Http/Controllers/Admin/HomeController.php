@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Ternak;
 use App\Perkawinan;
+use App\Kematian;
 
 class HomeController extends Controller
 {
@@ -22,9 +23,8 @@ class HomeController extends Controller
                         ->whereNotNull('tgl_kawin')
                         ->selectRaw('count(*)/2 as count')->first();
 
-        $mati = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                        ->whereNotNull('ternaks.kematian_id')
-                        ->where('kematians.tgl_kematian', '>', date("Y-m-d", strtotime('-29 days')))
+        $mati = Kematian::where('tgl_kematian', '>', date("Y-m-d", strtotime('-29 days')))
+                        ->whereNotNull('tgl_kematian')
                         ->selectRaw('count(*)')->first();
 
         return view('home.dashboard')->with('total_ternak', $ternak)
@@ -35,35 +35,54 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $inst = DB::select('SELECT public."search_inst"(?)', [$request->necktag]);
+        $result = [];
+
+        $inst = DB::select('SELECT * FROM public."search_inst"(?)', [$request->necktag]);
+        // $inst[0]->searched = true;
 
     	if($inst != null){
-    		$sp = preg_split("/[(),]/", $inst[0]->search_inst); 
-            //split karena hasil bukan array, tapi string
-            //0: kosong, 1:necktag, 2:jenis_kelamin, 3:ras, 4:tgl_lahir, 5:blood, 6:peternakan, 7:ayah, 8:ibu, 9:kosong
-
-            $parent = DB::select('SELECT public."search_parent"(?,?)', [$sp[7], $sp[8]]);
-            $sibling = DB::select('SELECT public."search_sibling"(?,?,?)', [$sp[1], $sp[7], $sp[8]]);
-            $child = DB::select('SELECT public."search_child"(?)', [$sp[1]]);
-            $gparent = DB::select('SELECT public."search_gparent"(?,?)', [$sp[7], $sp[8]]);
-            $gchild = DB::select('SELECT public."search_gchild"(?)', [$sp[1]]);
+            $spouse = DB::select('SELECT * FROM public."search_spouse"(?)', [$inst[0]->necktag]);
+            $parents = DB::select('SELECT * FROM public."search_parent"(?,?)', [$inst[0]->ayah, $inst[0]->ibu]);
+            $siblings = DB::select('SELECT * FROM public."search_sibling"(?,?,?)', [$inst[0]->necktag, $inst[0]->ayah, $inst[0]->ibu]);
+            $gparents = DB::select('SELECT * FROM public."search_gparent"(?,?)', [$inst[0]->ayah, $inst[0]->ibu]);
+            if($spouse != null){
+                $children = DB::select('SELECT * FROM public."search_child"(?)', [$inst[0]->necktag]);
+                $gchildren = DB::select('SELECT * FROM public."search_gchild"(?)', [$inst[0]->necktag]);
+            }
 	        
-	        $data = [
-	        	'inst' => $inst,
-	        	'parent' => $parent,
-	        	'sibling' => $sibling,
-	        	'child' => $child,
-	        	'gparent' => $gparent,
-	        	'gchild' => $gchild
-	        ];	
+            if($gparents != null){
+                for($i = 0; $i < sizeof($gparents); $i++)
+                    array_push($result, $gparents[$i]);
+            }
+            if($parents != null){
+                for($i = 0; $i < sizeof($parents); $i++)
+                    array_push($result, $parents[$i]);
+            }
+            if($spouse != null){
+                array_push($result, $spouse[0]);
+            }
+            array_push($result, $inst[0]);
+            if($siblings != null){
+                for($i = 0; $i < sizeof($siblings); $i++)
+                    array_push($result, $siblings[$i]);
+            }
+            if($spouse != null){
+                if($children != null){
+                    for($i = 0; $i < sizeof($children); $i++)
+                        array_push($result, $children[$i]);
+                }
+                if($gchildren != null){
+                    for($i = 0; $i < sizeof($gchildren); $i++)
+                        array_push($result, $gchildren[$i]);
+                }
+            }
     	}
         else{
-    		$data = [
+    		$result = [
                 'result' => 'Tidak ada data ternak dengan necktag ' .$request->necktag. '.',
-                'necktag' => $request->necktag
             ];
-    		return response()->json(['errors' => $data]);
+    		return response()->json(['errors' => $result]);
     	}
-        return response()->json(['result' => $data]);
+        return response()->json(['result' => $result]);
     }
 }

@@ -4,6 +4,48 @@ $.ajaxSetup({
 	}
 });
 
+var segments = location.pathname.split('/');
+
+$('select[name="provinsi"]').on('change', function() {
+    var prov_id = $(this).val();
+    if(prov_id) {
+        $.ajax({
+            url: segments[0]+'/wilayah/kabupaten/'+prov_id,
+            type: "GET",
+            dataType: "json",
+            success:function(data) {
+                $('select[name="kab_kota"]').empty();
+
+                $.each(data.kab, function(key, value) {
+                    $('select[name="kab_kota"]').append('<option value="'+ value.kode +'">'+ value.nama +'</option>');
+                });
+            }
+        });
+    }else{
+        $('select[name="kab_kota"]').empty();
+    }
+});
+
+$('select[name="kab_kota"]').on('change', function() {
+    var kab_id = $(this).val();
+    if(kab_id) {
+        $.ajax({
+            url: segments[0]+'/wilayah/kecamatan/'+kab_id,
+            type: "GET",
+            dataType: "json",
+            success:function(data) {
+                $('select[name="kecamatan"]').empty();
+
+                $.each(data.kec, function(key, value) {
+                    $('select[name="kecamatan"]').append('<option value="'+ value.kode +'">'+ value.nama +'</option>');
+                });
+            }
+        });
+    }else{
+        $('select[name="kecamatan"]').empty();
+    }
+});
+
 $('#tambah_data').click(function(){
     $('.modal-title').text('Tambah Data - Grup Peternak');
 	$('#action_button').val('Tambah');
@@ -69,9 +111,9 @@ $(document).on('click', '.edit', function(){
         success: function(data){
             $('#nama_grup').val(data.result.nama_grup);
             $('#alamat').val(data.result.alamat);
-            $('#provinsi').val(data.result.provinsi);
-            $('#kab_kota').val(data.result.kab_kota);
-            $('#kecamatan').val(data.result.kecamatan);
+            $('#provinsi').val(data.result.provinsi).change();
+            $('#kab_kota').val(data.result.kab_kota).change();
+            $('#kecamatan').val(data.result.kecamatan).change();
             $('#keterangan').val(data.result.keterangan);
             $('#hidden_id').val(id);
             $('#action').val('Edit');

@@ -8,6 +8,7 @@ use App\Kematian;
 use App\Ternak;
 use App\DataTables\KematianDataTable;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class KematianController extends Controller
@@ -21,7 +22,7 @@ class KematianController extends Controller
     {
         $title = 'TERNAK MATI';
         $page = 'Ternak Mati';
-        $ternaks = Ternak::all();
+        $ternaks = Ternak::where('user_id', Auth::id());
 
         return $dataTable->render('data.kematian', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks]);
     }
@@ -44,6 +45,10 @@ class KematianController extends Controller
      */
     public function store(Request $request)
     {
+        if(Kematian::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
+
         $rules = array(
             'necktag' => 'required',
             'tgl_kematian' => 'required',
@@ -67,6 +72,10 @@ class KematianController extends Controller
         );
 
         Kematian::create($form_data);
+
+        $ternak = Ternak::where('necktag', $request->necktag)->first();
+        $ternak->kematian_id = $kematian->id;
+        $ternak->save();
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }

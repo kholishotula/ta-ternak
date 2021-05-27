@@ -11,6 +11,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Ternak;
 use App\Perkawinan;
 use App\RiwayatPenyakit;
+use App\Kematian;
+use App\Penjualan;
 
 class LaporanController extends Controller
 {
@@ -41,12 +43,26 @@ class LaporanController extends Controller
     public function mati(Request $request)
     {
         if($request->ajax()){
-            $mati = Ternak::select('ternaks.necktag', 'ternaks.kematian_id', 'kematians.tgl_kematian', 'kematians.waktu_kematian', 'kematians.penyebab', 'kematians.kondisi', 'ternaks.pemilik_id', 'ternaks.peternakan_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.bobot_lahir', 'ternaks.pukul_lahir', 'ternaks.lama_dikandungan', 'ternaks.lama_laktasi', 'ternaks.tgl_lepas_sapih', 'ternaks.blood', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.bobot_tubuh', 'ternaks.panjang_tubuh', 'ternaks.tinggi_tubuh', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
-                        ->join('public.kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+            $mati = Kematian::select('ternaks.necktag', 'ternaks.kematian_id', 'kematians.tgl_kematian', 'kematians.waktu_kematian', 'kematians.penyebab', 'kematians.kondisi', 'ternaks.pemilik_id', 'ternaks.user_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
+                        ->join('public.ternaks', 'kematians.id', '=', 'ternaks.kematian_id')
                         ->whereBetween('kematians.tgl_kematian', [$request->datefrom, $request->dateto])
                         ->get();
 
             return DataTables::of($mati)
+                  ->addIndexColumn()
+                  ->make(true);
+        }
+    }
+
+    public function jual(Request $request)
+    {
+        if($request->ajax()){
+            $jual = Penjualan::select('ternaks.necktag', 'ternaks.penjualan_id', 'penjualans.tgl_terjual', 'penjualans.ket_pembeli', 'ternaks.pemilik_id', 'ternaks.user_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
+                        ->join('public.ternaks', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                        ->whereBetween('penjualans.tgl_terjual', [$request->datefrom, $request->dateto])
+                        ->get();
+
+            return DataTables::of($jual)
                   ->addIndexColumn()
                   ->make(true);
         }
@@ -75,14 +91,14 @@ class LaporanController extends Controller
     public function ada(Request $request)
     {
         if($request->ajax()){
-            $exists_union = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                                ->where('tgl_kematian', '>', $request->dateto)
-                                ->where('tgl_lahir', '<', $request->dateto)
-                                ->selectRaw('ternaks.*');
+            // $exists_union = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+            //                     ->where('tgl_kematian', '>', $request->dateto)
+            //                     ->where('tgl_lahir', '<', $request->dateto)
+            //                     ->selectRaw('ternaks.*');
 
             $exists = Ternak::where('status_ada', true)
                         ->where('tgl_lahir', '<', $request->dateto)
-                        ->union($exists_union)
+                        // ->union($exists_union)
                         ->get();
 
             return DataTables::of($exists)

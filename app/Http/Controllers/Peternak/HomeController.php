@@ -5,26 +5,38 @@ namespace App\Http\Controllers\Peternak;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Ternak;
-use App\Perkawinan;
 
 class HomeController extends Controller
 {
     public function index()
     {
-    	$ternak = Ternak::count();
+    	$ternak = Ternak::where('user_id', Auth::id())
+                        ->count();
 
-        $lahir = Ternak::where('tgl_lahir', '>', date("Y-m-d", strtotime('-29 days')))
+        $lahir = Ternak::where([['tgl_lahir', '>', date("Y-m-d", strtotime('-29 days'))],
+                                ['user_id', '=', Auth::id()]
+                              ])
                         ->whereNotNull('tgl_lahir')
                         ->selectRaw('count(*)')->first();
 
-        $kawin = Perkawinan::where('tgl_kawin', '>', date("Y-m-d", strtotime('-29 days')))
-                        ->whereNotNull('tgl_kawin')
-                        ->selectRaw('count(*)/2 as count')->first();
+        // $kawin = Perkawinan::where('tgl_kawin', '>', date("Y-m-d", strtotime('-29 days')))
+        //                 ->whereNotNull('tgl_kawin')
+        //                 ->selectRaw('count(*)/2 as count')->first();
+
+        $kawin = Ternak::join('perkawinans', 'perkawinans.necktag', '=', 'ternaks.necktag')
+                        ->whereNotNull('perkawinans.tgl_kawin')
+                        ->where([['perkawinans.tgl_kawin', '>', date("Y-m-d", strtotime('-29 days'))],
+                                 ['ternaks.user_id', '=', Auth::id()]
+                                ])
+                        ->selectRaw('count(*)')->first();
 
         $mati = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
                         ->whereNotNull('ternaks.kematian_id')
-                        ->where('kematians.tgl_kematian', '>', date("Y-m-d", strtotime('-29 days')))
+                        ->where([['kematians.tgl_kematian', '>', date("Y-m-d", strtotime('-29 days'))],
+                                 ['ternaks.user_id', '=', Auth::id()]
+                                ])
                         ->selectRaw('count(*)')->first();
 
         return view('home.dashboard')->with('total_ternak', $ternak)

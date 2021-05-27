@@ -94,6 +94,30 @@
         </div>
     </div>
 </div>
+<div>
+    <div class="card">
+        <div class="header">
+            <h2>Berdasarkan PENJUALAN</h2>
+            <ul class="header-dropdown m-r--5">
+                <li class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <i class="material-icons">more_vert</i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        @foreach($years as $year)
+                            <li><a href="javascript:void(0);" id="g-jual-{{ $year }}" class="g-jual">{{ $year }}</a></li>
+                        @endforeach
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="body">
+            <div style="margin: 0 auto;" id="g-jual">
+                {{ $jual->container() }}
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('script')
@@ -103,6 +127,7 @@
 {{ $umur->script() }}
 {{ $lahir->script() }}
 {{ $mati->script() }}
+{{ $jual->script() }}
 
 <script type="text/javascript">
 var segments = location.pathname.split('/');
@@ -171,6 +196,37 @@ $(document).on('click', '.g-mati', function(){
             mati_id.data.datasets[2].data = data.data;
 
             mati_id.update();
+        },
+        error: function (jqXHR, textStatus, errorThrown) { 
+            console.log(jqXHR); 
+        }
+    });
+});  
+
+// jual
+$(document).on('click', '.g-jual', function(){
+    var id = $(this).attr('id');
+    id = id.split('-');
+    // 0:g, 1:lahir, 2:tahun
+
+    $.ajax({
+        url: url_seg+"/grafik/jual",
+        method: "GET",
+        data: {
+            tahun: id[2],
+        },
+        datatype: "json",
+        success: function(data){
+            var jual_id = <?php echo $jual->id; ?>;
+
+            // console.log(lahir_id);
+
+            jual_id.options.title.text = "Grafik Ternak - Penjualan ("+ id[2] +")";
+            jual_id.data.datasets[0].data = data.jantan;
+            jual_id.data.datasets[1].data = data.betina;
+            jual_id.data.datasets[2].data = data.data;
+
+            jual_id.update();
         },
         error: function (jqXHR, textStatus, errorThrown) { 
             console.log(jqXHR); 

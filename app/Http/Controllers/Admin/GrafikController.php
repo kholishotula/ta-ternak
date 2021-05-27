@@ -8,6 +8,7 @@ use App\Charts\RasChart;
 use App\Charts\UmurChart;
 use App\Charts\KelahiranChart;
 use App\Charts\KematianChart;
+use App\Charts\PenjualanChart;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,8 @@ class GrafikController extends Controller
 	    $umur = $this->grafikUmur();
 	    $lahir = $this->grafikLahir($request);
 	    $mati = $this->grafikMati($request);
+	    $jual = $this->grafikJual($request);
+        
         $yearNow = date('Y');
         $year = array();
 
@@ -31,6 +34,7 @@ class GrafikController extends Controller
             'umur' => $umur,
             'lahir'=> $lahir,
             'mati' => $mati,
+            'jual' => $jual,
             'years' => $year,
         ]);
     }
@@ -452,6 +456,105 @@ class GrafikController extends Controller
 
         $chart = new KematianChart;
         $chart->title('Grafik Ternak - Kematian ('. $yearNow .')');
+        $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
+
+        if($count_jantan != null){
+            $chart->dataset('Jantan','bar', $jantan)->options([
+                'responsive' => true,
+                'fill' => true,
+                'backgroundColor' => '#36A7C9',
+                'borderColor' => '#1A89B4',
+                 'tooltip' => [
+                    'show' => true
+                ],
+            ]);
+        }
+
+        if($count_betina != null){
+            $chart->dataset('Betina','bar', $betina)->options([
+                'responsive' => true,
+                'fill' => true,
+                'backgroundColor' => '#F8B195',
+                'borderColor' => '#f67280',
+                 'tooltip' => [
+                    'show' => true
+                ],
+            ]);
+        }
+
+        if($count != null){
+    	    $chart->dataset('Jumlah Ternak', 'line', $data)->options([
+                'responsive' => true,
+    			// 'fill' => 'true',
+    			// 'backgroundColor' => '#FFE0B2',
+                'borderColor' => '#FF9800',
+                 'tooltip' => [
+                    'show' => true
+                ],
+    		]);
+        }
+
+        if ($request->ajax()) {
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+        }
+
+		return $chart;
+    }
+
+    public function grafikJual(Request $request)
+    {
+        $yearNow = date('Y');
+
+        if ($request->ajax()) {
+           $yearNow = $request->tahun;
+        }
+
+        $count = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                        ->whereNotNull('penjualan_id')
+                        ->whereYear('tgl_terjual', '=', $yearNow)
+                        ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                        ->groupBy('jual')
+                        ->orderBy('jual')
+                        ->get();
+
+        $count_jantan = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                        ->whereNotNull('penjualan_id')
+                        ->whereYear('tgl_terjual', '=', $yearNow)
+                        ->where('ternaks.jenis_kelamin', '=', 'Jantan')
+                        ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                        ->groupBy('jual')
+                        ->orderBy('jual')
+                        ->get();
+
+        $count_betina = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                        ->whereNotNull('penjualan_id')
+                        ->whereYear('tgl_terjual', '=', $yearNow)
+                        ->where('ternaks.jenis_kelamin', '=', 'Betina')
+                        ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                        ->groupBy('jual')
+                        ->orderBy('jual')
+                        ->get();
+
+        for($i=0; $i<12; $i++){
+            $data[$i] = 0;
+            $jantan[$i] = 0;
+            $betina[$i] = 0;
+        }
+
+        foreach($count as $jual){
+        	$data[$jual->jual - 1] = $jual->jumlah;
+        }
+
+        foreach($count_jantan as $lahir){
+            $jantan[$lahir->jual - 1] = $lahir->jumlah;
+        }
+
+        foreach($count_betina as $lahir){
+            $betina[$lahir->jual - 1] = $lahir->jumlah;
+        }
+
+        $chart = new PenjualanChart;
+        $chart->title('Grafik Ternak - Penjualan ('. $yearNow .')');
         $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
 
         if($count_jantan != null){

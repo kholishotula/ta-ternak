@@ -13,7 +13,6 @@ $('#tambah_data').click(function(){
     $('#form_result').html('');
     $('#tambah_data_form')[0].reset();
     $('#register').show();
-    // $('.reg-admin').hide();
 
     $('#grup_peternak').val('').change();
     $('#formModal').modal('show');
@@ -69,25 +68,30 @@ $(document).on('click', '.edit', function(){
         url: "/admin/peternak/"+id+"/edit",
         datatype: "json",
         success: function(data){
-            $('#grup_peternak').val(data.result.grup_peternak).change();
+            $('#grup_peternak').val(data.result.grup_id).change();
             $('#name').val(data.result.name);
-            if(data.result.verified_at){
-                $('#verify').prop('checked', true);
+            // if(data.result.verified_at != null){
+            //     // $('input[name="verify"][value="ya"]').prop('checked', true);
+            //     $('input[name="verify"]').val(['ya']).change();
+            // }
+            // else{
+            //     // $('input[name="verify"][value="tidak"]').prop('checked', true);
+            //     $('input[name="verify"]').val(['tidak']).change();
+            // }
+            if(data.result.verified_at != null){
+                $('#verify').val(['ya']).change();
             }
             else{
-                $('#verify').prop('checked', false);
+                $('#verify').val(['tidak']).change();
             }
-            if(data.result.role == 'peternak'){
-                $('#ketua_grup').prop('checked', false);
-            }
-            else{
-                $('#ketua_grup').prop('checked', true);
-            }
-            // $('.reg-admin').show();
-            // $('#register_from_admin').val(data.result.register_from_admin).change();
-
-            // $('#username').val(data.result.username);
-            // $('#password_first').val(data.result.password_first);
+            // if(data.result.role == 'peternak'){
+            //     $('input[name="role"][value="peternak"]').prop('checked', true).change();
+            // }
+            // else{
+            //     $('input[name="role"][value="ketua_grup"]').prop('checked', true).change();
+            // }
+            $('#role').val(data.result.role).change();
+            
             $('#hidden_id').val(id);
             $('#action').val('Edit');
             $('#action_button').val('Ubah');

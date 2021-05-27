@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '7f36f6137da0809a30d9dde9e72013ae26b93158',
+    'reference' => '58b4719bfde175baa41495c1cf5e77e0d43ccb9c',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -452,6 +452,15 @@ private static $installed = array (
         0 => 'v6.20.26',
       ),
     ),
+    'intervention/image' => 
+    array (
+      'pretty_version' => '2.5.1',
+      'version' => '2.5.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'abbf18d5ab8367f96b3205ca3c89fb2fa598c69e',
+    ),
     'jakub-onderka/php-console-color' => 
     array (
       'replaced' => 
@@ -525,7 +534,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '7f36f6137da0809a30d9dde9e72013ae26b93158',
+      'reference' => '58b4719bfde175baa41495c1cf5e77e0d43ccb9c',
     ),
     'laravel/passport' => 
     array (

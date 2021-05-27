@@ -188,6 +188,8 @@ return [
         Milon\Barcode\BarcodeServiceProvider::class,
 
         Laravel\Passport\PassportServiceProvider::class,
+
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -249,6 +251,7 @@ return [
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
 
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

@@ -21,6 +21,9 @@
 	Route::get('/home', 'HomeController@index')->middleware('auth')->name('home');
 	// Route::get('/home', 'HomeController@index')->middleware('auth', 'verified')->name('home');
 
+	Route::get('wilayah/kabupaten/{prov_id}', 'WilayahController@getKabupaten');
+	Route::get('wilayah/kecamatan/{kab_id}', 'WilayahController@getKecamatan');
+
 	//--------------------- admin --------------------------------------
 	// Route::prefix('admin')->middleware('can:isAdmin', 'auth', 'verified')->group(function(){
 	Route::prefix('admin')->middleware('can:isAdmin', 'auth')->group(function(){
@@ -52,6 +55,8 @@
 			Route::resource('grup-peternak', 'GrupPeternakController')->except(['create']);
 			Route::resource('perkawinan', 'PerkawinanController')->except(['create', 'show']);
 			Route::get('perkawinan/pasangan/{id}', 'PerkawinanController@getPasangan');
+			Route::resource('penjualan', 'PenjualanController')->except(['create', 'show']);
+			Route::resource('perkembangan', 'PerkembanganController')->except(['create']);
 
 			// data peternak
 			Route::resource('peternak', 'PeternakController')->except(['create']);
@@ -68,11 +73,13 @@
 			Route::get('grafik', 'GrafikController@index')->name('grafik');
 			Route::get('grafik/lahir', 'GrafikController@grafikLahir')->name('grafik.lahir');
 			Route::get('grafik/mati', 'GrafikController@grafikMati')->name('grafik.mati');
+			Route::get('grafik/jual', 'GrafikController@grafikJual')->name('grafik.jual');
 
 			//laporan
 			Route::get('laporan', 'LaporanController@index')->name('laporan');
 			Route::post('laporan/lahir', 'LaporanController@lahir')->middleware('cors')->name('laporan.lahir');
 			Route::post('laporan/mati', 'LaporanController@mati')->middleware('cors')->name('laporan.mati');
+			Route::post('laporan/jual', 'LaporanController@jual')->middleware('cors')->name('laporan.jual');
 			Route::post('laporan/kawin', 'LaporanController@kawin')->middleware('cors')->name('laporan.kawin');
 			Route::post('laporan/sakit', 'LaporanController@sakit')->middleware('cors')->name('laporan.sakit');
 			Route::post('laporan/ada', 'LaporanController@ada')->middleware('cors')->name('laporan.ada');

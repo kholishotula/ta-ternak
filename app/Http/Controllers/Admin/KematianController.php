@@ -74,6 +74,7 @@ class KematianController extends Controller
 
         $ternak = Ternak::where('necktag', $request->necktag)->first();
         $ternak->kematian_id = $kematian->id;
+        $ternak->status_ada = false;
         $ternak->save();
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
@@ -148,12 +149,11 @@ class KematianController extends Controller
     {
         $data = Kematian::findOrFail($id);
 
-        if(Ternak::where('kematian_id', $id)->exists()){
-            $err = 'Data kematian id '. $id .' tidak dapat dihapus.';
-            return response()->json(['error' => $err]);
+        if($ternak = Ternak::where('kematian_id', $id)->first()){
+            $ternak->kematian_id = null;
+            $ternak->status_ada = true;
+            $ternak->save();
         }
-        else{
-            $data->delete();
-        }
+        $data->delete();
     }
 }

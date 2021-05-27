@@ -6,6 +6,7 @@ use App\GrupPeternak;
 use App\DataTables\GrupPeternakDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 use Validator;
 
@@ -20,8 +21,9 @@ class GrupPeternakController extends Controller
     {
         $title = 'GRUP PETERNAK';
         $page = 'Grup Peternak';
+        $provinsi = DB::table('wilayahs')->whereRaw('LENGTH(kode) = 2')->orderBy('nama')->get();
 
-        return $dataTable->render('data.grup-peternak', ['title' => $title, 'page' => $page]);
+        return $dataTable->render('data.grup-peternak', ['title' => $title, 'page' => $page, 'provinsi' => $provinsi]);
     }
 
     /**
@@ -56,12 +58,16 @@ class GrupPeternakController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
+        $provinsi = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->provinsi)->get();
+        $kab_kota = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kab_kota)->get();
+        $kecamatan = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kecamatan)->get();
+
         $form_data = array(
             'nama_grup' => $request->nama_grup,
             'alamat' => $request->alamat,
-            'provinsi' => $request->provinsi,
-            'kab_kota' => $request->kab_kota,
-            'kecamatan' => $request->kecamatan,
+            'provinsi' => preg_split('/["]/', $provinsi)[3],
+            'kab_kota' => preg_split('/["]/', $kab_kota)[3],
+            'kecamatan' => preg_split('/["]/', $kecamatan)[3],
             'keterangan' => $request->keterangan,
         );
 
@@ -94,7 +100,8 @@ class GrupPeternakController extends Controller
     {
         if(request()->ajax()){
             $data = GrupPeternak::findOrFail($id);
-            return response()->json(['result' => $data]);
+            $provinsi = DB::table('wilayahs')->whereRaw('LENGTH(kode) = 2')->orderBy('nama')->get();
+            return response()->json(['result' => $data, 'provinsi' => $provinsi]);
         }
     }
 
@@ -121,12 +128,16 @@ class GrupPeternakController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
+        $provinsi = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->provinsi)->get();
+        $kab_kota = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kab_kota)->get();
+        $kecamatan = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kecamatan)->get();
+
         $form_data = array(
             'nama_grup' => $request->nama_grup,
             'alamat' => $request->alamat,
-            'provinsi' => $request->provinsi,
-            'kab_kota' => $request->kab_kota,
-            'kecamatan' => $request->kecamatan,
+            'provinsi' => preg_split('/["]/', $provinsi)[3],
+            'kab_kota' => preg_split('/["]/', $kab_kota)[3],
+            'kecamatan' => preg_split('/["]/', $kecamatan)[3],
             'keterangan' => $request->keterangan,
         );
 

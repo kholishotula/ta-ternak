@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\GrupPeternak;
 use App\Ternak;
 use App\User;
+use Carbon\Carbon;
 use App\DataTables\PeternakDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -52,8 +53,11 @@ class PeternakController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'grup_peternak_id' => 'required',
+            'grup_peternak' => 'required',
             'name' => 'required',
+            'verify' => 'required',
+            'role' => 'required',
+            'ktp_user' => 'required|max:16',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users'
         );
@@ -68,13 +72,18 @@ class PeternakController extends Controller
 
         $form_data = array(
             'name' => $request->name,
+            'ktp_user' => $request->ktp_user,
             'username' => $request->username,
-            'grup_peternak_id' => $request->grup_peternak_id,
+            'grup_id' => $request->grup_peternak,
             'email' => $request->email,
             'password_first' => $password,
             'password' => Hash::make($password),
-            'register_from_admin' => true,
+            'role' => $request->role,
         );
+
+        if($request->verify == 'ya'){
+            $form_data['verified_at'] = Carbon::now();
+        }
 
         User::create($form_data);
 
@@ -120,8 +129,9 @@ class PeternakController extends Controller
     {
         $rules = array(
             'grup_peternak' => 'required',
+            'name' => 'required',
             'verify' => 'required',
-            'ketua_grup' => 'required'
+            'role' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -132,9 +142,12 @@ class PeternakController extends Controller
 
         $form_data = array(
             'grup_id' => $request->grup_peternak,
-            'verify' => $request->verify,
-            'ketua_grup' => $request->ketua_grup
+            'name' => $request->name,
+            'role' => $request->role,
         );
+        if($request->verify == 'ya'){
+           $form_data['verified_at'] = Carbon::now();
+        }
 
         $user = User::whereId($id)->update($form_data);
 

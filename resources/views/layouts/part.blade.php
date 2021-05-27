@@ -123,7 +123,7 @@
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
-                    <img src="{{ asset('adminbsb/images/user.png') }}" width="48" height="48" alt="User" />
+                    <img src="{{ asset('adminbsb/images/user.png') }}" width="36" height="36" alt="User" />
                 </div>
                 <div class="info-container">
                     <div class="email">Selamat datang, {{ Auth::user()->role }}</div>
@@ -163,7 +163,9 @@
                             <li><a href="{{ route('admin.grup-peternak.index') }}">Grup Peternak</a></li>
                             <li><a href="{{ route('admin.kematian.index') }}">Kematian</a></li>
                             <li><a href="{{ route('admin.pemilik.index') }}">Pemilik</a></li>
+                            <li><a href="{{ route('admin.penjualan.index') }}">Penjualan</a></li>
                             <li><a href="{{ route('admin.perkawinan.index') }}">Perkawinan</a></li>
+                            <li><a href="{{ route('admin.perkembangan.index') }}">Perkembangan</a></li>
                             <li><a href="{{ route('admin.ras.index') }}">Ras</a></li>
                             <li><a href="{{ route('admin.riwayat.index') }}">Riwayat Penyakit</a></li>
                             <li><a href="{{ route('admin.ternak.index') }}">Ternak</a></li>

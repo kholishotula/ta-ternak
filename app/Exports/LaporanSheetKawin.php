@@ -20,12 +20,13 @@ class LaporanSheetKawin implements FromQuery, WithHeadings, WithTitle
 
     public function query()
     {
-    	return Perkawinan::query()->whereBetween('tgl', [$this->start, $this->end]);
+    	return Perkawinan::query()->select("necktag", "necktag_psg", "tgl_kawin", "created_at", "updated_at")
+                        ->whereBetween('tgl_kawin', [$this->start, $this->end]);
     }
 
     public function headings(): array
     {
-        return ["id", "necktag", "necktag_psg", "tgl", "created_at", "updated_at"];
+        return ["necktag", "necktag_psg", "tgl_kawin", "created_at", "updated_at"];
     }
 
     public function title(): string

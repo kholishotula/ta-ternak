@@ -72,14 +72,20 @@ class PeternakDataTable extends DataTable
         return [
             Column::make('id')
                 ->title('ID'),
-            Column::make('name')
-                ->title('Nama'),
             Column::make('grup_id')
                 ->title('ID Grup Peternak'),
+            Column::make('ktp_user')
+                ->title('No KTP'),
+            Column::make('name')
+                ->title('Nama'),
             Column::make('username')
                 ->title('Username'),
             Column::make('email')
                 ->title('Email'),
+            Column::make('password_first')
+                ->title('Password awal'),
+            Column::make('role')
+                ->title('Peran'),
             Column::make('verified_at')
                 ->title('Verified At'),
             Column::make('created_at')

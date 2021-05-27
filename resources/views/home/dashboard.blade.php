@@ -4,6 +4,14 @@
 <link href="{{ asset('/css/search.css') }}" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
 <link href="{{ asset('/adminbsb/plugins/waitme/waitMe.css') }}" rel="stylesheet" />
+<style>
+    .tooltipBox {
+    background-color: #666666;
+    color: white;
+    border-radius: 4px;
+    padding: 4px;
+}
+</style>
 @endpush
 
 @section('title')
@@ -88,6 +96,11 @@
 <!-- /search -->
 
 <!-- result -->
+<div id="chartDiv" style="max-width: 740px;height: 400px;margin: 0px auto"></div>
+<div id="text-center not-exist"></div>
+<br>
+<!-- old version -->
+<!--
 <div id="search_result" style="display: none;">
     <div class="block-header">
         <h2>
@@ -106,20 +119,7 @@
                             <a href="javascript:void(0);" id="res-refresh">
                                 <i class="material-icons">loop</i>
                             </a>
-                            <!-- <a href="javascript:void(0);" data-toggle="cardloading" data-loading-effect="pulse" data-loading-color="lightgreen">
-                                <i class="material-icons">loop</i>
-                            </a> -->
                         </li>
-                        <!-- <li class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="javascript:void(0);">Action</a></li>
-                                <li><a href="javascript:void(0);">Another action</a></li>
-                                <li><a href="javascript:void(0);">Something else here</a></li>
-                            </ul>
-                        </li> -->
                     </ul>
                 </div>
                 <div class="body">
@@ -127,7 +127,7 @@
                     <div id="not-exist"></div>
 
                     <div id="exist">
-                        <!-- inst -->
+                        // inst
                         <div align="center">
                             <table class="table table-bordered" style="width: 60%;">
                                 <tr align="center">
@@ -155,7 +155,7 @@
 
                         <br>
 
-                        <!-- parents -->
+                        // parents
                         <div>
                             <p align="center" style="font-weight: bold; font-size: 20px;">Orang Tua</p>
                             <span id="span-parent" align="center"></span>
@@ -193,28 +193,28 @@
                             </table>
                         </div>
                         <br>
-                        <!-- siblings -->
+                        // siblings
                         <div>
                             <p align="center" style="font-weight: bold; font-size: 20px;">Saudara</p>
                             <span id="span-sibling" align="center"></span>
                             <table class="table" id="t-sibling"></table>
                         </div>
                         <br>
-                        <!-- children -->
+                        // children
                         <div>
                             <p align="center" style="font-weight: bold; font-size: 20px;">Anak</p>
                             <span id="span-child" align="center"></span>
                             <table class="table" id="t-child"></table>
                         </div>
                         <br>
-                        <!-- grandparents -->
+                        // grandparents
                         <div>
                             <p align="center" style="font-weight: bold; font-size: 20px;">Kakek - Nenek</p>
                             <span id="span-gp" align="center"></span>
                             <table class="table" id="t-gp"></table>
                         </div>
                         <br>
-                        <!-- grandchildren -->
+                        // grandchildren
                         <div>
                             <p align="center" style="font-weight: bold; font-size: 20px;">Cucu</p>
                             <span id="span-gc" align="center"></span>
@@ -227,10 +227,15 @@
         </div>
     </div>
 </div>
+-->
+<!-- /old version -->
 <!-- /result -->
 @endsection
 
 @push('script')
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+<script type="text/javascript" src="https://code.jscharting.com/latest/modules/types.js"></script>
+<script type="text/javascript" src="https://code.jscharting.com/latest/modules/toolbar.js"></script>
 <script src="{{ asset('/js/dashboard.js') }}"></script>
 <script src="{{ asset('/adminbsb/plugins/waitme/waitMe.js') }}"></script>
 <script src="{{ asset('/adminbsb/js/pages/cards/colored.js') }}"></script>

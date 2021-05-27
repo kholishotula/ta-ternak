@@ -78,6 +78,7 @@
                 <ul class="nav nav-tabs tab-nav-right" role="tablist">
                     <li role="presentation" class="active"><a href="#lahir" data-toggle="tab">LAHIR</a></li>
                     <li role="presentation"><a href="#mati" data-toggle="tab">MATI</a></li>
+                    <li role="presentation"><a href="#jual" data-toggle="tab">JUAL</a></li>
                     <li role="presentation"><a href="#kawin" data-toggle="tab">KAWIN</a></li>
                     <li role="presentation"><a href="#sakit" data-toggle="tab">SAKIT</a></li>
                     <li role="presentation"><a href="#ada" data-toggle="tab">TOTAL ADA</a></li>
@@ -94,9 +95,10 @@
                                         <th>No.</th>
                                         <th>Necktag</th>
                                         <th>ID Pemilik</th>
-                                        <th>ID Peternakan</th>
+                                        <th>ID Peternak</th>
                                         <th>ID Ras</th>
                                         <th>ID Kematian</th>
+                                        <th>ID Penjualan</th>
                                         <th>Jenis Kelamin</th>
                                         <th>Tanggal Lahir</th>
                                         <th>Bobot Lahir</th>
@@ -104,12 +106,8 @@
                                         <th>Lama di Kandungan</th>
                                         <th>Lama Laktasi</th>
                                         <th>Tanggal Lepas Sapih</th>
-                                        <th>Blood</th>
                                         <th>Ayah</th>
                                         <th>Ibu</th>
-                                        <th>Bobot Tubuh</th>
-                                        <th>Panjang Tubuh</th>
-                                        <th>Tinggi Tubuh</th>
                                         <th>Cacat Fisik</th>
                                         <th>Ciri Lain</th>
                                         <th>Status Ada</th>
@@ -135,21 +133,41 @@
                                         <th>Penyebab</th>
                                         <th>Kondisi</th>
                                         <th>ID Pemilik</th>
-                                        <th>ID Peternakan</th>
+                                        <th>ID Peternak</th>
                                         <th>ID Ras</th>
                                         <th>Jenis Kelamin</th>
                                         <th>Tanggal Lahir</th>
-                                        <th>Bobot Lahir</th>
-                                        <th>Pukul Lahir</th>
-                                        <th>Lama di Kandungan</th>
-                                        <th>Lama Laktasi</th>
-                                        <th>Tanggal Lepas Sapih</th>
-                                        <th>Blood</th>
                                         <th>Ayah</th>
                                         <th>Ibu</th>
-                                        <th>Bobot Tubuh</th>
-                                        <th>Panjang Tubuh</th>
-                                        <th>Tinggi Tubuh</th>
+                                        <th>Cacat Fisik</th>
+                                        <th>Ciri Lain</th>
+                                        <th>Status Ada</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="jual">
+                        <h4 align="center"><b>Data Ternak Jual</b></h4>
+                        <div class="table-responsive">
+                            <table id="jual-table" class="table table-bordered table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Necktag</th>
+                                        <th>ID Penjualan</th>
+                                        <th>Tanggal Terjual</th>
+                                        <th>Ket Pembeli</th>
+                                        <th>ID Pemilik</th>
+                                        <th>ID Peternak</th>
+                                        <th>ID Ras</th>
+                                        <th>Jenis Kelamin</th>
+                                        <th>Tanggal Lahir</th>
+                                        <th>Ayah</th>
+                                        <th>Ibu</th>
                                         <th>Cacat Fisik</th>
                                         <th>Ciri Lain</th>
                                         <th>Status Ada</th>
@@ -170,7 +188,7 @@
                                         <th>ID</th>
                                         <th>Necktag</th>
                                         <th>Necktag Pasangan</th>
-                                        <th>Tanggal</th>
+                                        <th>Tanggal Kawin</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
                                     </tr>
@@ -186,9 +204,9 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Penyakit</th>
                                         <th>Necktag</th>
                                         <th>Tanggal Sakit</th>
+                                        <th>Nama Penyakit</th>
                                         <th>Obat</th>
                                         <th>Lama Sakit</th>
                                         <th>Keterangan</th>
@@ -209,9 +227,10 @@
                                         <th>No.</th>
                                         <th>Necktag</th>
                                         <th>ID Pemilik</th>
-                                        <th>ID Peternakan</th>
+                                        <th>ID Peternak</th>
                                         <th>ID Ras</th>
                                         <th>ID Kematian</th>
+                                        <th>ID Penjualan</th>
                                         <th>Jenis Kelamin</th>
                                         <th>Tanggal Lahir</th>
                                         <th>Bobot Lahir</th>
@@ -219,12 +238,8 @@
                                         <th>Lama di Kandungan</th>
                                         <th>Lama Laktasi</th>
                                         <th>Tanggal Lepas Sapih</th>
-                                        <th>Blood</th>
                                         <th>Ayah</th>
                                         <th>Ibu</th>
-                                        <th>Bobot Tubuh</th>
-                                        <th>Panjang Tubuh</th>
-                                        <th>Tinggi Tubuh</th>
                                         <th>Cacat Fisik</th>
                                         <th>Ciri Lain</th>
                                         <th>Status Ada</th>
