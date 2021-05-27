@@ -151,7 +151,7 @@
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="jual">
-                        <h4 align="center"><b>Data Ternak Jual</b></h4>
+                        <h4 align="center"><b>Data Ternak Terjual</b></h4>
                         <div class="table-responsive">
                             <table id="jual-table" class="table table-bordered table-condensed table-striped">
                                 <thead>

@@ -364,7 +364,7 @@
 				</div>
 
 				<!-- riwayat -->
-				<!-- <div>
+				<div>
 					<label class="control-label">Riwayat Penyakit</label>
 					<div>
 						<span id="span-rp"></span>
@@ -373,7 +373,7 @@
 						</table>
 					</div>
 				</div>
-				<br> -->
+				<br>
 			</div>
 		</div>
 	</div>

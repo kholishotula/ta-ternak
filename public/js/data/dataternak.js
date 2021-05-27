@@ -124,7 +124,7 @@ $('#tambah_data_form').on('submit', function(event){
 $(document).on('click', '.view', function(){
 	var id = $(this).attr('id');
     var txt = '', txt2 = '';
-    var rp = [];
+    // var rp = [];
 
     txt = '<tr>';
     txt += '<th>Nama Penyakit</th>';
@@ -151,8 +151,8 @@ $(document).on('click', '.view', function(){
 			$('#vlama_laktasi').val(data.result.lama_laktasi);
 			$('#vtgl_lepas_sapih').val(data.result.tgl_lepas_sapih);
 			$('#vblood').val(data.result.blood);
-			$('#vnecktag_ayah').val(data.result.necktag_ayah);
-			$('#vnecktag_ibu').val(data.result.necktag_ibu);
+			$('#vnecktag_ayah').val(data.result.necktag_ayah).change();
+			$('#vnecktag_ibu').val(data.result.necktag_ibu).change();
 			$('#vbobot_tubuh').val(data.result.bobot_tubuh);
 			$('#vpanjang_tubuh').val(data.result.panjang_tubuh);
 			$('#vtinggi_tubuh').val(data.result.tinggi_tubuh);
@@ -162,31 +162,27 @@ $(document).on('click', '.view', function(){
 			$('#vcreated_at').val(data.result.created_at);
 			$('#vupdated_at').val(data.result.updated_at);
 
-            // if(data.riwayat != ''){
-            //     $('#riwayat-penyakit').empty().append(txt);
-            //     $.each(data.riwayat, function(i, val) {
-            //         var rp1 = data.riwayat[i].rp_ternak.split('(');
-            //         var rp2 = rp1[1].split(')');
-            //         rp[i] = rp2[0].split(',');
-            //         //1: nama penyakit, 2: date, 3: obat, 4: lama sakit, 5: ket
-
-            //         txt2 = '<tr>'; 
-            //         for(var j = 1; j <= 5; j++){ 
-            //             if(rp[i][j-1] == ""){
-            //                 rp[i][j-1] = '-';
-            //             } 
-            //             txt2 += '<td>' + rp[i][j-1] + '</td>';
-            //         }
-            //         txt2 += '</tr>';
-            //         $('#riwayat-penyakit').append(txt2);
-            //         $('#riwayat-penyakit').show();
-            //     });
-            //     $('#span-rp').empty();
-            // }
-            // else{
-            //     $('#span-rp').html('<p align="center">Tidak ada data riwayat penyakit</p>');
-            //     $('#riwayat-penyakit').hide();
-            // }
+            if(data.riwayat != null){
+                $('#riwayat-penyakit').empty().append(txt);
+                $.each(data.riwayat, function(i, val) {
+                    //1: nama penyakit, 2: date, 3: obat, 4: lama sakit, 5: ket
+                    
+                    txt2 = '<tr>'; 
+                    txt2 += '<td>' + data.riwayat[i].nama_penyakit + '</td>';
+                    txt2 += '<td>' + data.riwayat[i].tgl_sakit + '</td>';
+                    txt2 += '<td>' + data.riwayat[i].obat + '</td>';
+                    txt2 += '<td>' + data.riwayat[i].lama_sakit + '</td>';
+                    txt2 += '<td>' + data.riwayat[i].keterangan + '</td>';
+                    txt2 += '</tr>';
+                    $('#riwayat-penyakit').append(txt2);
+                    $('#riwayat-penyakit').show();
+                });
+                $('#span-rp').empty();
+            }
+            else{
+                $('#span-rp').html('<p align="center">Tidak ada data riwayat penyakit</p>');
+                $('#riwayat-penyakit').hide();
+            }
 
 			$('.modal-title').text('Data Ternak - '+id);
 	    	$('#viewModal').modal('show');

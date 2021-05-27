@@ -72,11 +72,6 @@ class KematianController extends Controller
 
         $kematian = Kematian::create($form_data);
 
-        $ternak = Ternak::where('necktag', $request->necktag)->first();
-        $ternak->kematian_id = $kematian->id;
-        $ternak->status_ada = false;
-        $ternak->save();
-
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
 
@@ -114,7 +109,11 @@ class KematianController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Kematian::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
         $rules = array(
+            'necktag' => 'required',
             'tgl_kematian' => 'required',
             'waktu_kematian' => 'required',
             'penyebab' => 'required',
@@ -128,6 +127,7 @@ class KematianController extends Controller
         }
 
         $form_data = array(
+            'necktag' => $request->necktag,
             'tgl_kematian' => $request->tgl_kematian,
             'waktu_kematian' => $request->waktu_kematian,
             'penyebab' => $request->penyebab,
@@ -148,12 +148,6 @@ class KematianController extends Controller
     public function destroy($id)
     {
         $data = Kematian::findOrFail($id);
-
-        if($ternak = Ternak::where('kematian_id', $id)->first()){
-            $ternak->kematian_id = null;
-            $ternak->status_ada = true;
-            $ternak->save();
-        }
         $data->delete();
     }
 }

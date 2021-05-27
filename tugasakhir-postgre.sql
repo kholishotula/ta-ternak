@@ -123,3 +123,283 @@ BEGIN
 	and pml.id = tr.pemilik_id and ptk.id = tr.user_id;
 END; $$
 LANGUAGE PLPGSQL;
+
+-- trigger - ternak (if add/edit ternak then add to perkawinan)
+CREATE OR REPLACE FUNCTION f_update_from_ternak()
+  	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+	
+    IF NOT EXISTS (
+		SELECT 1 FROM public.perkawinans 
+		WHERE (necktag = NEW.necktag_ayah or necktag_psg = NEW.necktag_ayah)
+		AND (necktag = NEW.necktag_ibu or necktag_psg = NEW.necktag_ibu)
+	) AND NEW.necktag_ayah IS NOT NULL AND NEW.necktag_ibu IS NOT NULL THEN
+	  INSERT INTO public.perkawinans(necktag, necktag_psg, tgl_kawin, created_at, updated_at)
+	  VALUES (NEW.necktag_ayah, NEW.necktag_ibu, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+      
+	  INSERT INTO public.perkawinans(necktag, necktag_psg, tgl_kawin, created_at, updated_at)
+	  VALUES (NEW.necktag_ibu, NEW.necktag_ayah, CURRENT_DATE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	END IF;
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS update_from_ternak 
+ON public.ternaks;
+
+CREATE TRIGGER update_from_ternak
+  	AFTER INSERT OR UPDATE
+  	ON public.ternaks
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_update_from_ternak();
+
+-- trigger - perkawinan (if add perkawinan then add reverse to perkawinan)
+CREATE OR REPLACE FUNCTION f_insert_from_perkawinan()
+  	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+	
+	INSERT INTO public.perkawinans(necktag, necktag_psg, tgl_kawin, created_at, updated_at)
+	VALUES (NEW.necktag_psg, NEW.necktag, NEW.tgl_kawin, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS insert_from_perkawinan 
+ON public.perkawinans;
+
+CREATE TRIGGER insert_from_perkawinan
+  	AFTER INSERT
+  	ON public.perkawinans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_insert_from_perkawinan();
+
+-- trigger - perkawinan (if delete perkawinan then delete reverse from perkawinan)
+CREATE OR REPLACE FUNCTION f_delete_from_perkawinan()
+  	RETURNS trigger AS $$
+BEGIN
+	IF MOD(OLD.id, 2) = 0 THEN
+		DELETE FROM public.perkawinans as pk
+		WHERE pk.id = OLD.id - 1;
+	ELSEIF MOD(OLD.id, 2) = 1 THEN
+		DELETE FROM public.perkawinans as pk
+		WHERE pk.id = OLD.id + 1;
+	END IF;
+	
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS delete_from_perkawinan 
+ON public.perkawinans;
+
+CREATE TRIGGER delete_from_perkawinan
+  	AFTER DELETE
+  	ON public.perkawinans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_delete_from_perkawinan();
+
+-- trigger - perkawinan (if update perkawinan then update reverse from perkawinan)
+CREATE OR REPLACE FUNCTION f_update_from_perkawinan()
+  	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+	
+	IF MOD(new.id, 2) = 0 THEN
+		UPDATE public.perkawinans
+		SET necktag = new.necktag_psg,
+			necktag_psg = new.necktag,
+			tgl_kawin = new.tgl_kawin,
+			updated_at = new.updated_at
+		WHERE id = new.id - 1;
+	ELSIF MOD(new.id, 2) = 1 THEN
+		UPDATE public.perkawinans
+		SET necktag = new.necktag_psg,
+			necktag_psg = new.necktag,
+			tgl_kawin = new.tgl_kawin,
+			updated_at = new.updated_at
+		WHERE id = new.id + 1;
+	END IF;
+	
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS update_from_perkawinan 
+ON public.perkawinans;
+
+CREATE TRIGGER update_from_perkawinan
+  	AFTER UPDATE
+  	ON public.perkawinans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_update_from_perkawinan();
+
+-- trigger - kematian (if insert kematian then change kematian id and status to ternak)
+CREATE OR REPLACE FUNCTION f_insert_from_kematian()
+	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	UPDATE public.ternaks
+	SET kematian_id = NEW.id,
+		status_ada = false
+	WHERE necktag = NEW.necktag;
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS insert_from_kematian 
+ON public.kematians;
+
+CREATE TRIGGER insert_from_kematian
+  	AFTER INSERT
+  	ON public.kematians
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_insert_from_kematian();
+
+-- trigger - kematian (if update necktag kematian then change kematian id and status to ternak)
+CREATE OR REPLACE FUNCTION f_update_from_kematian()
+	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	IF OLD.necktag <> NEW.necktag THEN
+		UPDATE public.ternaks
+		SET kematian_id = null,
+			status_ada = true
+		WHERE necktag = OLD.necktag;
+
+		UPDATE public.ternaks
+		SET kematian_id = NEW.id,
+			status_ada = false
+		WHERE necktag = NEW.necktag;
+	END IF;
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS update_from_kematian 
+ON public.kematians;
+
+CREATE TRIGGER update_from_kematian
+  	AFTER UPDATE
+  	ON public.kematians
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_update_from_kematian();
+
+-- trigger - kematian (if delete kematian then change kematian id and status to ternak)
+CREATE OR REPLACE FUNCTION f_delete_from_kematian()
+	RETURNS trigger AS $$
+BEGIN
+	UPDATE public.ternaks
+	SET kematian_id = null,
+		status_ada = true
+	WHERE necktag = OLD.necktag;
+
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS delete_from_kematian 
+ON public.kematians;
+
+CREATE TRIGGER delete_from_kematian
+  	BEFORE DELETE
+  	ON public.kematians
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_delete_from_kematian();
+
+-- trigger - penjualan (if insert penjualan then change penjualan id and status to ternak)
+CREATE OR REPLACE FUNCTION f_insert_from_penjualan()
+	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	UPDATE public.ternaks
+	SET penjualan_id = NEW.id,
+		status_ada = false
+	WHERE necktag = NEW.necktag;
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS insert_from_penjualan 
+ON public.penjualans;
+
+CREATE TRIGGER insert_from_penjualan
+  	AFTER INSERT
+  	ON public.penjualans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_insert_from_penjualan();
+
+-- trigger - penjualan (if update necktag penjualan then change penjualan id and status to ternak)
+CREATE OR REPLACE FUNCTION f_update_from_penjualan()
+	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	IF OLD.necktag <> NEW.necktag THEN
+		UPDATE public.ternaks
+		SET penjualan_id = null,
+			status_ada = true
+		WHERE necktag = OLD.necktag;
+
+		UPDATE public.ternaks
+		SET penjualan_id = NEW.id,
+			status_ada = false
+		WHERE necktag = NEW.necktag;
+	END IF;
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS update_from_penjualan 
+ON public.penjualans;
+
+CREATE TRIGGER update_from_penjualan
+  	AFTER UPDATE
+  	ON public.penjualans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_update_from_penjualan();
+
+-- trigger - penjualan (if delete penjualan then change penjualan id and status to ternak)
+CREATE OR REPLACE FUNCTION f_delete_from_penjualan()
+	RETURNS trigger AS $$
+BEGIN
+	UPDATE public.ternaks
+	SET penjualan_id = null,
+		status_ada = true
+	WHERE necktag = OLD.necktag;
+
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS delete_from_penjualan 
+ON public.penjualans;
+
+CREATE TRIGGER delete_from_penjualan
+  	BEFORE DELETE
+  	ON public.penjualans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_delete_from_penjualan();

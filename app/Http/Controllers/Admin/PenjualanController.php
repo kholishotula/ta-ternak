@@ -67,11 +67,6 @@ class PenjualanController extends Controller
 
         $penjualan = Penjualan::create($form_data);
 
-        $ternak = Ternak::where('necktag', $request->necktag)->first();
-        $ternak->penjualan_id = $penjualan->id;
-        $ternak->status_ada = false;
-        $ternak->save();
-
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
 
@@ -109,6 +104,9 @@ class PenjualanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Penjualan::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data penjualan untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
         $rules = array(
             'necktag' => 'required',
             'tgl_terjual' => 'required',
@@ -140,12 +138,6 @@ class PenjualanController extends Controller
     public function destroy($id)
     {
         $data = Penjualan::findOrFail($id);
-
-        if($ternak = Ternak::where('penjualan_id', $id)->first()){
-            $ternak->penjualan_id = null;
-            $ternak->status_ada = true;
-            $ternak->save();
-        }
         $data->delete();
     }
 }
