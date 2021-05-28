@@ -16,60 +16,152 @@ else if(seg == 'peternak'){
     url_seg = "/peternak";
 }
 
+$('#laporan-hasil').hide();
 
+var begin, finish;
+var from, to, grup_id = null;
+// var start = moment().subtract(29, 'days');
+// var end = moment();
+// var from = '', to = '', grup_id = null;
 
-var start = moment().subtract(29, 'days');
-var end = moment();
-var from = '', to = '';
+// function cb(start, end) {
+//     $('#reportrange').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 
-function cb(start, end) {
-    $('#reportrange').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+//     from = start.format('YYYY-MM-DD');
+//     to = end.format('YYYY-MM-DD');
+// }
 
-    from = start.format('YYYY-MM-DD');
-    to = end.format('YYYY-MM-DD');
-}
+// $('select[name="grup"]').on('change', function() {
+//     var grup_id = $(this).val();
+//     if(grup_id) {
+//         $.ajax({
+//             url: url_seg+"/laporan",
+//             method: "GET", 
+//             data: {
+//                 grup: grup_id,
+//                 datefrom: start.format('YYYY-MM-DD'), 
+//                 dateto: end.format('YYYY-MM-DD')
+//             },
+//             dataType: "json",
+//             success:function(data) {
+//                 from = start.format('YYYY-MM-DD');
+//                 to = end.format('YYYY-MM-DD');
+//                 $('#date-span').html(data.start + ' sampai ' + data.end);
+
+//                 $('#lahir-table').DataTable().ajax.reload();
+//                 $('#mati-table').DataTable().ajax.reload();
+//                 $('#kawin-table').DataTable().ajax.reload();
+//                 $('#sakit-table').DataTable().ajax.reload();
+//                 $('#ada-table').DataTable().ajax.reload();
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) { 
+//                 console.log(jqXHR); 
+//             }
+//         });
+//     }
+// });
+
+// $('#reportrange').daterangepicker({
+//     startDate: start,
+//     endDate: end,
+//     ranges: {
+//        'Today': [moment(), moment()],
+//        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+//        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+//        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+//        'This Month': [moment().startOf('month'), moment().endOf('month')],
+//        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+//     },
+//     locale: {
+//     	"format": "YYYY-MM-DD"
+//     }
+// }, function(start, end, label) {
+//     $.ajax({
+//         url: url_seg+"/laporan",
+//         method: "GET", 
+//         data: {
+//             datefrom: start.format('YYYY-MM-DD'), 
+//             dateto: end.format('YYYY-MM-DD')
+//         },
+//         dataType: "json",
+//         success:function(data) {
+//             from = start.format('YYYY-MM-DD');
+//             to = end.format('YYYY-MM-DD');
+//             $('#date-span').html(data.start + ' sampai ' + data.end);
+
+//             $('#lahir-table').DataTable().ajax.reload();
+//             $('#mati-table').DataTable().ajax.reload();
+//             $('#kawin-table').DataTable().ajax.reload();
+//             $('#sakit-table').DataTable().ajax.reload();
+//             $('#ada-table').DataTable().ajax.reload();
+//         },
+//         error: function (jqXHR, textStatus, errorThrown) { 
+//             console.log(jqXHR); 
+//         }
+//     });
+// });
+
+// $('#reportrange').daterangepicker({
+//     startDate: start,
+//     endDate: end,
+//     ranges: {
+//        'Today': [moment(), moment()],
+//        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+//        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+//        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+//        'This Month': [moment().startOf('month'), moment().endOf('month')],
+//        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+//     },
+//     locale: {
+//         "format": "YYYY-MM-DD"
+//     }
+//     // opens: 'left'
+// }, cb);
 
 $('#reportrange').daterangepicker({
-    startDate: start,
-    endDate: end,
-    ranges: {
-       'Today': [moment(), moment()],
-       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-       'This Month': [moment().startOf('month'), moment().endOf('month')],
-       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-    },
-    locale: {
-    	"format": "YYYY-MM-DD"
-    }
+    opens: 'left'
 }, function(start, end, label) {
-    $.ajax({
-        url: url_seg+"/laporan",
-        method: "GET", 
-        data: {
-            datefrom: start.format('YYYY-MM-DD'), 
-            dateto: end.format('YYYY-MM-DD')
-        },
-        dataType: "json",
-        success:function(data) {
-            from = start.format('YYYY-MM-DD');
-            to = end.format('YYYY-MM-DD');
-            $('#date-span').html(data.start + ' sampai ' + data.end);
-
-            $('#lahir-table').DataTable().ajax.reload();
-            $('#mati-table').DataTable().ajax.reload();
-            $('#kawin-table').DataTable().ajax.reload();
-            $('#sakit-table').DataTable().ajax.reload();
-            $('#ada-table').DataTable().ajax.reload();
-        },
-        error: function (jqXHR, textStatus, errorThrown) { 
-            console.log(jqXHR); 
-        }
-    });
+    // console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    begin = start.format('YYYY-MM-DD');
+    finish = end.format('YYYY-MM-DD');
 });
 
-cb(start, end);
+$('#filter-form').on('submit', function(event){
+	event.preventDefault();
+        $.ajax({
+            url: url_seg+"/laporan",
+            method: "GET", 
+            data: {
+                // data: $(this).serialize,
+                grup_id: $(this).serialize().split('&')[0].split('=')[1],
+                datefrom: begin, 
+                dateto: finish
+            },
+            dataType: "json",
+            success:function(data) {
+                // console.log(data);
+
+                from = begin;
+                to = finish;
+                grup_id = data.grup_id;
+                $('#date-span').html('tanggal ' + from + ' sampai ' + to);
+                $('#grup-name').html(' untuk Grup Peternak id ' + grup_id);
+
+                $('#lahir-table').DataTable().ajax.reload();
+                $('#mati-table').DataTable().ajax.reload();
+                $('#kawin-table').DataTable().ajax.reload();
+                $('#sakit-table').DataTable().ajax.reload();
+                $('#ada-table').DataTable().ajax.reload();
+
+                $('#laporan-hasil').show();
+            },
+            error: function (jqXHR, textStatus, errorThrown) { 
+                console.log(jqXHR); 
+            }
+        });
+});
+
+// cb(start, end);
 
 
 $('#lahir-table').DataTable({
@@ -81,6 +173,7 @@ $('#lahir-table').DataTable({
         data: function(d){
             d.datefrom = from;
             d.dateto = to;
+            d.grup_id = grup_id;
         },
         error: function (jqXHR, textStatus, errorThrown) { 
             console.log(jqXHR); 
@@ -120,6 +213,7 @@ $('#mati-table').DataTable({
         data: function(d){
             d.datefrom = from;
             d.dateto = to;
+            d.grup_id = grup_id;
         },
         error: function (jqXHR, textStatus, errorThrown) { 
             console.log(jqXHR); 
@@ -157,6 +251,7 @@ $('#jual-table').DataTable({
         data: function(d){
             d.datefrom = from;
             d.dateto = to;
+            d.grup_id = grup_id;
         },
         error: function (jqXHR, textStatus, errorThrown) { 
             console.log(jqXHR); 
@@ -192,6 +287,7 @@ $('#kawin-table').DataTable({
         data: function(d){
             d.datefrom = from;
             d.dateto = to;
+            d.grup_id = grup_id;
         },
         error: function (jqXHR, textStatus, errorThrown) { 
             console.log(jqXHR); 
@@ -216,6 +312,7 @@ $('#sakit-table').DataTable({
         data: function(d){
             d.datefrom = from;
             d.dateto = to;
+            d.grup_id = grup_id;
         },
         error: function (jqXHR, textStatus, errorThrown) { 
             console.log(jqXHR); 
@@ -241,6 +338,7 @@ $('#ada-table').DataTable({
         url: url_seg+'/laporan/ada',
         method: 'POST',
         data: function(d){
+            d.grup_id = grup_id;
             d.datefrom = from;
             d.dateto = to;
         },
@@ -276,7 +374,8 @@ $('#ada-table').DataTable({
 $('#dwd-btn').click(function(){
     var dateparam = {
         datefrom: from,
-        dateto: to
+        dateto: to,
+        grup_id: grup_id,
     };
     var url = url_seg+"/laporan/export/" + $.param(dateparam);
     window.location = url;

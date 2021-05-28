@@ -58,16 +58,16 @@ class GrupPeternakController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
-        $provinsi = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->provinsi)->get();
-        $kab_kota = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kab_kota)->get();
-        $kecamatan = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kecamatan)->get();
+        $provinsi = DB::table('wilayahs')->select('nama')->where('kode', $request->provinsi)->get();
+        $kab_kota = DB::table('wilayahs')->select('nama')->where('kode', $request->kab_kota)->get();
+        $kecamatan = DB::table('wilayahs')->select('nama')->where('kode', $request->kecamatan)->get();
 
         $form_data = array(
             'nama_grup' => $request->nama_grup,
             'alamat' => $request->alamat,
-            'provinsi' => preg_split('/["]/', $provinsi)[3],
-            'kab_kota' => preg_split('/["]/', $kab_kota)[3],
-            'kecamatan' => preg_split('/["]/', $kecamatan)[3],
+            'provinsi' => $provinsi[0]->nama,
+            'kab_kota' => $kab_kota[0]->nama,
+            'kecamatan' => $kecamatan[0]->nama,
             'keterangan' => $request->keterangan,
         );
 

@@ -28,14 +28,25 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header">
-                <h2>Rentang Waktu</h2>
+                <h2>FILTER</h2>
             </div>
             <div class="body">
-                <!-- <form> -->
+                <form id="filter-form">
                     <!-- @csrf -->
 
                     <div class="row clearfix">
                         <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">Grup Peternak</label>
+                                <div class="form-line">
+                                    <select class="form-control js-select-search" name="grup" id="grup">
+                                        <option></option>
+                                        @foreach ($grups as $grup)
+                                        <option value="{{ $grup->id }}">{{ $grup->nama_grup }}</option>
+                                        @endforeach  
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon">
@@ -46,24 +57,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <input type="submit" class="btn-success" name="action_button" id="action_button" value="CARI">
                         </div>
                     </div>
                     
-                <!-- </form> -->
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <!-- data laporan -->
-<div class="row">
+<div class="row" id="laporan-hasil">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header row">
                 <h2 class="col-md-9">
                     LAPORAN - DATA TERNAK 
-                    <small>Laporan data ternak berdasarkan range waktu 
-                        <span id="date-span">{{ $start }} sampai {{ $end }}</span>
+                    <small>Laporan data ternak berdasarkan filter 
+                        <span id="date-span"></span>
+                        <span id="grup-name"></span>
                     </small>
                 </h2>
                 <div class="col-md-3" align="right">
