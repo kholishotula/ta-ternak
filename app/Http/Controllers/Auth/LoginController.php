@@ -39,9 +39,14 @@ class LoginController extends Controller
             $this->redirectTo = route('admin');
             return $this->redirectTo;
         }
-        else if(Auth::user()->role == 'peternak'){
+        else{
             if(Auth::user()->verified_at){
-                $this->redirectTo = route('peternak');
+                if(Auth::user()->role == 'peternak'){
+                    $this->redirectTo = route('peternak');
+                }
+                else{
+                    $this->redirectTo = route('ketua-grup');
+                }
                 return $this->redirectTo;
             }
             else{

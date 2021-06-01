@@ -1,28 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\Peternak;
+namespace App\Http\Controllers\Ketua;
 
+use App\Ternak;
+use App\Penjualan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
-use App\Ras;
-use App\Ternak;
-use App\DataTables\RasDataTable;
+use Illuminate\Support\Facades\Auth;
+use App\DataTables\PenjualanDataTable;
+use Yajra\Datatables\Datatables;
 use Validator;
 
-class RasController extends Controller
+class PenjualanController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(RasDataTable $dataTable)
+    public function index(PenjualanDataTable $dataTable)
     {
-        $title = 'RAS';
-        $page = 'Ras';
+        $title = 'TERNAK TERJUAL';
+        $page = 'Ternak Terjual';
+        $ternaks = Ternak::where('user_id', Auth::id())->get();
 
-        return $dataTable->render('data.ras', ['title' => $title, 'page' => $page]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.penjualan', [
+            'title' => $title,
+            'page' => $page, 
+            'ternaks' => $ternaks
+        ]);
     }
 
     /**
@@ -43,9 +49,13 @@ class RasController extends Controller
      */
     public function store(Request $request)
     {
+        if(Penjualan::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data penjualan untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
+
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'necktag' => 'required',
+            'tgl_terjual' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -55,11 +65,12 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'necktag' => $request->necktag,
+            'tgl_terjual' => $request->tgl_terjual,
+            'ket_pembeli' => $request->ket
         );
 
-        Ras::create($form_data);
+        $penjualan = Penjualan::create($form_data);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -84,7 +95,7 @@ class RasController extends Controller
     public function edit($id)
     {
         if(request()->ajax()){
-            $data = Ras::findOrFail($id);
+            $data = Penjualan::findOrFail($id);
             return response()->json(['result' => $data]);
         }
     }
@@ -98,9 +109,12 @@ class RasController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Penjualan::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data penjualan untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'necktag' => 'required',
+            'tgl_terjual' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -110,11 +124,12 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'necktag' => $request->necktag,
+            'tgl_terjual' => $request->tgl_terjual,
+            'ket_pembeli' => $request->ket
         );
 
-        Ras::whereId($id)->update($form_data);
+        Penjualan::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -127,14 +142,7 @@ class RasController extends Controller
      */
     public function destroy($id)
     {
-        $data = Ras::findOrFail($id);
-
-        if(Ternak::where('ras_id', $id)->exists()){
-            $err = 'Data ras id '. $id .' tidak dapat dihapus.';
-            return response()->json(['error' => $err]);
-        }
-        else{
-            $data->delete();
-        }
+        $data = Penjualan::findOrFail($id);
+        $data->delete();
     }
 }

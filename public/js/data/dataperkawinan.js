@@ -15,7 +15,9 @@ if(seg == 'admin'){
 else if(seg == 'peternak'){
     url_seg = "/peternak";
 }
-
+else if(seg == 'ketua-grup'){
+    url_seg = "/ketua-grup";
+}
 
 $('select[name="necktag"]').on('change', function() {
     var necktagID = $(this).val();

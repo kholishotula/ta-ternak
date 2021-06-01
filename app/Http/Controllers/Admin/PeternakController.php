@@ -55,7 +55,6 @@ class PeternakController extends Controller
         $rules = array(
             'grup_peternak' => 'required',
             'name' => 'required',
-            'verify' => 'required',
             'role' => 'required',
             'ktp_user' => 'required|max:16',
             'username' => 'required|string|max:255|unique:users',
@@ -68,6 +67,15 @@ class PeternakController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
         
+        if($request->role == 'ketua grup'){
+            $ketua_grup = User::where('grup_id', $request->grup_peternak)
+                            ->where('role', 'ketua grup')
+                            ->first();
+            if($ketua_grup != null){
+                return response()->json(['errors' => ['Ketua grup untuk Grup Peternak ID '.$request->grup_peternak.' sudah ada.']]);
+            }
+        }
+
         $password = Str::random(8);
 
         $form_data = array(
@@ -80,10 +88,6 @@ class PeternakController extends Controller
             'password' => Hash::make($password),
             'role' => $request->role,
         );
-
-        if($request->verify == 'ya'){
-            $form_data['verified_at'] = Carbon::now();
-        }
 
         User::create($form_data);
 
@@ -130,7 +134,6 @@ class PeternakController extends Controller
         $rules = array(
             'grup_peternak' => 'required',
             'name' => 'required',
-            'verify' => 'required',
             'role' => 'required'
         );
 
@@ -140,14 +143,20 @@ class PeternakController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
+        if($request->role == 'ketua grup'){
+            $ketua_grup = User::where('grup_id', $request->grup_peternak)
+                            ->where('role', 'ketua grup')
+                            ->first();
+            if($ketua_grup != null){
+                return response()->json(['errors' => ['Ketua grup untuk Grup Peternak ID '.$request->grup_peternak.' sudah ada.']]);
+            }
+        }
+
         $form_data = array(
             'grup_id' => $request->grup_peternak,
             'name' => $request->name,
             'role' => $request->role,
         );
-        if($request->verify == 'ya'){
-           $form_data['verified_at'] = Carbon::now();
-        }
 
         $user = User::whereId($id)->update($form_data);
 
@@ -165,7 +174,7 @@ class PeternakController extends Controller
         $data = User::findOrFail($id);
 
         if(Ternak::where('user_id', $id)->exists()){
-            $err = 'Data grup peternak id '. $id .' tidak dapat dihapus.';
+            $err = 'Data peternak id '. $id .' tidak dapat dihapus.';
             return response()->json(['error' => $err]);
         }
         else{

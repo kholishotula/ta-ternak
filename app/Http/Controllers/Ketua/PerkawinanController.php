@@ -1,28 +1,36 @@
 <?php
 
-namespace App\Http\Controllers\Peternak;
+namespace App\Http\Controllers\Ketua;
 
+use App\Ternak;
+use App\Perkawinan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
-use App\Ras;
-use App\Ternak;
-use App\DataTables\RasDataTable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Yajra\Datatables\Datatables;
+use App\DataTables\PerkawinanDataTable;
 use Validator;
 
-class RasController extends Controller
+class PerkawinanController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(RasDataTable $dataTable)
+    public function index(PerkawinanDataTable $dataTable)
     {
-        $title = 'RAS';
-        $page = 'Ras';
+        $title = 'PERKAWINAN';
+        $page = 'Perkawinan';
+        $ternak = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')
+                        ->where('user_id', Auth::id())
+                        ->get();
 
-        return $dataTable->render('data.ras', ['title' => $title, 'page' => $page]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.perkawinan', [
+            'title' => $title,
+            'page' => $page,
+            'ternak' => $ternak]);
     }
 
     /**
@@ -44,8 +52,9 @@ class RasController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'necktag' => 'required',
+            'necktag_psg' => 'required',
+            'tgl' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -55,11 +64,12 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'necktag' => $request->necktag,
+            'necktag_psg' => $request->necktag_psg,
+            'tgl_kawin' => $request->tgl
         );
 
-        Ras::create($form_data);
+        Perkawinan::create($form_data);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -70,10 +80,10 @@ class RasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function show($id)
-    // {
-    //     //
-    // }
+    public function show($id)
+    {
+        //
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -84,7 +94,7 @@ class RasController extends Controller
     public function edit($id)
     {
         if(request()->ajax()){
-            $data = Ras::findOrFail($id);
+            $data = Perkawinan::findOrFail($id);
             return response()->json(['result' => $data]);
         }
     }
@@ -99,8 +109,9 @@ class RasController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'necktag' => 'required',
+            'necktag_psg' => 'required',
+            'tgl' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -110,11 +121,12 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'necktag' => $request->necktag,
+            'necktag_psg' => $request->necktag_psg,
+            'tgl_kawin' => $request->tgl
         );
 
-        Ras::whereId($id)->update($form_data);
+        Perkawinan::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -127,14 +139,20 @@ class RasController extends Controller
      */
     public function destroy($id)
     {
-        $data = Ras::findOrFail($id);
+        $data = Perkawinan::findOrFail($id);
+        $data->delete();
+    }
 
-        if(Ternak::where('ras_id', $id)->exists()){
-            $err = 'Data ras id '. $id .' tidak dapat dihapus.';
-            return response()->json(['error' => $err]);
-        }
-        else{
-            $data->delete();
-        }
+    // necktag pasangan - dependent dropdown
+    public function getPasangan($id)
+    {
+        $tes = Ternak::find($id);
+
+        $ternak = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')
+                        ->where('necktag', '<>', $id)
+                        ->where('jenis_kelamin', '<>', $tes->jenis_kelamin)
+                        ->get();
+
+        return response()->json(['ternak' => $ternak]);
     }
 }

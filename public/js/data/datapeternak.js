@@ -70,26 +70,6 @@ $(document).on('click', '.edit', function(){
         success: function(data){
             $('#grup_peternak').val(data.result.grup_id).change();
             $('#name').val(data.result.name);
-            // if(data.result.verified_at != null){
-            //     // $('input[name="verify"][value="ya"]').prop('checked', true);
-            //     $('input[name="verify"]').val(['ya']).change();
-            // }
-            // else{
-            //     // $('input[name="verify"][value="tidak"]').prop('checked', true);
-            //     $('input[name="verify"]').val(['tidak']).change();
-            // }
-            if(data.result.verified_at != null){
-                $('#verify').val(['ya']).change();
-            }
-            else{
-                $('#verify').val(['tidak']).change();
-            }
-            // if(data.result.role == 'peternak'){
-            //     $('input[name="role"][value="peternak"]').prop('checked', true).change();
-            // }
-            // else{
-            //     $('input[name="role"][value="ketua_grup"]').prop('checked', true).change();
-            // }
             $('#role').val(data.result.role).change();
             
             $('#hidden_id').val(id);

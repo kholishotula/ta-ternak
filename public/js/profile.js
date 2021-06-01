@@ -15,7 +15,9 @@ if(seg == 'admin'){
 else if(seg == 'peternak'){
 	url_seg = "/peternak";
 }
-
+else if(seg == 'ketua-grup'){
+    url_seg = "/ketua-grup";
+}
 
 $('#edit_profil').click(function(){	
 	$('#form_result').html('');

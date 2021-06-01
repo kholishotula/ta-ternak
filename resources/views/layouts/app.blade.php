@@ -64,7 +64,11 @@
                                         <a class="dropdown-item" href="{{ route('admin') }}">
                                             {{ __('Dashboard Admin') }}
                                         </a>
-                                    @else
+                                    @elsecan('isPeternak')
+                                        <a class="dropdown-item" href="{{ route('peternak') }}">
+                                            {{ __('Dashboard Peternak') }}
+                                        </a>
+                                    @elsecan('isKetua')
                                         <a class="dropdown-item" href="{{ route('peternak') }}">
                                             {{ __('Dashboard Peternak') }}
                                         </a>

@@ -12,6 +12,9 @@ if(seg == 'admin'){
 else if(seg == 'peternak'){
     url_seg = "/peternak";
 }
+else if(seg == 'ketua-grup'){
+    url_seg = "/ketua-grup";
+}
 
 $('#search_form').on('submit', function(event){
 	event.preventDefault();

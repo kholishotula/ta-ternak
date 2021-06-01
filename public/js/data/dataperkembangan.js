@@ -16,6 +16,10 @@ if(seg == 'admin'){
 else if(seg == 'peternak'){
     url_seg = "/peternak";
 }
+else if(seg == 'ketua-grup'){
+    url_seg = "/ketua-grup";
+}
+
 $('#eform-file').hide();
 
 $('#tambah_data').on('click', function(){

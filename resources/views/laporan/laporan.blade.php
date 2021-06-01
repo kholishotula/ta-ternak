@@ -14,8 +14,10 @@
 <li>
     @can('isAdmin')
     <a href="{{ route('admin') }}">
-    @else
+    @elsecan('isPeternak')
     <a href="{{ route('peternak') }}">
+    @elsecan('isKetua')
+    <a href="{{ route('ketua-grup') }}">
     @endcan
         <i class="material-icons">home</i> Home
     </a>
@@ -48,6 +50,10 @@
                                     </select>
                                 </div>
                             </div>
+                            @elsecan('isKetua')
+                            <select class="form-control js-select-search hidden" name="grup" id="grup">
+                                <option value="{{ $grup_id }}" type="hidden"></option> 
+                            </select>
                             @endcan
                             <div class="form-group">
                                 <div class="input-group">

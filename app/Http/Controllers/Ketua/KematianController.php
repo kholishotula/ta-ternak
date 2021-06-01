@@ -1,28 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\Peternak;
+namespace App\Http\Controllers\Ketua;
 
+use App\Kematian;
+use App\Ternak;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
-use App\Ras;
-use App\Ternak;
-use App\DataTables\RasDataTable;
+use App\DataTables\KematianDataTable;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class RasController extends Controller
+class KematianController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(RasDataTable $dataTable)
+    public function index(KematianDataTable $dataTable)
     {
-        $title = 'RAS';
-        $page = 'Ras';
+        $title = 'TERNAK MATI';
+        $page = 'Ternak Mati';
+        $ternaks = Ternak::where('user_id', Auth::id());
 
-        return $dataTable->render('data.ras', ['title' => $title, 'page' => $page]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.kematian', [
+            'title' => $title,
+            'page' => $page,
+            'ternaks' => $ternaks
+        ]);
     }
 
     /**
@@ -43,9 +49,16 @@ class RasController extends Controller
      */
     public function store(Request $request)
     {
+        if(Kematian::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
+
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'necktag' => 'required',
+            'tgl_kematian' => 'required',
+            'waktu_kematian' => 'required',
+            'penyebab' => 'required',
+            'kondisi' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -55,11 +68,14 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'necktag' => $request->necktag,
+            'tgl_kematian' => $request->tgl_kematian,
+            'waktu_kematian' => $request->waktu_kematian,
+            'penyebab' => $request->penyebab,
+            'kondisi' => $request->kondisi
         );
 
-        Ras::create($form_data);
+        Kematian::create($form_data);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -84,7 +100,7 @@ class RasController extends Controller
     public function edit($id)
     {
         if(request()->ajax()){
-            $data = Ras::findOrFail($id);
+            $data = Kematian::findOrFail($id);
             return response()->json(['result' => $data]);
         }
     }
@@ -98,9 +114,14 @@ class RasController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Kematian::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'tgl_kematian' => 'required',
+            'waktu_kematian' => 'required',
+            'penyebab' => 'required',
+            'kondisi' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -110,11 +131,13 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'tgl_kematian' => $request->tgl_kematian,
+            'waktu_kematian' => $request->waktu_kematian,
+            'penyebab' => $request->penyebab,
+            'kondisi' => $request->kondisi
         );
 
-        Ras::whereId($id)->update($form_data);
+        Kematian::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -127,14 +150,7 @@ class RasController extends Controller
      */
     public function destroy($id)
     {
-        $data = Ras::findOrFail($id);
-
-        if(Ternak::where('ras_id', $id)->exists()){
-            $err = 'Data ras id '. $id .' tidak dapat dihapus.';
-            return response()->json(['error' => $err]);
-        }
-        else{
-            $data->delete();
-        }
+        $data = Kematian::findOrFail($id);
+        $data->delete();
     }
 }

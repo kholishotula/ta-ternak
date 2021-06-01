@@ -1,28 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Peternak;
+namespace App\Http\Controllers\Ketua;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
-use App\Ras;
+use Illuminate\Support\Facades\Auth;
+use App\Pemilik;
 use App\Ternak;
-use App\DataTables\RasDataTable;
+use App\DataTables\PemilikDataTable;
+use Yajra\Datatables\Datatables;
 use Validator;
 
-class RasController extends Controller
+class PemilikController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(RasDataTable $dataTable)
+    public function index(PemilikDataTable $dataTable)
     {
-        $title = 'RAS';
-        $page = 'Ras';
+        $title = 'PEMILIK';
+        $page = 'Pemilik';
 
-        return $dataTable->render('data.ras', ['title' => $title, 'page' => $page]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.pemilik', [
+            'title' => $title,
+            'page' => $page
+        ]);
     }
 
     /**
@@ -44,8 +48,8 @@ class RasController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'nama_pemilik' => 'required',
+            'ktp_pemilik' => 'required|digits:16|unique:pemiliks'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -55,11 +59,11 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'nama_pemilik' => $request->nama_pemilik,
+            'ktp_pemilik' => $request->ktp_pemilik
         );
 
-        Ras::create($form_data);
+        Pemilik::create($form_data);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -70,10 +74,15 @@ class RasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function show($id)
-    // {
-    //     //
-    // }
+    public function show($id)
+    {
+        if(request()->ajax()){
+            $data = Pemilik::findOrFail($id);
+            $ternak = Ternak::where('pemilik_id', '=', $data->id)->get();
+
+            return response()->json(['result' => $data, 'ternak' => $ternak]);
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -84,7 +93,7 @@ class RasController extends Controller
     public function edit($id)
     {
         if(request()->ajax()){
-            $data = Ras::findOrFail($id);
+            $data = Pemilik::findOrFail($id);
             return response()->json(['result' => $data]);
         }
     }
@@ -99,8 +108,8 @@ class RasController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'nama_pemilik' => 'required',
+            'ktp_pemilik' => 'required|digits:16'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -110,11 +119,11 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'nama_pemilik' => $request->nama_pemilik,
+            'ktp_pemilik' => $request->ktp_pemilik
         );
 
-        Ras::whereId($id)->update($form_data);
+        Pemilik::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -127,10 +136,10 @@ class RasController extends Controller
      */
     public function destroy($id)
     {
-        $data = Ras::findOrFail($id);
-
-        if(Ternak::where('ras_id', $id)->exists()){
-            $err = 'Data ras id '. $id .' tidak dapat dihapus.';
+        $data = Pemilik::findOrFail($id);
+        
+        if(Ternak::where('pemilik_id', $id)->exists()){
+            $err = 'Data pemilik id '. $id .' tidak dapat dihapus.';
             return response()->json(['error' => $err]);
         }
         else{

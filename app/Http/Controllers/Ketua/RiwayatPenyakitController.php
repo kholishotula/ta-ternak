@@ -1,28 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Peternak;
+namespace App\Http\Controllers\Ketua;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
-use App\Ras;
+use Illuminate\Support\Facades\Auth;
+use Yajra\Datatables\Datatables;
+use App\DataTables\RiwayatDataTable;
+use App\RiwayatPenyakit;
 use App\Ternak;
-use App\DataTables\RasDataTable;
+use Carbon\Carbon;
 use Validator;
 
-class RasController extends Controller
+class RiwayatPenyakitController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(RasDataTable $dataTable)
+    public function index(RiwayatDataTable $dataTable)
     {
-        $title = 'RAS';
-        $page = 'Ras';
-
-        return $dataTable->render('data.ras', ['title' => $title, 'page' => $page]);
+        $title = 'RIWAYAT PENYAKIT';
+        $page = 'Riwayat Penyakit';
+        $ternaks = Ternak::where('user_id', Auth::id())->get();
+        
+        return $dataTable->with('peternak_id', Auth::id())->render('data.riwayat', [
+            'title' => $title,
+            'page' => $page,
+            'ternaks' => $ternaks
+        ]);
     }
 
     /**
@@ -44,8 +51,9 @@ class RasController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'nama_penyakit' => 'required',
+            'necktag' => 'required',
+            'tgl_sakit' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -55,11 +63,15 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'necktag' => $request->necktag,
+            'nama_penyakit' => $request->nama_penyakit,
+            'tgl_sakit' => $request->tgl_sakit,
+            'obat' => $request->obat,
+            'lama_sakit' => $request->lama_sakit,
+            'keterangan' => $request->keterangan,
         );
 
-        Ras::create($form_data);
+        RiwayatPenyakit::create($form_data);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -84,7 +96,7 @@ class RasController extends Controller
     public function edit($id)
     {
         if(request()->ajax()){
-            $data = Ras::findOrFail($id);
+            $data = RiwayatPenyakit::find($id);
             return response()->json(['result' => $data]);
         }
     }
@@ -99,8 +111,9 @@ class RasController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'jenis_ras' => 'required',
-            'ket_ras' => 'required'
+            'nama_penyakit' => 'required',
+            'necktag' => 'required',
+            'tgl_sakit' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -110,11 +123,16 @@ class RasController extends Controller
         }
 
         $form_data = array(
-            'jenis_ras' => $request->jenis_ras,
-            'ket_ras' => $request->ket_ras
+            'nama_penyakit' => $request->nama_penyakit,
+            'necktag' => $request->necktag,
+            'tgl_sakit' => $request->tgl_sakit,
+            'obat' => $request->obat,
+            'lama_sakit' => $request->lama_sakit,
+            'keterangan' => $request->keterangan,
+            'updated_at' => Carbon::now()
         );
 
-        Ras::whereId($id)->update($form_data);
+        RiwayatPenyakit::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -127,14 +145,7 @@ class RasController extends Controller
      */
     public function destroy($id)
     {
-        $data = Ras::findOrFail($id);
-
-        if(Ternak::where('ras_id', $id)->exists()){
-            $err = 'Data ras id '. $id .' tidak dapat dihapus.';
-            return response()->json(['error' => $err]);
-        }
-        else{
-            $data->delete();
-        }
+        $data = RiwayatPenyakit::findOrFail($id);
+        $data->delete();
     }
 }

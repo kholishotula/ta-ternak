@@ -27,7 +27,7 @@ class MatchController extends Controller
     	if($jantan != null ){
 			$sp = preg_split("/[(),]/", $jantan[0]->search_inst); 
 	    	//split karena hasil bukan array, tapi string
-	    	//0: kosong, 1:necktag, 2:jenis_kelamin, 3:ras, 4:tgl_lahir, 5:blood, 6:peternakan, 7:ayah, 8:ibu, 9:kosong
+	    	//0: kosong, 1:necktag, 2:jenis_kelamin, 3:ras, 4:tgl_lahir, 5:pemilik, 6:peternak, 7:ayah, 8:ibu, 9:kosong
 
 			$j_parent = DB::select('SELECT public."search_parent"(?,?)', [$sp[7], $sp[8]]);
 			foreach($j_parent as $jp){

@@ -55,6 +55,8 @@
                 <a class="navbar-brand" href="{{ route('admin') }}"> {{ config('app.name', 'Laravel') }} - Sistem Informasi Ternak </a>
                 @elsecan('isPeternak')
                 <a class="navbar-brand" href="{{ route('peternak') }}"> {{ config('app.name', 'Laravel') }} - Sistem Informasi Ternak </a>
+                @elsecan('isKetua')
+                <a class="navbar-brand" href="{{ route('ketua-grup') }}"> {{ config('app.name', 'Laravel') }} - Sistem Informasi Ternak </a>
                 @endcan
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -73,6 +75,8 @@
                                         <a href="{{ route('admin.profile') }}">
                                         @elsecan('isPeternak')
                                         <a href="{{ route('peternak.profile') }}">
+                                        @elsecan('isKetua')
+                                        <a href="{{ route('ketua-grup.profile') }}">
                                         @endcan
                                             <div class="icon-circle bg-cyan">
                                                 <i class="material-icons">person</i>
@@ -134,12 +138,13 @@
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MENU</li>
                     <li>
                         @can('isAdmin')
                         <a href="{{ route('admin') }}">
                         @elsecan('isPeternak')
                         <a href="{{ route('peternak') }}">
+                        @elsecan('isKetua')
+                        <a href="{{ route('ketua-grup') }}">
                         @endcan 
                             <i class="material-icons">home</i>
                             <span>Dashboard</span>
@@ -158,6 +163,19 @@
                             <i class="material-icons">verified_user</i>
                             <span>Peternak perlu verifikasi</span>
                         </a>
+                    </li>
+                    @elsecan('isKetua')
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">groups</i>
+                            <span>Grup Peternak Saya</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li><a href="{{ route('ketua-grup.grup-saya.peternak') }}">Peternak</a></li>
+                            <li><a href="">Ternak</a></li>
+                            <li><a href="">Riwayat Penyakit</a></li>
+                            <li><a href="">Perkembangan</a></li>
+                        </ul>
                     </li>
                     @endcan
                     <li>
@@ -185,6 +203,15 @@
                             <li><a href="{{ route('peternak.ras.index') }}">Ras</a></li>
                             <li><a href="{{ route('peternak.riwayat.index') }}">Riwayat Penyakit</a></li>
                             <li><a href="{{ route('peternak.ternak.index') }}">Ternak</a></li>
+                            @elsecan('isKetua')
+                            <li><a href="{{ route('ketua-grup.kematian.index') }}">Kematian</a></li>
+                            <li><a href="{{ route('ketua-grup.pemilik.index') }}">Pemilik</a></li>
+                            <li><a href="{{ route('ketua-grup.penjualan.index') }}">Penjualan</a></li>
+                            <li><a href="{{ route('ketua-grup.perkawinan.index') }}">Perkawinan</a></li>
+                            <li><a href="{{ route('ketua-grup.perkembangan.index') }}">Perkembangan</a></li>
+                            <li><a href="{{ route('ketua-grup.ras.index') }}">Ras</a></li>
+                            <li><a href="{{ route('ketua-grup.riwayat.index') }}">Riwayat Penyakit</a></li>
+                            <li><a href="{{ route('ketua-grup.ternak.index') }}">Ternak</a></li>
                             @endcan
                             
                         </ul>
@@ -194,6 +221,8 @@
                         <a href="{{ route('admin.barcode') }}">
                         @elsecan('isPeternak')
                         <a href="{{ route('peternak.barcode') }}">
+                        @elsecan('isKetua')
+                        <a href="{{ route('ketua-grup.barcode') }}">
                         @endcan
                             <i class="material-icons">view_week</i>
                             <span>Barcode</span>
@@ -204,6 +233,8 @@
                         <a href="{{ route('admin.match') }}">
                         @elsecan('isPeternak')
                         <a href="{{ route('peternak.match') }}">
+                        @elsecan('isKetua')
+                        <a href="{{ route('ketua-grup.match') }}">
                         @endcan
                             <i class="material-icons">compare</i>
                             <span>Perkawinan</span>
@@ -214,6 +245,8 @@
                         <a href="{{ route('admin.grafik') }}">
                         @elsecan('isPeternak')
                         <a href="{{ route('peternak.grafik') }}">
+                        @elsecan('isKetua')
+                        <a href="{{ route('ketua-grup.grafik') }}">
                         @endcan
                             <i class="material-icons">pie_chart</i>
                             <span>Grafik</span>
@@ -224,6 +257,8 @@
                         <a href="{{ route('admin.laporan') }}">
                         @elsecan('isPeternak')
                         <a href="{{ route('peternak.laporan') }}">
+                        @elsecan('isKetua')
+                        <a href="{{ route('ketua-grup.laporan') }}">
                         @endcan
                             <i class="material-icons">archive</i>
                             <span>Laporan</span>

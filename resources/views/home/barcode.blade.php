@@ -14,8 +14,10 @@
 <li>
     @can('isAdmin')
     <a href="{{ route('admin') }}">
-    @else
+    @elsecan('isPeternak')
     <a href="{{ route('peternak') }}">
+    @elsecan('isKetua')
+    <a href="{{ route('ketua-grup') }}">
     @endcan
         <i class="material-icons">home</i> Home 
     </a>
@@ -35,8 +37,10 @@
                 <div class="col-md-3" align="right">
                     @can('isAdmin')
                 	<a href="{{ route('admin.barcode.pdf') }}">
-                    @else
+                    @elsecan('isPeternak')
                     <a href="{{ route('peternak.barcode.pdf') }}">
+                    @elsecan('isKetua')
+                    <a href="{{ route('ketua-grup.barcode.pdf') }}">
                     @endcan
 	                    <button id="bar-dwd-btn" class="btn">
 	                        <i class="material-icons">file_download</i>

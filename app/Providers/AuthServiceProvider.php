@@ -39,5 +39,9 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role == 'peternak';
         });
 
+        Gate::define('isKetua', function($user) {
+            return $user->role == 'ketua grup';
+        });
+
     }
 }

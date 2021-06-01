@@ -43,26 +43,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Verifikasi Akun</label>
-                        <!-- <div class="input-group input-group-lg">
-                            <div class="col-md-4">
-                                <input type="radio" name="verify" id="verify_yes" value="ya">
-                                <label for="verify">Ya</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="radio" name="verify" id="verify_no" value="tidak">
-                                <label for="verify">Tidak</label>
-                            </div>
-                        </div> -->
-                        <div>
-            				<select class="form-control js-select-search" name="verify" id="verify">
-            					<option></option>
-            				  	<option value="ya">Ya</option>
-                                <option value="tidak">Tidak</option>
-            				</select>
-        				</div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label">Jadikan sebagai Ketua Grup</label>
                         <!-- <div class="input-group input-group-lg">
                             <div class="col-md-4">

@@ -22,7 +22,12 @@ class RedirectIfAuthenticated
             if(Auth::user()->role == 'admin'){
                 return redirect()->route('admin');
             }
-            return redirect()->route('peternak');
+            elseif (Auth::user()->role == 'peternak') {
+                return redirect()->route('peternak');
+            }
+            else{
+                return redirect()->route('ketua-grup');
+            }
 
             // return redirect(RouteServiceProvider::HOME);
         }

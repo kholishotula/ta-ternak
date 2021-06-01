@@ -12,8 +12,10 @@
 <li>
     @can('isAdmin')
     <a href="{{ route('admin') }}">
-    @else
+    @elsecan('isPeternak')
     <a href="{{ route('peternak') }}">
+    @elsecan('isKetua')
+    <a href="{{ route('ketua-grup') }}">
     @endcan
         <i class="material-icons">home</i> Home
     </a>
@@ -139,6 +141,9 @@ if(seg == 'admin'){
 }
 else if(seg == 'peternak'){
     url_seg = "/peternak";
+}
+else if(seg == 'ketua-grup'){
+    url_seg = "/ketua-grup";
 }
 
 // lahir
