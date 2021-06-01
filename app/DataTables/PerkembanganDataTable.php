@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Ternak;
 use App\Perkembangan;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -37,8 +38,13 @@ class PerkembanganDataTable extends DataTable
      */
     public function query()
     {
-        $model = new Perkembangan();
-        return $model->newQuery()->select('*');
+        if($this->peternak_id != null){
+            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)->pluck('necktag')->toArray();
+            return Perkembangan::whereIn('necktag', $necktag_ternaks)->select('*');
+        }
+        else{
+            return Perkembangan::select('*');
+        }
     }
 
     /**

@@ -24,7 +24,11 @@ class KematianController extends Controller
         $page = 'Ternak Mati';
         $ternaks = Ternak::where('user_id', Auth::id());
 
-        return $dataTable->render('data.kematian', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.kematian', [
+            'title' => $title,
+            'page' => $page,
+            'ternaks' => $ternaks
+        ]);
     }
 
     /**
@@ -32,10 +36,10 @@ class KematianController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -73,10 +77,6 @@ class KematianController extends Controller
 
         Kematian::create($form_data);
 
-        $ternak = Ternak::where('necktag', $request->necktag)->first();
-        $ternak->kematian_id = $kematian->id;
-        $ternak->save();
-
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
 
@@ -86,10 +86,10 @@ class KematianController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    // public function show($id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -114,6 +114,9 @@ class KematianController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Kematian::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
         $rules = array(
             'tgl_kematian' => 'required',
             'waktu_kematian' => 'required',
@@ -148,13 +151,6 @@ class KematianController extends Controller
     public function destroy($id)
     {
         $data = Kematian::findOrFail($id);
-        
-        if(Ternak::where('kematian_id', $id)->exists()){
-            $err = 'Data kematian id '. $id .' tidak dapat dihapus.';
-            return response()->json(['error' => $err]);
-        }
-        else{
-            $data->delete();
-        }
+        $data->delete();
     }
 }

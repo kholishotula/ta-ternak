@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Peternak;
 use App\DataTables\PerkawinanDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Ternak;
@@ -22,9 +23,14 @@ class PerkawinanController extends Controller
     {
         $title = 'PERKAWINAN';
         $page = 'Perkawinan';
-        $ternak = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')->get();
+        $ternak = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')
+                        ->where('user_id', Auth::id())
+                        ->get();
 
-        return $dataTable->render('data.perkawinan', ['title' => $title, 'page' => $page, 'ternak' => $ternak]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.perkawinan', [
+            'title' => $title,
+            'page' => $page,
+            'ternak' => $ternak]);
     }
 
     /**
@@ -32,10 +38,10 @@ class PerkawinanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -60,7 +66,7 @@ class PerkawinanController extends Controller
         $form_data = array(
             'necktag' => $request->necktag,
             'necktag_psg' => $request->necktag_psg,
-            'tgl' => $request->tgl
+            'tgl_kawin' => $request->tgl
         );
 
         Perkawinan::create($form_data);
@@ -117,7 +123,7 @@ class PerkawinanController extends Controller
         $form_data = array(
             'necktag' => $request->necktag,
             'necktag_psg' => $request->necktag_psg,
-            'tgl' => $request->tgl
+            'tgl_kawin' => $request->tgl
         );
 
         Perkawinan::whereId($id)->update($form_data);

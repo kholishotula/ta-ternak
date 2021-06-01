@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Peternak;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\Datatables\Datatables;
 use App\DataTables\RiwayatDataTable;
 use App\RiwayatPenyakit;
@@ -23,10 +23,13 @@ class RiwayatPenyakitController extends Controller
     {
         $title = 'RIWAYAT PENYAKIT';
         $page = 'Riwayat Penyakit';
-        $ternaks = Ternak::all();
-        $riwayat = RiwayatPenyakit::all();
+        $ternaks = Ternak::where('user_id', Auth::id())->get();
         
-        return $dataTable->render('data.riwayat', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks, 'riwayat' => $riwayat]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.riwayat', [
+            'title' => $title,
+            'page' => $page,
+            'ternaks' => $ternaks
+        ]);
     }
 
     /**
@@ -34,10 +37,10 @@ class RiwayatPenyakitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -79,10 +82,10 @@ class RiwayatPenyakitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    // public function show($id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.

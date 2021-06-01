@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Peternak;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Ternak;
 use domPDF;
 use DNS1D;
@@ -12,7 +13,7 @@ class BarcodeController extends Controller
 {
     public function index()
     {
-    	$ternak = Ternak::withTrashed()->latest()->paginate(15); 
+    	$ternak = Ternak::where('user_id', Auth::id())->withTrashed()->latest()->paginate(15); 
 	    $no = 1; 
 
         return view('home.barcode')->with('ternak', $ternak)->with('no', $no);
@@ -20,7 +21,7 @@ class BarcodeController extends Controller
 
     public function generatePdf()
     {
-        $ternak = Ternak::withTrashed()->get();
+        $ternak = Ternak::where('user_id', Auth::id())->withTrashed()->get();
         $no = 1;
         $html = '<h2 align="center">SITERNAK - Barcode Necktag</h2>';
         $html .= '<table>';

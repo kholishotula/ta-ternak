@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
-// use App\Peternak;
 use Validator;
 use App\Http\Requests\ChangePasswordRequest;
 
@@ -62,14 +61,7 @@ class ProfileController extends Controller
             'email' => $request->email
         );
 
-        // $form_data_ptk = array(
-        //     'nama_peternak' => $request->name,
-        //     'username' => $request->username
-        // );
-
         $data = Auth::user();
-
-        // Peternak::where('username', $data->username)->update($form_data_ptk);
         $data->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
@@ -93,8 +85,6 @@ class ProfileController extends Controller
         if(Auth::Check()){
             if(\Hash::check($request->current_password, Auth::User()->password)){
                 $data = Auth::user();
-
-                // $ptk = Peternak::where('username', $data->username)->update(["password" => $request->password]);
                 $user = User::find($data->id)->update(["password"=> bcrypt($request->password)]);
             }else{
                 return response()->json(['error' => 'Detail yang dimasukkan salah!']);

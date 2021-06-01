@@ -8,8 +8,10 @@ use App\Charts\RasChart;
 use App\Charts\UmurChart;
 use App\Charts\KelahiranChart;
 use App\Charts\KematianChart;
+use App\Charts\PenjualanChart;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GrafikController extends Controller
 {
@@ -19,6 +21,8 @@ class GrafikController extends Controller
 	    $umur = $this->grafikUmur();
 	    $lahir = $this->grafikLahir($request);
 	    $mati = $this->grafikMati($request);
+	    $jual = $this->grafikJual($request);
+        
         $yearNow = date('Y');
         $year = array();
 
@@ -31,6 +35,7 @@ class GrafikController extends Controller
             'umur' => $umur,
             'lahir'=> $lahir,
             'mati' => $mati,
+            'jual' => $jual,
             'years' => $year,
         ]);
     }
@@ -43,6 +48,7 @@ class GrafikController extends Controller
         $data = array();
 
         $count = Ternak::where('status_ada', '=', true)
+                        ->where('user_id', Auth::id())
                         ->rightJoin('ras', 'ras.id', '=', 'ternaks.ras_id')
                         ->groupBy('ras.jenis_ras')
                         ->orderBy('ras.jenis_ras')
@@ -50,6 +56,7 @@ class GrafikController extends Controller
                         ->get();
 
         $count_jantan = Ternak::where('status_ada', '=', true)
+                        ->where('user_id', Auth::id())
                         ->where('jenis_kelamin', '=', 'Jantan')
                         ->rightJoin('ras', 'ras.id', '=', 'ternaks.ras_id')
                         ->groupBy('ras.jenis_ras')
@@ -58,6 +65,7 @@ class GrafikController extends Controller
                         ->get();
 
         $count_betina = Ternak::where('status_ada', '=', true)
+                        ->where('user_id', Auth::id())
                         ->where('jenis_kelamin', '=', 'Betina')
                         ->rightJoin('ras', 'ras.id', '=', 'ternaks.ras_id')
                         ->groupBy('ras.jenis_ras')
@@ -183,6 +191,7 @@ class GrafikController extends Controller
         $data = array();
 
         $count = Ternak::where('status_ada', '=', true)
+                        ->where('user_id', Auth::id())
                         ->selectRaw('count(*) as jumlah, coalesce((extract(year from current_date) -
     extract(year from ternaks.tgl_lahir)), 0) as tahun')
                         ->groupBy('tahun')
@@ -190,6 +199,7 @@ class GrafikController extends Controller
                         ->get();
 
         $count_jantan = Ternak::where('status_ada', '=', true)
+                        ->where('user_id', Auth::id())
                         ->where('jenis_kelamin', '=', 'Jantan')
                         ->selectRaw('count(*) as jumlah, coalesce((extract(year from current_date) -
     extract(year from ternaks.tgl_lahir)), 0) as tahun')
@@ -198,6 +208,7 @@ class GrafikController extends Controller
                         ->get();
 
         $count_betina = Ternak::where('status_ada', '=', true)
+                        ->where('user_id', Auth::id())
                         ->where('jenis_kelamin', '=', 'Betina')
                         ->selectRaw('count(*) as jumlah, coalesce((extract(year from current_date) -
     extract(year from ternaks.tgl_lahir)), 0) as tahun')
@@ -314,12 +325,14 @@ class GrafikController extends Controller
         }
 
         $count = Ternak::whereYear('tgl_lahir', '=' , $yearNow)
+                        ->where('user_id', Auth::id())
                         ->selectRaw('count(*) as jumlah, coalesce(extract(month from tgl_lahir), 0) as lahir')
                         ->groupBy('lahir')
                         ->orderBy('lahir')
                         ->get();
 
         $count_jantan = Ternak::whereYear('tgl_lahir', '=' , $yearNow)
+                        ->where('user_id', Auth::id())
                         ->where('jenis_kelamin', '=', 'Jantan')
                         ->selectRaw('count(*) as jumlah, coalesce(extract(month from tgl_lahir), 0) as lahir')
                         ->groupBy('lahir')
@@ -327,6 +340,7 @@ class GrafikController extends Controller
                         ->get();
 
         $count_betina = Ternak::whereYear('tgl_lahir', '=' , $yearNow)
+                        ->where('user_id', Auth::id())
                         ->where('jenis_kelamin', '=', 'Betina')
                         ->selectRaw('count(*) as jumlah, coalesce(extract(month from tgl_lahir), 0) as lahir')
                         ->groupBy('lahir')
@@ -407,6 +421,7 @@ class GrafikController extends Controller
         }
 
         $count = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                        ->where('user_id', Auth::id())
                         ->whereNotNull('kematian_id')
                         ->whereYear('tgl_kematian', '=', $yearNow)
                         ->selectRaw('count(*) as jumlah, coalesce(extract(month from kematians.tgl_kematian), 0) as mati')
@@ -415,6 +430,7 @@ class GrafikController extends Controller
                         ->get();
 
         $count_jantan = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                        ->where('user_id', Auth::id())
                         ->whereNotNull('kematian_id')
                         ->whereYear('tgl_kematian', '=', $yearNow)
                         ->where('ternaks.jenis_kelamin', '=', 'Jantan')
@@ -424,6 +440,7 @@ class GrafikController extends Controller
                         ->get();
 
         $count_betina = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                        ->where('user_id', Auth::id())
                         ->whereNotNull('kematian_id')
                         ->whereYear('tgl_kematian', '=', $yearNow)
                         ->where('ternaks.jenis_kelamin', '=', 'Betina')
@@ -495,5 +512,107 @@ class GrafikController extends Controller
         }
 
         return $chart;
+    }
+
+    public function grafikJual(Request $request)
+    {
+        $yearNow = date('Y');
+
+        if ($request->ajax()) {
+           $yearNow = $request->tahun;
+        }
+
+        $count = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                        ->where('user_id', Auth::id())
+                        ->whereNotNull('penjualan_id')
+                        ->whereYear('tgl_terjual', '=', $yearNow)
+                        ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                        ->groupBy('jual')
+                        ->orderBy('jual')
+                        ->get();
+
+        $count_jantan = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                        ->where('user_id', Auth::id())
+                        ->whereNotNull('penjualan_id')
+                        ->whereYear('tgl_terjual', '=', $yearNow)
+                        ->where('ternaks.jenis_kelamin', '=', 'Jantan')
+                        ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                        ->groupBy('jual')
+                        ->orderBy('jual')
+                        ->get();
+
+        $count_betina = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                        ->where('user_id', Auth::id())
+                        ->whereNotNull('penjualan_id')
+                        ->whereYear('tgl_terjual', '=', $yearNow)
+                        ->where('ternaks.jenis_kelamin', '=', 'Betina')
+                        ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                        ->groupBy('jual')
+                        ->orderBy('jual')
+                        ->get();
+
+        for($i=0; $i<12; $i++){
+            $data[$i] = 0;
+            $jantan[$i] = 0;
+            $betina[$i] = 0;
+        }
+
+        foreach($count as $jual){
+        	$data[$jual->jual - 1] = $jual->jumlah;
+        }
+
+        foreach($count_jantan as $lahir){
+            $jantan[$lahir->jual - 1] = $lahir->jumlah;
+        }
+
+        foreach($count_betina as $lahir){
+            $betina[$lahir->jual - 1] = $lahir->jumlah;
+        }
+
+        $chart = new PenjualanChart;
+        $chart->title('Grafik Ternak - Penjualan ('. $yearNow .')');
+        $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
+
+        if($count_jantan != null){
+            $chart->dataset('Jantan','bar', $jantan)->options([
+                'responsive' => true,
+                'fill' => true,
+                'backgroundColor' => '#36A7C9',
+                'borderColor' => '#1A89B4',
+                 'tooltip' => [
+                    'show' => true
+                ],
+            ]);
+        }
+
+        if($count_betina != null){
+            $chart->dataset('Betina','bar', $betina)->options([
+                'responsive' => true,
+                'fill' => true,
+                'backgroundColor' => '#F8B195',
+                'borderColor' => '#f67280',
+                 'tooltip' => [
+                    'show' => true
+                ],
+            ]);
+        }
+
+        if($count != null){
+    	    $chart->dataset('Jumlah Ternak', 'line', $data)->options([
+                'responsive' => true,
+    			// 'fill' => 'true',
+    			// 'backgroundColor' => '#FFE0B2',
+                'borderColor' => '#FF9800',
+                 'tooltip' => [
+                    'show' => true
+                ],
+    		]);
+        }
+
+        if ($request->ajax()) {
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+        }
+
+		return $chart;
     }
 }

@@ -1,30 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Peternak;
 
 use App\Ternak;
-use App\RiwayatPenyakit;
-use Carbon\Carbon;
-use App\DataTables\RiwayatDataTable;
+use App\Penjualan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\DataTables\PenjualanDataTable;
 use Yajra\Datatables\Datatables;
 use Validator;
 
-class RiwayatPenyakitController extends Controller
+class PenjualanController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(RiwayatDataTable $dataTable)
+    public function index(PenjualanDataTable $dataTable)
     {
-        $title = 'RIWAYAT PENYAKIT';
-        $page = 'Riwayat Penyakit';
-        $ternaks = Ternak::all();
-        
-        return $dataTable->render('data.riwayat', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks]);
+        $title = 'TERNAK TERJUAL';
+        $page = 'Ternak Terjual';
+        $ternaks = Ternak::where('user_id', Auth::id())->get();
+
+        return $dataTable->with('peternak_id', Auth::id())->render('data.penjualan', [
+            'title' => $title,
+            'page' => $page, 
+            'ternaks' => $ternaks
+        ]);
     }
 
     /**
@@ -45,10 +49,13 @@ class RiwayatPenyakitController extends Controller
      */
     public function store(Request $request)
     {
+        if(Penjualan::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data penjualan untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
+
         $rules = array(
-            'nama_penyakit' => 'required',
             'necktag' => 'required',
-            'tgl_sakit' => 'required'
+            'tgl_terjual' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -59,14 +66,11 @@ class RiwayatPenyakitController extends Controller
 
         $form_data = array(
             'necktag' => $request->necktag,
-            'nama_penyakit' => $request->nama_penyakit,
-            'tgl_sakit' => $request->tgl_sakit,
-            'obat' => $request->obat,
-            'lama_sakit' => $request->lama_sakit,
-            'keterangan' => $request->keterangan,
+            'tgl_terjual' => $request->tgl_terjual,
+            'ket_pembeli' => $request->ket
         );
 
-        RiwayatPenyakit::create($form_data);
+        $penjualan = Penjualan::create($form_data);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -91,7 +95,7 @@ class RiwayatPenyakitController extends Controller
     public function edit($id)
     {
         if(request()->ajax()){
-            $data = RiwayatPenyakit::find($id);
+            $data = Penjualan::findOrFail($id);
             return response()->json(['result' => $data]);
         }
     }
@@ -105,10 +109,12 @@ class RiwayatPenyakitController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Penjualan::where('necktag', $request->necktag)->exists()){
+            return response()->json(['errors' => ['Data penjualan untuk ternak '.$request->necktag.' sudah ada.']]);
+        }
         $rules = array(
-            'nama_penyakit' => 'required',
             'necktag' => 'required',
-            'tgl_sakit' => 'required'
+            'tgl_terjual' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -118,15 +124,12 @@ class RiwayatPenyakitController extends Controller
         }
 
         $form_data = array(
-            'nama_penyakit' => $request->nama_penyakit,
-            'tgl_sakit' => $request->tgl_sakit,
-            'obat' => $request->obat,
-            'lama_sakit' => $request->lama_sakit,
-            'keterangan' => $request->keterangan,
-            'updated_at' => Carbon::now()
+            'necktag' => $request->necktag,
+            'tgl_terjual' => $request->tgl_terjual,
+            'ket_pembeli' => $request->ket
         );
 
-        RiwayatPenyakit::whereId($id)->update($form_data);
+        Penjualan::whereId($id)->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -139,7 +142,7 @@ class RiwayatPenyakitController extends Controller
      */
     public function destroy($id)
     {
-        $data = RiwayatPenyakit::findOrFail($id);
+        $data = Penjualan::findOrFail($id);
         $data->delete();
     }
 }

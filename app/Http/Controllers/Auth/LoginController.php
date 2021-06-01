@@ -39,20 +39,17 @@ class LoginController extends Controller
             $this->redirectTo = route('admin');
             return $this->redirectTo;
         }
-
-        // $this->redirectTo = route('peternak');
-        // return $this->redirectTo;
-
         else if(Auth::user()->role == 'peternak'){
             if(Auth::user()->verified_at){
                 $this->redirectTo = route('peternak');
                 return $this->redirectTo;
             }
-
-            Auth::logout();
-            session()->flash('failure', 'Tidak terauthorisasi - Akun Anda belum terverifikasi!');
-            $this->redirectTo = route('login');
-            return $this->redirectTo;            
+            else{
+                Auth::logout();
+                session()->flash('failure', 'Tidak terauthorisasi - Akun Anda belum terverifikasi!');
+                $this->redirectTo = route('login');
+                return $this->redirectTo;
+            }
         }
         
     }

@@ -12,6 +12,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Ternak;
 use App\Perkawinan;
 use App\RiwayatPenyakit;
+use App\Kematian;
+use App\Penjualan;
+use App\User;
 
 class LaporanController extends Controller
 {
@@ -24,8 +27,7 @@ class LaporanController extends Controller
             ]);
         }
 
-        return view('laporan.laporan')->with('start', date("Y-m-d", strtotime('-29 days')))
-                    ->with('end', date("Y-m-d"));
+        return view('laporan.laporan');
     }
 
     public function lahir(Request $request)
@@ -44,13 +46,28 @@ class LaporanController extends Controller
     public function mati(Request $request)
     {
         if($request->ajax()){
-            $mati = Ternak::select('ternaks.necktag', 'ternaks.kematian_id', 'kematians.tgl_kematian', 'kematians.waktu_kematian', 'kematians.penyebab', 'kematians.kondisi', 'ternaks.pemilik_id', 'ternaks.peternakan_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.bobot_lahir', 'ternaks.pukul_lahir', 'ternaks.lama_dikandungan', 'ternaks.lama_laktasi', 'ternaks.tgl_lepas_sapih', 'ternaks.blood', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.bobot_tubuh', 'ternaks.panjang_tubuh', 'ternaks.tinggi_tubuh', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
-                        ->join('public.kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                        ->whereBetween('kematians.tgl_kematian', [$request->datefrom, $request->dateto])
-                        ->where('ternaks.user_id', Auth::id())
-                        ->get();
+            $mati = Kematian::select('ternaks.necktag', 'ternaks.kematian_id', 'kematians.tgl_kematian', 'kematians.waktu_kematian', 'kematians.penyebab', 'kematians.kondisi', 'ternaks.pemilik_id', 'ternaks.user_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
+                    ->join('public.ternaks', 'kematians.id', '=', 'ternaks.kematian_id')
+                    ->where('ternaks.user_id', Auth::id())
+                    ->whereBetween('kematians.tgl_kematian', [$request->datefrom, $request->dateto])
+                    ->get();
 
             return DataTables::of($mati)
+                  ->addIndexColumn()
+                  ->make(true);
+        }
+    }
+
+    public function jual(Request $request)
+    {
+        if($request->ajax()){
+            $jual = Penjualan::select('ternaks.necktag', 'ternaks.penjualan_id', 'penjualans.tgl_terjual', 'penjualans.ket_pembeli', 'ternaks.pemilik_id', 'ternaks.user_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
+                    ->join('public.ternaks', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                    ->where('ternaks.user_id', Auth::id())
+                    ->whereBetween('penjualans.tgl_terjual', [$request->datefrom, $request->dateto])
+                    ->get();
+
+            return DataTables::of($jual)
                   ->addIndexColumn()
                   ->make(true);
         }
@@ -59,11 +76,11 @@ class LaporanController extends Controller
     public function kawin(Request $request)
     {
         if($request->ajax()){
-            $kawin = Ternak::select('ternaks.necktag', 'ternaks.kematian_id', 'kematians.tgl_kematian', 'kematians.waktu_kematian', 'kematians.penyebab', 'kematians.kondisi', 'ternaks.pemilik_id', 'ternaks.peternakan_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.bobot_lahir', 'ternaks.pukul_lahir', 'ternaks.lama_dikandungan', 'ternaks.lama_laktasi', 'ternaks.tgl_lepas_sapih', 'ternaks.blood', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.bobot_tubuh', 'ternaks.panjang_tubuh', 'ternaks.tinggi_tubuh', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
-                        ->join('public.kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                        ->whereBetween('kematians.tgl_kematian', [$request->datefrom, $request->dateto])
-                        ->where('ternaks.user_id', Auth::id())
-                        ->get();
+            $necktag_ternaks = Ternak::where('user_id', Auth::id())->pluck('necktag')->toArray();
+
+            $kawin = Perkawinan::whereBetween('tgl_kawin', [$request->datefrom, $request->dateto])
+                                ->whereIn('necktag', $necktag_ternaks)
+                                ->get();
 
             return DataTables::of($kawin)
                   ->make(true);
@@ -73,9 +90,13 @@ class LaporanController extends Controller
     public function sakit(Request $request)
     {
         if($request->ajax()){
-            $sakit = RiwayatPenyakit::whereBetween('tgl_sakit', [$request->datefrom, $request->dateto])->get();
+            $necktag_ternaks = Ternak::where('user_id', Auth::id())->pluck('necktag')->toArray();
+            
+            $sakit = RiwayatPenyakit::whereBetween('tgl_sakit', [$request->datefrom, $request->dateto])
+                                    ->whereIn('necktag', $necktag_ternaks)
+                                    ->get();
 
-            return DDataTables::of($sakit)
+            return DataTables::of($sakit)
                   ->make(true);
         }
     }
@@ -83,14 +104,8 @@ class LaporanController extends Controller
     public function ada(Request $request)
     {
         if($request->ajax()){
-            $exists_union = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                                ->where('tgl_kematian', '>', $request->dateto)
-                                ->where('tgl_lahir', '<', $request->dateto)
-                                ->selectRaw('ternaks.*');
-
             $exists = Ternak::where('status_ada', true)
-                        ->where('tgl_lahir', '<', $request->dateto)
-                        ->union($exists_union)
+                        ->where('user_id', Auth::id())
                         ->get();
 
             return DataTables::of($exists)
@@ -104,8 +119,8 @@ class LaporanController extends Controller
         $sp = preg_split("/[=&]/", $date); 
         //0: datefrom, 1:tgl, 2:dateto, 3:tgl
 
-        $export = new LaporanExport($sp[1], $sp[3]);
+        $export = new LaporanExport($sp[1], $sp[3], null, Auth::id());
 
-        return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'.xlsx');
+        return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'_peternak_id_'.Auth::id().'.xlsx');
     }
 }

@@ -38,19 +38,12 @@ class TernakDataTable extends DataTable
      */
     public function query()
     {
-        if($this->id){
-            return Ternak::where('user_id', $this->id)->select('*');
+        if($this->peternak_id != null){
+            return Ternak::where('user_id', $this->peternak_id)->select('*');
         }
-        $model = new Ternak();
-        $query = $model->newQuery()->select('*');
-
-        // if($query->status_ada){
-        //     $query->status_ada = 'Ada';
-        // }else{
-        //     $query->status_ada = 'Tidak Ada';
-        // }
-
-        return $query;
+        else{
+            return Ternak::select('*');
+        }
     }
 
     /**

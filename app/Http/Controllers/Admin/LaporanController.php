@@ -144,7 +144,6 @@ class LaporanController extends Controller
                 if($user_ids != null){
                     $exists = Ternak::where('status_ada', true)
                         ->whereIn('user_id', $user_ids)
-                        // ->union($exists_union)
                         ->get();
                 }
                 else{
@@ -153,7 +152,6 @@ class LaporanController extends Controller
             }
             else{
                 $exists = Ternak::where('status_ada', true)
-                        // ->union($exists_union)
                         ->get();
             }
 
@@ -163,14 +161,19 @@ class LaporanController extends Controller
         } 
     }
 
-    public function export($date) 
+    public function export($param) 
     {
-        $sp = preg_split("/[=&]/", $date); 
-        //0: datefrom, 1:tgl, 2:dateto, 3:tgl
+        $sp = preg_split("/[=&]/", $param); 
+        //0: datefrom, 1:tgl, 2:dateto, 3:tgl, 4:grup_id, 5:grup_id
 
-        $export = new LaporanExport($sp[1], $sp[3]);
+        $export = new LaporanExport($sp[1], $sp[3], $sp[5], null);
 
-        return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'.xlsx');
+        if($sp[5] != null){
+            return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'_grup_peternak_id_'.$sp[5].'.xlsx');
+        }
+        else{
+            return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'.xlsx');
+        }
     }
 
 }

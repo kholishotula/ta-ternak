@@ -88,7 +88,7 @@
         <select class="input100 form-control js-select-search @error('grup_peternak') is-invalid @enderror" id="grup_peternak" name="grup_peternak" required>
             <option></option>
             @forelse($grupPeternak as $grup)
-                <option value="{{ $grup->id }}">{{ $grup->nama_grup }}</option>
+                <option value="{{ $grup->id }}">{{ $grup->nama_grup }} - {{ $grup->kecamatan }}, {{ $grup->kab_kota }}</option>
             @empty
                 Tidak ada Grup Peternak
             @endforelse

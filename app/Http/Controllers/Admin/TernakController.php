@@ -118,27 +118,23 @@ class TernakController extends Controller
             $data = Ternak::findOrFail($id);
 
             if($data->user_id != null){
-                $pid = DB::table('users')->where('id', $data->user_id)->first();
-                $data->user_id = $pid->name;
+                $uid = User::where('id', $data->user_id)->first();
+                $data->user_id = $uid->name;
             }
             if($data->pemilik_id != null){
-                $pid = DB::table('pemiliks')->where('id', $data->pemilik_id)->first();
+                $pid = Pemilik::where('id', $data->pemilik_id)->first();
                 $data->pemilik_id = $pid->nama_pemilik;
             }
             if($data->ras_id != null){
-                $rid = DB::table('ras')->where('id', $data->ras_id)->first();
+                $rid = Ras::where('id', $data->ras_id)->first();
                 $data->ras_id = $rid->jenis_ras;
             }
-            if($data->grup_id != null){
-                $gid = DB::table('grup_ternaks')->where('id', $data->grup_id)->first();
-                $data->grup_id = $gid->nama_grup;
-            }
             if($data->kematian_id != null){
-                $kid = DB::table('kematians')->where('id', $data->kematian_id)->first();
+                $kid = Kematian::where('id', $data->kematian_id)->first();
                 $data->kematian_id = $kid->tgl_kematian.' - '.$kid->waktu_kematian;
             }
             if($data->penjualan_id != null){
-                $jid = DB::table('penjualans')->where('id', $data->penjualan_id)->first();
+                $jid = Penjualan::where('id', $data->penjualan_id)->first();
                 $data->penjualan_id = $jid->tgl_terjual.' - dibeli oleh '.$jid->ket_pembeli;
             }
 
@@ -148,7 +144,6 @@ class TernakController extends Controller
                 $data->status_ada = 'Tidak Ada';
             }
 
-            // $rp = DB::select('SELECT public."rp_ternak"(?)', [$data->necktag]);
             if(RiwayatPenyakit::where('necktag', $id)->exists()){
                 $rp = RiwayatPenyakit::where('necktag', $id)->get();
             }
@@ -195,7 +190,6 @@ class TernakController extends Controller
             'pemilik_id' => 'required',
             'peternak_id' => 'required',
             'jenis_kelamin' => 'required',
-            'tgl_lahir' => 'required',
             'status_ada' => 'required'
         );
 

@@ -61,6 +61,10 @@
 			// data peternak
 			Route::resource('peternak', 'PeternakController')->except(['create']);
 
+			// data peternak yang belum terverifikasi
+			Route::get('verifikasi', 'VerifikasiController@index')->name('verifikasi');
+			Route::get('verifikasi/users', 'VerifikasiController@getUsers')->name('verifikasi.users');
+
 			//barcode
 			Route::get('barcode', 'BarcodeController@index')->name('barcode');
 			Route::get('barcode/pdf', 'BarcodeController@generatePdf')->name('barcode.pdf');
@@ -83,7 +87,7 @@
 			Route::post('laporan/kawin', 'LaporanController@kawin')->middleware('cors')->name('laporan.kawin');
 			Route::post('laporan/sakit', 'LaporanController@sakit')->middleware('cors')->name('laporan.sakit');
 			Route::post('laporan/ada', 'LaporanController@ada')->middleware('cors')->name('laporan.ada');
-			Route::get('laporan/export/{date}', 'LaporanController@export')->name('laporan.export');
+			Route::get('laporan/export/{param}', 'LaporanController@export')->name('laporan.export');
 		});
 	});
 
@@ -117,6 +121,8 @@
 			Route::resource('pemilik', 'PemilikController')->except(['create']);
 			Route::resource('perkawinan', 'PerkawinanController')->except(['create', 'show']);
 			Route::get('perkawinan/pasangan/{id}', 'PerkawinanController@getPasangan');
+			Route::resource('penjualan', 'PenjualanController')->except(['create', 'show']);
+			Route::resource('perkembangan', 'PerkembanganController')->except(['create']);
 
 			//barcode
 			Route::get('barcode', 'BarcodeController@index')->name('barcode');
@@ -130,15 +136,17 @@
 			Route::get('grafik', 'GrafikController@index')->name('grafik');
 			Route::get('grafik/lahir', 'GrafikController@grafikLahir')->name('grafik.lahir');
 			Route::get('grafik/mati', 'GrafikController@grafikMati')->name('grafik.mati');
+			Route::get('grafik/jual', 'GrafikController@grafikJual')->name('grafik.jual');
 
 			//laporan
 			Route::get('laporan', 'LaporanController@index')->name('laporan');
 			Route::post('laporan/lahir', 'LaporanController@lahir')->middleware('cors')->name('laporan.lahir');
 			Route::post('laporan/mati', 'LaporanController@mati')->middleware('cors')->name('laporan.mati');
+			Route::post('laporan/jual', 'LaporanController@jual')->middleware('cors')->name('laporan.jual');
 			Route::post('laporan/kawin', 'LaporanController@kawin')->middleware('cors')->name('laporan.kawin');
 			Route::post('laporan/sakit', 'LaporanController@sakit')->middleware('cors')->name('laporan.sakit');
 			Route::post('laporan/ada', 'LaporanController@ada')->middleware('cors')->name('laporan.ada');
-			Route::get('laporan/export/{date}', 'LaporanController@export')->name('laporan.export');
+			Route::get('laporan/export/{param}', 'LaporanController@export')->name('laporan.export');
 		});
 	});
 

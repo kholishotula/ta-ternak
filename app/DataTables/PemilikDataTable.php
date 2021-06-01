@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Ternak;
 use App\Pemilik;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -37,8 +38,13 @@ class PemilikDataTable extends DataTable
      */
     public function query()
     {
-        $model = new Pemilik();
-        return $model->newQuery()->select('*');
+        if($this->peternak_id != null){
+            $pemilik_ids = Ternak::where('user_id', $this->peternak_id)->distinct()->pluck('pemilik_id')->toArray();
+            return Pemilik::whereIn('id', $pemilik_ids)->select('*');
+        }
+        else {
+            return Pemilik::select('*');
+        }
     }
 
     /**

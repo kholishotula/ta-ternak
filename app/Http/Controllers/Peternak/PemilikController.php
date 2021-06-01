@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Peternak;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Pemilik;
 use App\Ternak;
 use App\DataTables\PemilikDataTable;
@@ -22,7 +23,10 @@ class PemilikController extends Controller
         $title = 'PEMILIK';
         $page = 'Pemilik';
 
-        return $dataTable->render('data.pemilik', ['title' => $title, 'page' => $page]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.pemilik', [
+            'title' => $title,
+            'page' => $page
+        ]);
     }
 
     /**
@@ -30,10 +34,10 @@ class PemilikController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -56,7 +60,7 @@ class PemilikController extends Controller
 
         $form_data = array(
             'nama_pemilik' => $request->nama_pemilik,
-            'ktp_pemilik' => $request->ktp
+            'ktp_pemilik' => $request->ktp_pemilik
         );
 
         Pemilik::create($form_data);
@@ -116,7 +120,7 @@ class PemilikController extends Controller
 
         $form_data = array(
             'nama_pemilik' => $request->nama_pemilik,
-            'ktp_pemilik' => $request->ktp
+            'ktp_pemilik' => $request->ktp_pemilik
         );
 
         Pemilik::whereId($id)->update($form_data);

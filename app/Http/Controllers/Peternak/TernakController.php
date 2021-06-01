@@ -31,13 +31,13 @@ class TernakController extends Controller
     {
         $title = 'TERNAK';
         $page = 'Ternak';
-        $pemilik = Pemilik::all();
+        $pemilik_ids = Ternak::where('user_id', Auth::id())->distinct()->pluck('pemilik_id')->toArray();
+        $pemilik = Pemilik::whereIn('id', $pemilik_ids)->get();
         $ras = Ras::all();
-        $peternak = User::where('role', '<>', 'admin')->get();
+        $peternak = User::where('id', Auth::id())->get();
         $datas = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')->get();
-        $id = Auth::id();
 
-        return $dataTable->with('id', $id)->render('data.ternak', [
+        return $dataTable->with('peternak_id', Auth::id())->render('data.ternak', [
             'title' => $title, 
             'page' => $page, 
             'data' => $datas, 
@@ -52,10 +52,10 @@ class TernakController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -70,7 +70,6 @@ class TernakController extends Controller
             'pemilik_id' => 'required',
             'peternak_id' => 'required',
             'jenis_kelamin' => 'required',
-            'tgl_lahir' => 'required',
             'status_ada' => 'required'
         );
 
@@ -120,25 +119,25 @@ class TernakController extends Controller
         if(request()->ajax()){
             $data = Ternak::findOrFail($id);
 
+            if($data->user_id != null){
+                $uid = User::where('id', $data->user_id)->first();
+                $data->user_id = $uid->name;
+            }
             if($data->pemilik_id != null){
-                $pid = DB::table('pemiliks')->where('id', $data->pemilik_id)->first();
+                $pid = Pemilik::where('id', $data->pemilik_id)->first();
                 $data->pemilik_id = $pid->nama_pemilik;
             }
             if($data->ras_id != null){
-                $rid = DB::table('ras')->where('id', $data->ras_id)->first();
+                $rid = Ras::where('id', $data->ras_id)->first();
                 $data->ras_id = $rid->jenis_ras;
             }
-            if($data->grup_id != null){
-                $gid = DB::table('grup_ternaks')->where('id', $data->grup_id)->first();
-                $data->grup_id = $gid->nama_grup;
-            }
             if($data->kematian_id != null){
-                $kid = DB::table('kematians')->where('id', $data->kematian_id)->first();
+                $kid = Kematian::where('id', $data->kematian_id)->first();
                 $data->kematian_id = $kid->tgl_kematian.' - '.$kid->waktu_kematian;
             }
             if($data->penjualan_id != null){
-                $jid = DB::table('penjualans')->where('id', $data->penjualan_id)->first();
-                $data->penjualan_id = $jid->tgl_kematian.' - dibeli oleh '.$jid->ket_pembeli;
+                $jid = Penjualan::where('id', $data->penjualan_id)->first();
+                $data->penjualan_id = $jid->tgl_terjual.' - dibeli oleh '.$jid->ket_pembeli;
             }
 
             if($data->status_ada == true){
@@ -147,7 +146,6 @@ class TernakController extends Controller
                 $data->status_ada = 'Tidak Ada';
             }
 
-            // $rp = DB::select('SELECT public."rp_ternak"(?)', [$data->necktag]);
             if(RiwayatPenyakit::where('necktag', $id)->exists()){
                 $rp = RiwayatPenyakit::where('necktag', $id)->get();
             }
@@ -194,7 +192,6 @@ class TernakController extends Controller
             'pemilik_id' => 'required',
             'peternak_id' => 'required',
             'jenis_kelamin' => 'required',
-            'tgl_lahir' => 'required',
             'status_ada' => 'required'
         );
 
@@ -243,7 +240,11 @@ class TernakController extends Controller
     {
         $data = Ternak::findOrFail($id);
 
-        if(Perkawinan::where('necktag', $id)->exists()){
+        if(Perkawinan::where('necktag', $id)->exists() ||
+           RiwayatPenyakit::where('necktag', $id)->exists() ||
+           Kematian::where('necktag', $id)->exists() ||
+           Perkembangan::where('necktag', $id)->exists() ||
+           Penjualan::where('necktag', $id)->exists()){
             $err = 'Data ternak id '. $id .' tidak dapat dihapus.';
             return response()->json(['error' => $err]);
         }
@@ -256,7 +257,7 @@ class TernakController extends Controller
     // trash
     public function trash()
     {
-        $ternak = Ternak::onlyTrashed()->get();
+        $ternak = Ternak::where('user_id', Auth::id())->onlyTrashed()->get();
 
         return Datatables::of($ternak)
                 ->addIndexColumn()
@@ -278,7 +279,7 @@ class TernakController extends Controller
 
     public function restoreAll()
     {
-        $ternak = Ternak::onlyTrashed();
+        $ternak = Ternak::where('user_id', Auth::id())->onlyTrashed();
         $ternak->restore();
     }
 
@@ -291,7 +292,7 @@ class TernakController extends Controller
 
     public function fdeleteAll()
     {
-        $ternak = Ternak::onlyTrashed();
+        $ternak = Ternak::where('user_id', Auth::id())->onlyTrashed();
         $ternak->forceDelete();
     }
 }

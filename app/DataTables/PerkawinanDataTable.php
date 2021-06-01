@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Ternak;
 use App\Perkawinan;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -36,8 +37,13 @@ class PerkawinanDataTable extends DataTable
      */
     public function query()
     {
-        $model = new Perkawinan();
-        return $model->newQuery()->select('*');
+        if($this->peternak_id != null){
+            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)->pluck('necktag')->toArray();
+            return Perkawinan::whereIn('necktag', $necktag_ternaks)->select('*');
+        }
+        else{
+            return Perkawinan::select('*');
+        }
     }
 
     /**

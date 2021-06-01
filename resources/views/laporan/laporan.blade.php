@@ -36,6 +36,7 @@
 
                     <div class="row clearfix">
                         <div class="col-md-12">
+                            @can('isAdmin')
                             <div class="form-group">
                                 <label class="control-label">Grup Peternak</label>
                                 <div class="form-line">
@@ -47,6 +48,7 @@
                                     </select>
                                 </div>
                             </div>
+                            @endcan
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon">

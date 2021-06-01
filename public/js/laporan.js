@@ -145,7 +145,9 @@ $('#filter-form').on('submit', function(event){
                 to = finish;
                 grup_id = data.grup_id;
                 $('#date-span').html('tanggal ' + from + ' sampai ' + to);
-                $('#grup-name').html(' untuk Grup Peternak id ' + grup_id);
+                if(grup_id != null){
+                    $('#grup-name').html(' untuk Grup Peternak id ' + grup_id);
+                }
 
                 $('#lahir-table').DataTable().ajax.reload();
                 $('#mati-table').DataTable().ajax.reload();
@@ -372,11 +374,11 @@ $('#ada-table').DataTable({
 });
 
 $('#dwd-btn').click(function(){
-    var dateparam = {
+    var param = {
         datefrom: from,
         dateto: to,
         grup_id: grup_id,
     };
-    var url = url_seg+"/laporan/export/" + $.param(dateparam);
+    var url = url_seg+"/laporan/export/" + $.param(param);
     window.location = url;
 });

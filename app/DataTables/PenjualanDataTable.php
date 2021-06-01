@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Ternak;
 use App\Penjualan;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -36,8 +37,13 @@ class PenjualanDataTable extends DataTable
      */
     public function query()
     {
-        $model = new Penjualan();
-        return $model->newQuery()->select('*');
+        if($this->peternak_id != null){
+            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)->pluck('necktag')->toArray();
+            return Penjualan::whereIn('necktag', $necktag_ternaks)->select('*');
+        }
+        else{
+            return Penjualan::select('*');
+        }
     }
 
     /**

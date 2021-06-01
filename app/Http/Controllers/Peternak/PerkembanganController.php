@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Peternak;
 
 use App\Ternak;
 use App\Perkembangan;
 use Carbon\Carbon;
-use App\DataTables\PerkembanganDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\DataTables\PerkembanganDataTable;
 use Yajra\Datatables\Datatables;
 use Validator;
 use File;
@@ -24,9 +25,13 @@ class PerkembanganController extends Controller
     {
         $title = 'PENCATATAN PERKEMBANGAN';
         $page = 'Pencatatan Perkembangan';
-        $ternaks = Ternak::all();
+        $ternaks = Ternak::where('user_id', Auth::id())->get();
         
-        return $dataTable->render('data.perkembangan', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks]);
+        return $dataTable->with('peternak_id', Auth::id())->render('data.perkembangan', [
+            'title' => $title,
+            'page' => $page,
+            'ternaks' => $ternaks
+        ]);
     }
 
     /**

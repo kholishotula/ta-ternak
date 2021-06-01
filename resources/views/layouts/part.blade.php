@@ -152,6 +152,13 @@
                             <span>Peternak</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('admin.verifikasi') }}">
+                            <!-- <i class="material-icons">how_to_reg</i> -->
+                            <i class="material-icons">verified_user</i>
+                            <span>Peternak perlu verifikasi</span>
+                        </a>
+                    </li>
                     @endcan
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -172,7 +179,9 @@
                             @elsecan('isPeternak')
                             <li><a href="{{ route('peternak.kematian.index') }}">Kematian</a></li>
                             <li><a href="{{ route('peternak.pemilik.index') }}">Pemilik</a></li>
+                            <li><a href="{{ route('peternak.penjualan.index') }}">Penjualan</a></li>
                             <li><a href="{{ route('peternak.perkawinan.index') }}">Perkawinan</a></li>
+                            <li><a href="{{ route('peternak.perkembangan.index') }}">Perkembangan</a></li>
                             <li><a href="{{ route('peternak.ras.index') }}">Ras</a></li>
                             <li><a href="{{ route('peternak.riwayat.index') }}">Riwayat Penyakit</a></li>
                             <li><a href="{{ route('peternak.ternak.index') }}">Ternak</a></li>
