@@ -20,100 +20,68 @@ else if(seg == 'ketua-grup'){
     url_seg = "/ketua-grup";
 }
 
-$('#eform-file').hide();
+// $('#eform-file').hide();
 
-$('#tambah_data').on('click', function(){
-    $('.modal-title').text('Tambah Data - Perkembangan');
-    $('#action_button').val('Tambah');
-    $('#action_button').addClass('btn-success');
-    $('#action_button').removeClass('btn-warning');
-    $('#action').val('Add');
-    $('#form_result').html('');
+$('#foto').change(function(){
+    let reader = new FileReader();
 
-    $('#tambah_data_form')[0].reset();
-    $('#necktag').val('').change();
-    $('#form-file').show();
+    reader.onload = (e) => { 
+      $('#preview-image').attr('src', e.target.result); 
+    }
 
+    reader.readAsDataURL(this.files[0]); 
+});
+
+$('#tambah_data').click(function () {
+    $('#tambah_edit_data_form').trigger("reset");
+    $('.modal-title').text("Tambah Data - Perkembangan");
     $('#formModal').modal('show');
+    $('#necktag').val('');
+    $('#hidden_id').val('');
+    $('#preview-image').attr('src', 'https://www.riobeauty.co.uk/images/product_image_not_found.gif');
+    $('#btn-save').text('Tambah');
+    $('#btn-save').addClass('btn-success');
+    $('#btn-save').removeClass('btn-warning');
 });
 
-$('#tambah_data_form').on('submit', function(event){
-    event.preventDefault();
-    var action_url = '';
-    var method_form = '';
-    
-    //tambah
-    if($('#action').val() == 'Add'){
-        action_url = url_seg+"/perkembangan";
-        method_form = "POST";
-        formData = new FormData(this);
+$('#tambah_edit_data_form').on('submit', function(e) {
 
-        $.ajax({
-            url: action_url,
-            method: method_form,
-            data: formData,
-            // data: $(this).serialize(),
-            // datatype: "json",
-            processData: false,
-            contentType: false,
-            success: function(data){
-                var html = '';
-                if (data.errors) {
-                    html = '<div class="alert alert-danger">';
-                    for (var count = 0; count < data.errors.length; count++) {
-                        html += '<p>' + data.errors[count] + '</p>';
-                    }
-                    html += '</div>';
-                }
-                if (data.success) {
-                    html = '<div class="alert alert-success">' + data.success + '</div>';
-                    $('#tambah_data_form')[0].reset();
-                    $('#perkembangan-table').DataTable().ajax.reload();
-                }
-                $('#form_result').html(html);
-            },
-            error: function (jqXHR, textStatus, errorThrown) { 
-                console.log(jqXHR); 
-            }
-        });
-    }
+    e.preventDefault();
+ 
+    var formData = new FormData(this);
+ 
+    $.ajax({
+        type:'POST',
+        url: url_seg+"/perkembangan",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: (data) => {
+            $("#formModal").modal('hide');
+            $("#btn-save").text('Tambah');
+            $("#btn-save").attr("disabled", false);
 
-    //edit
-    if($('#action').val() == 'Edit'){
-        var updateId = $('#hidden_id').val();
-        action_url = url_seg+"/perkembangan/"+updateId;
-        method_form = "PUT";
-        
-        $.ajax({
-            url: action_url,
-            method: method_form,
-            // data: formData,
-            data: $(this).serialize(),
-            datatype: "json",
-            // processData: false,
-            // contentType: false,
-            success: function(data){
-                var html = '';
-                if (data.errors) {
-                    html = '<div class="alert alert-danger">';
-                    for (var count = 0; count < data.errors.length; count++) {
-                        html += '<p>' + data.errors[count] + '</p>';
-                    }
-                    html += '</div>';
+            var html = '';
+            if (data.errors) {
+                html = '<div class="alert alert-danger">';
+                for (var count = 0; count < data.errors.length; count++) {
+                    html += '<p>' + data.errors[count] + '</p>';
                 }
-                if (data.success) {
-                    html = '<div class="alert alert-success">' + data.success + '</div>';
-                    $('#tambah_data_form')[0].reset();
-                    $('#perkembangan-table').DataTable().ajax.reload();
-                }
-                $('#form_result').html(html);
-            },
-            error: function (jqXHR, textStatus, errorThrown) { 
-                console.log(jqXHR); 
+                html += '</div>';
             }
-        });
-    }
-});
+            if (data.success) {
+                html = '<div class="alert alert-success">' + data.success + '</div>';
+                $('#tambah_edit_data_form')[0].reset();
+                $('#perkembangan-table').DataTable().ajax.reload();
+            }
+            $('#form_result').html(html);
+       },
+       error: function(jqXHR, textStatus, errorThrown){
+          console.log(jqXHR);
+        }
+      });
+  });
 
 //view
 $(document).on('click', '.view', function(){
@@ -159,7 +127,6 @@ $(document).on('click', '.edit', function(){
         url: url_seg+"/perkembangan/"+id+"/edit",
         datatype: "json",
         success: function(data){
-             // console.log(data);
             $('#necktag').val(data.result.necktag).change();
             $('#tgl_perkembangan').val(data.result.tgl_perkembangan);
             $('#berat_badan').val(data.result.berat_badan);
@@ -167,23 +134,19 @@ $(document).on('click', '.edit', function(){
             $('#lingkar_dada').val(data.result.lingkar_dada);
             $('#tinggi_pundak').val(data.result.tinggi_pundak);
             $('#lingkar_skrotum').val(data.result.lingkar_skrotum);
-            // if(data.result.foto){
-            //     $('#eform-file').show();
-            //     $('#eimage').attr('src', segments[0] + '/' + data.result.foto).width(150);
-                $('#form-file').hide();
-            // }
-            // else{
-            //     $('#eform-file').hide();
-            //     $('#form-file').show();
-            // }
-            // $('#image').val(data.image).change();
+            // $('#foto').removeAttr('required');
+            if(data.result.foto != null){
+                $('#preview-image').attr('src', segments[0] + '/' + data.result.foto).width(150); 
+            }
+            else{
+                $('#preview-image').attr('src', 'https://www.riobeauty.co.uk/images/product_image_not_found.gif');
+            }
             $('#keterangan').val(data.result.keterangan);
 
             $('#hidden_id').val(id);
-            $('#action').val('Edit');
-            $('#action_button').val('Ubah');
-            $('#action_button').addClass('btn-warning');
-            $('#action_button').removeClass('btn-success');
+            $('#btn-save').text('Ubah');
+            $('#btn-save').addClass('btn-warning');
+            $('#btn-save').removeClass('btn-success');
             $('.modal-title').text('Edit Data - Perkembangan');
             $('#formModal').modal('show');
         },
@@ -191,13 +154,6 @@ $(document).on('click', '.edit', function(){
             console.log(jqXHR); 
         }
     });
-});
-
-$("#ubah-foto").change(function() {
-    var val = $(this).val();
-    if(val === "ya") {
-        $('#form-file').show();
-    }
 });
 
 //delete

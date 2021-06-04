@@ -27,9 +27,9 @@
 			</div>
 			<div class="modal-body">
 				<span id="form_result"></span>
-				<form method="post" id="tambah_data_form" enctype="multipart/form-data">
+				<form method="post" id="tambah_edit_data_form" enctype="multipart/form-data">
 					@csrf
-
+                    <input type="hidden" name="hidden_id" id="hidden_id">
 					<div class="form-group">
 						<label class="control-label">Necktag</label>
 						<div>
@@ -82,7 +82,7 @@
 							<input type="number" step="any" name="lingkar_skrotum" id="lingkar_skrotum" class="form-control">
 						</div>
 					</div>
-                    <div class="form-group" id="eform-file">
+                    <!-- <div class="form-group" id="eform-file">
                         <label class="control-label">Foto</label>
                         <div class="form-line col-md-8">
                             <img id="eimage">
@@ -101,7 +101,17 @@
 						<div class="form-line col-md-8">
                             <input type="file" name="image" id="image" class="form-control">
 						</div>
-					</div>
+					</div> -->
+                    <div class="form-group">
+                        <label class="control-label">Foto</label>
+                        <div class="form-line col-md-6">
+                            <input type="file" class="form-control" id="foto" name="foto">
+                        </div>               
+                        <div class="form-line col-md-6">
+                            <img id="preview-image" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif"
+                                alt="preview image" style="max-height: 250px;">
+                        </div>
+                    </div>
 					<div class="form-group">
 						<label class="control-label">Keterangan</label>
 						<div class="form-line col-md-8">
@@ -110,9 +120,7 @@
 					</div>
 					<br>
 					<div class="form-group" align="center">
-						<input type="hidden" name="action" id="action" value="Add">
-						<input type="hidden" name="hidden_id" id="hidden_id">
-						<input type="submit" name="action_button" id="action_button" class="btn btn-warning" value="Add">
+                        <button type="submit" class="btn btn-success" id="btn-save" value="tambah_data"></button>
 					</div>
 				</form>
 			</div>
