@@ -28,7 +28,7 @@
         <i class="material-icons">home</i> Home
     </a>
 </li>
-<li><i class="material-icons">widgets</i> Data </li>
+<li><i class="material-icons">groups</i> Grup Saya </li>
 <li class="active"><i class="material-icons">attachment</i> {{ $page ?? '' }} </li>
 @endsection
 

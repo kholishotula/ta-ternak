@@ -19,7 +19,7 @@ class PeternakController extends Controller
     }
 
     public function getUsers(){
-        $users = User::where('role', '<>', 'admin')
+        $users = User::where('role', '=', 'peternak')
                     ->where('grup_id', Auth::user()->grup_id)
                     ->get();
 

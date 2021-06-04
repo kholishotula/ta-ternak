@@ -38,8 +38,10 @@ class PerkawinanDataTable extends DataTable
     public function query()
     {
         if($this->peternak_id != null){
-            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)->pluck('necktag')->toArray();
-            return Perkawinan::whereIn('necktag', $necktag_ternaks)->select('*');
+            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)
+                                    ->pluck('necktag')->toArray();
+            return Perkawinan::whereIn('necktag', $necktag_ternaks)
+                            ->select('*');
         }
         else{
             return Perkawinan::select('*');

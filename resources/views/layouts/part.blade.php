@@ -172,9 +172,9 @@
                         </a>
                         <ul class="ml-menu">
                             <li><a href="{{ route('ketua-grup.grup-saya.peternak') }}">Peternak</a></li>
-                            <li><a href="">Ternak</a></li>
-                            <li><a href="">Riwayat Penyakit</a></li>
-                            <li><a href="">Perkembangan</a></li>
+                            <li><a href="{{ route('ketua-grup.grup-saya.ternak') }}">Ternak</a></li>
+                            <li><a href="{{ route('ketua-grup.grup-saya.riwayat') }}">Riwayat Penyakit</a></li>
+                            <li><a href="{{ route('ketua-grup.grup-saya.perkembangan') }}">Perkembangan</a></li>
                         </ul>
                     </li>
                     @endcan

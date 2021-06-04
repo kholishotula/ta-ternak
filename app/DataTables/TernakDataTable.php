@@ -39,7 +39,8 @@ class TernakDataTable extends DataTable
     public function query()
     {
         if($this->peternak_id != null){
-            return Ternak::where('user_id', $this->peternak_id)->select('*');
+            return Ternak::where('user_id', $this->peternak_id)
+                        ->select('*');
         }
         else{
             return Ternak::select('*');

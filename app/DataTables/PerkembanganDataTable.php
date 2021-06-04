@@ -39,8 +39,11 @@ class PerkembanganDataTable extends DataTable
     public function query()
     {
         if($this->peternak_id != null){
-            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)->pluck('necktag')->toArray();
-            return Perkembangan::whereIn('necktag', $necktag_ternaks)->select('*');
+            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)
+                                    ->pluck('necktag')->toArray();
+            return Perkembangan::whereIn('necktag', $necktag_ternaks)
+                                ->orderBy('necktag', 'asc')
+                                ->select('*');
         }
         else{
             return Perkembangan::select('*');

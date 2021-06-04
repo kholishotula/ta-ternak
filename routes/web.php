@@ -184,9 +184,19 @@
 			Route::resource('perkembangan', 'PerkembanganController')->except(['create']);
 	
 			// data di grup saya
+			//peternak
 			Route::get('grup-saya/peternak', 'GrupSaya\PeternakController@index')->name('grup-saya.peternak');
 			Route::get('grup-saya/peternak/get', 'GrupSaya\PeternakController@getUsers')->name('grup-saya.peternak.get');
 			Route::get('grup-saya/peternak/verify/{id}', 'GrupSaya\PeternakController@verifyUser');
+			//ternak
+			Route::get('grup-saya/ternak', 'GrupSaya\TernakController@index')->name('grup-saya.ternak');
+			Route::get('grup-saya/ternak/get', 'GrupSaya\TernakController@getTernaks')->name('grup-saya.ternak.get');
+			//riwayat penyakit
+			Route::get('grup-saya/riwayat', 'GrupSaya\RiwayatPenyakitController@index')->name('grup-saya.riwayat');
+			Route::get('grup-saya/riwayat/get', 'GrupSaya\RiwayatPenyakitController@getRiwayats')->name('grup-saya.riwayat.get');
+			//perkembangan
+			Route::get('grup-saya/perkembangan', 'GrupSaya\PerkembanganController@index')->name('grup-saya.perkembangan');
+			Route::get('grup-saya/perkembangan/get', 'GrupSaya\PerkembanganController@getPerkembangans')->name('grup-saya.perkembangan.get');
 	
 			//barcode
 			Route::get('barcode', 'BarcodeController@index')->name('barcode');

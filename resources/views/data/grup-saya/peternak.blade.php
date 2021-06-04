@@ -1,4 +1,4 @@
-@extends('data.index')
+@extends('data.grup-saya.index')
 
 @section('table-content')
 <!-- tabel -->

@@ -61,7 +61,6 @@ class PerkembanganController extends Controller
 
         if($file = $request->file('image')){
             $date = date('Y-m-d', strtotime($request->tgl_perkembangan));
-            // $destinationPath = public_path('images/perkembangan');
             $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
 
             $img = Image::make($file->path());
