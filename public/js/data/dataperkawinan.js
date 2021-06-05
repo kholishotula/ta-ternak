@@ -87,7 +87,7 @@ $('#tambah_data_form').on('submit', function(event){
 				html += '</div>';
 			}
 			if (data.error) {
-				console.log("halo");
+				// console.log("halo");
 				console.log(data.error);
 				html = '<div class="alert alert-danger">' + data.error + '</div>';
 			}
@@ -96,7 +96,6 @@ $('#tambah_data_form').on('submit', function(event){
 				$('#tambah_data_form')[0].reset();
 				$('#perkawinan-table').DataTable().ajax.reload();
 			}
-				console.log("haloff");
 			$('#form_result').html(html);
 		},
         error: function (jqXHR, textStatus, errorThrown) { 

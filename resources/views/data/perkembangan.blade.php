@@ -82,26 +82,6 @@
 							<input type="number" step="any" name="lingkar_skrotum" id="lingkar_skrotum" class="form-control">
 						</div>
 					</div>
-                    <!-- <div class="form-group" id="eform-file">
-                        <label class="control-label">Foto</label>
-                        <div class="form-line col-md-8">
-                            <img id="eimage">
-                        </div>
-                        <br>
-                        <b>Ubah foto?</b>
-						<div>
-							<select class="form-control js-select-search" name="ubah-foto" id="ubah-foto">
-								<option value="tidak">Tidak</option>
-                                <option value="ya">Ya</option>
-							</select>
-						</div>
-                    </div>
-                    <div class="form-group" id="form-file">
-						<label class="control-label">Upload Gambar</label>
-						<div class="form-line col-md-8">
-                            <input type="file" name="image" id="image" class="form-control">
-						</div>
-					</div> -->
                     <div class="form-group">
                         <label class="control-label">Foto</label>
                         <div class="form-line col-md-6">

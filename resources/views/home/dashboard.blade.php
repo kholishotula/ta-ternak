@@ -96,8 +96,49 @@
 <!-- /search -->
 
 <!-- result -->
-<div id="chartDiv" style="max-width: 740px;height: 400px;margin: 0px auto"></div>
-<div id="text-center not-exist"></div>
+<div id="exist">
+    <div class="block-header">
+        <h2 id="title"></h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-xs-12">
+            <div class="card">
+                <div class="body">
+                    <!-- inst -->
+                    <div align="center">
+                        <table class="table table-bordered" style="width: 60%;">
+                            <tr align="center">
+                                <td style="width: 50%;"><b>Jenis Kelamin</b></td>
+                                <td id="jk" style="width: 50%;"></td>
+                            </tr>
+                            <tr align="center">
+                                <td style="width: 50%;"><b>Ras</b></td>
+                                <td id="ras" style="width: 50%;"></td>
+                            </tr>
+                            <tr align="center">
+                                <td style="width: 50%;"><b>Tanggal Lahir</b></td>
+                                <td id="tgl_lahir" style="width: 50%;"></td>
+                            </tr>
+                            <tr align="center">
+                                <td style="width: 50%;"><b>Pemilik</b></td>
+                                <td id="pemilik" style="width: 50%;"></td>
+                            </tr>
+                            <tr align="center">
+                                <td style="width: 50%;"><b>Peternak</b></td>
+                                <td id="peternak" style="width: 50%;"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- family chart -->
+                    <div id="chartDiv" style="max-width: 740px; height: 400px; margin: 0px auto"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center" id="not-exist"></div>
 <br>
 <!-- old version -->
 <!--
@@ -110,18 +151,6 @@
     <div class="row">
         <div class="col-lg-12 col-xs-12">
             <div class="card">
-                <div class="header bg-teal">
-                    <h2 id="necktag-r">
-                        Necktag
-                    </h2>
-                    <ul class="header-dropdown m-r--5">
-                        <li>
-                            <a href="javascript:void(0);" id="res-refresh">
-                                <i class="material-icons">loop</i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
                 <div class="body">
                     
                     <div id="not-exist"></div>

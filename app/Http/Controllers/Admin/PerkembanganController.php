@@ -59,6 +59,22 @@ class PerkembanganController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
+        $date = date('Y-m-d', strtotime($request->tgl_perkembangan));
+
+        if($request->hasFile('foto')){                
+            $file = $request->file('foto');
+            $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
+
+            $img = Image::make($file->path());
+            $img->resize(1024, 1024, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save($name_img);
+        }
+        else{
+            $name_img = null;
+        }
+        
         $form_data = array(
             'necktag' => $request->necktag,
             'tgl_perkembangan' => $request->tgl_perkembangan,
@@ -67,69 +83,13 @@ class PerkembanganController extends Controller
             'lingkar_dada' => $request->lingkar_dada,
             'tinggi_pundak' => $request->tinggi_pundak,
             'lingkar_skrotum' => $request->lingkar_skrotum,
+            'foto' => $name_img,
             'keterangan' => $request->keterangan,
         );
 
-        $date = date('Y-m-d', strtotime($request->tgl_perkembangan));
+        Perkembangan::create($form_data);
 
-        $perkembanganId = $request->hidden_id;
-
-        if($perkembanganId){
-
-            $perkembanganData = Perkembangan::find($perkembanganId);
-
-            if($request->hasFile('foto')){
-                unlink($perkembanganData->foto);
-                
-                $file = $request->file('foto');
-                $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
-
-                $img = Image::make($file->path());
-                $img->resize(1024, 1024, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })->save($name_img);
-            }
-            elseif($request->tgl_perkembangan != $perkembanganData->tgl_perkembangan){
-                $extension = explode('.', $perkembanganData->foto)[1];
-                $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $extension;
-                
-                rename(public_path($perkembanganData->foto), public_path($name_img));
-            }
-            else{
-                if($perkembanganData->foto != null){
-                    $name_img = $perkembanganData->foto;
-                }
-                else{
-                    $name_img = null;
-                }
-            }
-            $form_data['foto'] = $name_img;
-
-            $perkembanganData->update($form_data);
-
-            return response()->json(['success' => 'Data telah berhasil diubah.']);
-        }
-        else{
-            if($request->hasFile('foto')){                
-                $file = $request->file('foto');
-                $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
-
-                $img = Image::make($file->path());
-                $img->resize(1024, 1024, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })->save($name_img);
-            }
-            else{
-                $name_img = null;
-            }
-            $form_data['foto'] = $name_img;
-
-            Perkembangan::create($form_data);
-
-            return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
-        }
+        return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
 
     /**
@@ -181,8 +141,37 @@ class PerkembanganController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
-        $perkembangan = Perkembangan::whereId($id);
+        $date = date('Y-m-d', strtotime($request->tgl_perkembangan));
 
+        $perkembanganData = Perkembangan::find($id);
+
+        if($request->hasFile('foto')){
+            unlink($perkembanganData->foto);
+                
+            $file = $request->file('foto');
+            $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
+
+            $img = Image::make($file->path());
+            $img->resize(1024, 1024, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save($name_img);
+        }
+        elseif($request->tgl_perkembangan != $perkembanganData->tgl_perkembangan){
+            $extension = explode('.', $perkembanganData->foto)[1];
+            $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $extension;
+                
+            rename(public_path($perkembanganData->foto), public_path($name_img));
+        }
+        else{
+            if($perkembanganData->foto != null){
+                $name_img = $perkembanganData->foto;
+            }
+            else{
+                $name_img = null;
+            }
+        }
+        
         $form_data = array(
             'necktag' => $request->necktag,
             'tgl_perkembangan' => $request->tgl_perkembangan,
@@ -191,21 +180,12 @@ class PerkembanganController extends Controller
             'lingkar_dada' => $request->lingkar_dada,
             'tinggi_pundak' => $request->tinggi_pundak,
             'lingkar_skrotum' => $request->lingkar_skrotum,
+            'foto' => $name_img,
             'keterangan' => $request->keterangan,
             'updated_at' => Carbon::now()
         );
 
-        if($file = $request->file('image')){
-            if($perkembangan->foto){
-                unlink($perkembangan->foto);
-            }
-            $date = date('Y-m-d', strtotime($request->tgl_perkembangan));
-            $name_img = 'images/perkembangan/' . $request->necktag . '-' . $date . '.' . $file->getClientOriginalExtension();
-            $file->move('images/perkembangan', $name_img);
-            $form_data['foto'] = $name_img;
-        }
-
-        $perkembangan->update($form_data);
+        $perkembanganData->update($form_data);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }

@@ -20,8 +20,6 @@ else if(seg == 'ketua-grup'){
     url_seg = "/ketua-grup";
 }
 
-// $('#eform-file').hide();
-
 $('#foto').change(function(){
     let reader = new FileReader();
 
@@ -49,18 +47,24 @@ $('#tambah_edit_data_form').on('submit', function(e) {
     e.preventDefault();
  
     var formData = new FormData(this);
+    var url_form;
  
+    if($('#btn-save').text() == 'Tambah'){
+        url_form = url_seg + "/perkembangan";
+    }
+    else{
+        var id = $('#hidden_id').val();
+        url_form = url_seg + "/perkembangan/" + id;
+        formData.append('_method', 'PUT');
+    }
     $.ajax({
-        type:'POST',
-        url: url_seg+"/perkembangan",
+        type: 'POST',
+        url: url_form,
         data: formData,
-        cache: false,
         contentType: false,
         processData: false,
         success: (data) => {
-            $("#formModal").modal('hide');
-            $("#btn-save").text('Tambah');
-            $("#btn-save").attr("disabled", false);
+            // $("#formModal").modal('hide');
 
             var html = '';
             if (data.errors) {
@@ -134,7 +138,6 @@ $(document).on('click', '.edit', function(){
             $('#lingkar_dada').val(data.result.lingkar_dada);
             $('#tinggi_pundak').val(data.result.tinggi_pundak);
             $('#lingkar_skrotum').val(data.result.lingkar_skrotum);
-            // $('#foto').removeAttr('required');
             if(data.result.foto != null){
                 $('#preview-image').attr('src', segments[0] + '/' + data.result.foto).width(150); 
             }
