@@ -26,7 +26,7 @@
                     @csrf
 
                     <div class="form-group">
-                        <label class="control-label">Grup Peternak</label>
+                        <label class="control-label">Grup Peternak<span class="text-danger">*</span></label>
                         <div>
             				<select class="form-control js-select-search" name="grup_peternak" id="grup_peternak">
             					<option></option>
@@ -37,13 +37,13 @@
         				</div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Nama Peternak</label>
+                        <label class="control-label">Nama Peternak<span class="text-danger">*</span></label>
                         <div class="form-line col-md-8">
                             <input type="text" name="name" id="name" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Jadikan sebagai Ketua Grup</label>
+                        <label class="control-label">Jadikan sebagai Ketua Grup<span class="text-danger">*</span></label>
                         <!-- <div class="input-group input-group-lg">
                             <div class="col-md-4">
                                 <input type="radio" name="role" id="role_ketua" value="ketua grup">
@@ -68,19 +68,19 @@
 	                    	<h5 align="center">REGISTRASI AKUN PETERNAK</h5>
 	                    </div>
                         <div class="form-group">
-	                        <label class="control-label">No KTP</label>
+	                        <label class="control-label">No KTP<span class="text-danger">*</span></label>
 	                        <div class="form-line col-md-8">
 	                            <input type="text" name="ktp_user" id="ktp_user" class="form-control">
 	                        </div>
 	                    </div>
 	                    <div class="form-group">
-	                        <label class="control-label">Username</label>
+	                        <label class="control-label">Username<span class="text-danger">*</span></label>
 	                        <div class="form-line col-md-8">
 	                            <input type="text" name="username" id="username" class="form-control">
 	                        </div>
 	                    </div>
 	                    <div class="form-group">
-	                        <label class="control-label">Email</label>
+	                        <label class="control-label">Email<span class="text-danger">*</span></label>
 	                        <div class="form-line col-md-8">
 	                            <input type="text" name="email" id="email" class="form-control">
 	                        </div>

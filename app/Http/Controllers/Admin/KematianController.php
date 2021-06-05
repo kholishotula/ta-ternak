@@ -51,9 +51,6 @@ class KematianController extends Controller
         $rules = array(
             'necktag' => 'required',
             'tgl_kematian' => 'required',
-            'waktu_kematian' => 'required',
-            'penyebab' => 'required',
-            'kondisi' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -114,10 +111,7 @@ class KematianController extends Controller
         }
         $rules = array(
             'necktag' => 'required',
-            'tgl_kematian' => 'required',
-            'waktu_kematian' => 'required',
-            'penyebab' => 'required',
-            'kondisi' => 'required'
+            'tgl_kematian' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);

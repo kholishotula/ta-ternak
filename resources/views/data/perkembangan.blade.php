@@ -31,7 +31,7 @@
 					@csrf
                     <input type="hidden" name="hidden_id" id="hidden_id">
 					<div class="form-group">
-						<label class="control-label">Necktag</label>
+						<label class="control-label">Necktag<span class="text-danger">*</span></label>
 						<div>
 							<select class="form-control js-select-search" name="necktag" id="necktag">
 								<option></option>
@@ -42,7 +42,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Tanggal Perkembangan</label>
+						<label class="control-label">Tanggal Perkembangan<span class="text-danger">*</span></label>
 						<div class="input-group">
                             <span class="input-group-addon">
                                 <i class="material-icons">date_range</i>
@@ -53,13 +53,13 @@
                         </div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Berat Badan (dalam kg)</label>
+						<label class="control-label">Berat Badan (dalam kg)<span class="text-danger">*</span></label>
 						<div class="form-line col-md-8">
 							<input type="number" step="any" name="berat_badan" id="berat_badan" class="form-control">
 						</div>
 					</div>
                     <div class="form-group">
-						<label class="control-label">Panjang Badan (dalam cm)</label>
+						<label class="control-label">Panjang Badan (dalam cm)<span class="text-danger">*</span></label>
 						<div class="form-line col-md-8">
 							<input type="number" step="any" name="panjang_badan" id="panjang_badan" class="form-control">
 						</div>

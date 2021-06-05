@@ -26,13 +26,13 @@
                     @csrf
 
                     <div class="form-group">
-                        <label class="control-label">Nama Grup Peternak</label>
+                        <label class="control-label">Nama Grup Peternak<span class="text-danger">*</span></label>
                         <div class="form-line col-md-8">
                             <input type="text" name="nama_grup" id="nama_grup" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Alamat</label>
+                        <label class="control-label">Alamat<span class="text-danger">*</span></label>
                         <div class="form-line col-md-8">
                             <input type="text" name="alamat" id="alamat" class="form-control">
                         </div>
@@ -44,7 +44,7 @@
                         </div>
                     </div> -->
                     <div class="form-group">
-                        <label class="control-label">Provinsi</label>
+                        <label class="control-label">Provinsi<span class="text-danger">*</span></label>
                         <div>
                             <select id="provinsi" class="form-control js-select-search" name="provinsi">
                                 @foreach ($provinsi as $prov)
@@ -60,7 +60,7 @@
                         </div>
                     </div> -->
                     <div class="form-group">
-                        <label class="control-label">Kabupaten/Kota</label>
+                        <label class="control-label">Kabupaten/Kota<span class="text-danger">*</span></label>
                         <div>
                             <select name="kab_kota" id="kab_kota" class="form-control js-select-search">
 
@@ -74,7 +74,7 @@
                         </div>
                     </div> -->
                     <div class="form-group">
-                        <label class="control-label">Kecamatan</label>
+                        <label class="control-label">Kecamatan<span class="text-danger">*</span></label>
                         <div>
                             <select name="kecamatan" id="kecamatan" class="form-control js-select-search">
 
@@ -101,11 +101,6 @@
 @endsection
 
 @push('script2')
-<!-- <script src="http://api.iksgroup.co.id/apijs/lokasiapi.js"></script> -->
-            <!-- <script>
-            var render=createwidgetlokasi("provinsi","kabupaten","kecamatan","kelurahan");
-            </script> -->
-<!-- <script src="{{ asset('/js/data/dataProvinsi.js') }}"></script> -->
 {{ $dataTable->scripts() }}
 <script src="{{ asset('/js/data/datagrupPeternak.js') }}"></script>
 @endpush

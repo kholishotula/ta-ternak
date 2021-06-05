@@ -48,7 +48,6 @@ class PerkawinanController extends Controller
         $rules = array(
             'necktag' => 'required',
             'necktag_psg' => 'required',
-            'tgl' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -105,7 +104,6 @@ class PerkawinanController extends Controller
         $rules = array(
             'necktag' => 'required',
             'necktag_psg' => 'required',
-            'tgl' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);

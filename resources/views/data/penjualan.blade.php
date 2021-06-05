@@ -26,7 +26,7 @@
                     @csrf
 
                     <div class="form-group">
-                        <label class="control-label">Necktag</label>
+                        <label class="control-label">Necktag<span class="text-danger">*</span></label>
                         <div class="form-line">
                             <select class="form-control js-select-search" name="necktag" id="necktag">
                                 <option></option>
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Tanggal Terjual</label>
+                        <label class="control-label">Tanggal Terjual<span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="material-icons">date_range</i>

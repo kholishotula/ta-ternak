@@ -73,7 +73,7 @@
 					@csrf
 					
 					<div class="form-group">
-						<label class="control-label">Pemilik</label>
+						<label class="control-label">Pemilik<span class="text-danger">*</span></label>
 						<div>
 							<select class="form-control js-select-search" name="pemilik_id" id="pemilik_id">
 								<option></option>
@@ -84,7 +84,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Peternak</label>
+						<label class="control-label">Peternak<span class="text-danger">*</span></label>
 						<div>
 							<select class="form-control js-select-search" name="peternak_id" id="peternak_id">
 								<option></option>
@@ -95,7 +95,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Ras</label>
+						<label class="control-label">Ras<span class="text-danger">*</span></label>
 						<div>
 							<select class="form-control js-select-search" name="ras_id" id="ras_id">
 								<option></option>
@@ -106,7 +106,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Jenis Kelamin</label>
+						<label class="control-label">Jenis Kelamin<span class="text-danger">*</span></label>
 						<div class="form-line col-md-8">
 							<select class="form-control" name="jenis_kelamin" id="jenis_kelamin" class="form-control">
 								<option value="Jantan">Jantan</option>
@@ -204,7 +204,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Status Kambing</label>
+						<label class="control-label">Status Kambing<span class="text-danger">*</span></label>
 						<div class="form-line col-md-8">
 							<select class="form-control" name="status_ada" id="status_ada">
 								<option value="true">Ada</option>

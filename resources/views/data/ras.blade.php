@@ -26,13 +26,13 @@
 					@csrf
 
 					<div class="form-group">
-						<label class="control-label">Jenis Ras</label>
+						<label class="control-label">Jenis Ras<span class="text-danger">*</span></label>
 						<div class="form-line col-md-8">
 							<input type="text" name="jenis_ras" id="jenis_ras" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Keterangan</label>
+						<label class="control-label">Keterangan<span class="text-danger">*</span></label>
 						<div class="form-line col-md-8">
 							<input type="text" name="ket_ras" id="ket_ras" class="form-control">
 						</div>

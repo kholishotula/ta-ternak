@@ -26,13 +26,13 @@
                     @csrf
 
                     <div class="form-group">
-                        <label class="control-label">Nama</label>
+                        <label class="control-label">Nama<span class="text-danger">*</span></label>
                         <div class="form-line col-md-8">
                             <input type="text" name="nama_pemilik" id="nama_pemilik" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">KTP</label>
+                        <label class="control-label">KTP<span class="text-danger">*</span></label>
                         <div class="form-line col-md-8">
                             <input type="text" name="ktp_pemilik" id="ktp_pemilik" class="form-control">
                         </div>

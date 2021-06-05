@@ -50,6 +50,8 @@ class PerkembanganController extends Controller
         $rules = array(
             'necktag' => 'required',
             'tgl_perkembangan' => 'required',
+            'berat_badan' => 'required',
+            'panjang_badan' => 'required',
             'image' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
         );
 
@@ -132,6 +134,8 @@ class PerkembanganController extends Controller
         $rules = array(
             'necktag' => 'required',
             'tgl_perkembangan' => 'required',
+            'berat_badan' => 'required',
+            'panjang_badan' => 'required',
             'image' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
         );
 

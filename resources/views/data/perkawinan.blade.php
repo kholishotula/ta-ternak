@@ -26,7 +26,7 @@
 					@csrf
 
 					<div class="form-group">
-						<label class="control-label">Necktag</label>
+						<label class="control-label">Necktag<span class="text-danger">*</span></label>
 						<div>
 							<select class="form-control js-select-search" name="necktag" id="necktag">
 								<option></option>
@@ -37,7 +37,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label">Necktag Pasangan</label>
+						<label class="control-label">Necktag Pasangan<span class="text-danger">*</span></label>
 						<div>
 							<select class="form-control js-select-search" name="necktag_psg" id="necktag_psg">
 								

@@ -56,9 +56,6 @@ class KematianController extends Controller
         $rules = array(
             'necktag' => 'required',
             'tgl_kematian' => 'required',
-            'waktu_kematian' => 'required',
-            'penyebab' => 'required',
-            'kondisi' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -118,10 +115,8 @@ class KematianController extends Controller
             return response()->json(['errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']]);
         }
         $rules = array(
+            'necktag' => 'required',
             'tgl_kematian' => 'required',
-            'waktu_kematian' => 'required',
-            'penyebab' => 'required',
-            'kondisi' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
