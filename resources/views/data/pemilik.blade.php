@@ -83,7 +83,7 @@
                     </div>
                 </div>
 
-                <!-- riwayat -->
+                <!-- ternak -->
                 <div>
                     <label class="control-label">Ternak</label>
                     <div>

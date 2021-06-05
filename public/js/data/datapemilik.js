@@ -81,7 +81,6 @@ $(document).on('click', '.view', function(){
     txt = '<tr>';
     txt += '<th>Necktag</th>';
     txt += '<th>Jenis Kelamin</th>';
-    txt += '<th>Blood</th>';
     txt += '<th>Status Ada</th>';
     txt += '</tr>';
 
@@ -102,7 +101,6 @@ $(document).on('click', '.view', function(){
                     txt2 += '<tr>';
                     txt2 += '<td>' + data.ternak[i].necktag + '</td>';
                     txt2 += '<td>' + data.ternak[i].jenis_kelamin + '</td>';
-                    txt2 += '<td>' + data.ternak[i].blood + '</td>';
 
                     if(data.ternak[i].status_ada) data.ternak[i].status_ada = 'Ada';
                     else data.ternak[i].status_ada = 'Tidak Ada';

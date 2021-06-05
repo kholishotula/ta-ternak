@@ -78,7 +78,9 @@ class PemilikController extends Controller
     {
         if(request()->ajax()){
             $data = Pemilik::findOrFail($id);
-            $ternak = Ternak::where('pemilik_id', '=', $data->id)->get();
+            $ternak = Ternak::where('pemilik_id', $data->id)
+                            ->where('user_id', Auth::id())
+                            ->get();
 
             return response()->json(['result' => $data, 'ternak' => $ternak]);
         }

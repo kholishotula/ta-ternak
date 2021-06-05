@@ -52,14 +52,14 @@
 			Route::resource('riwayat', 'RiwayatPenyakitController')->except(['create', 'show']);
 			Route::resource('kematian', 'KematianController')->except(['create', 'show']);
 			Route::resource('pemilik', 'PemilikController')->except(['create']);
-			Route::resource('grup-peternak', 'GrupPeternakController')->except(['create']);
+			Route::resource('grup-peternak', 'GrupPeternakController')->except(['create', 'show']);
 			Route::resource('perkawinan', 'PerkawinanController')->except(['create', 'show']);
 			Route::get('perkawinan/pasangan/{id}', 'PerkawinanController@getPasangan');
 			Route::resource('penjualan', 'PenjualanController')->except(['create', 'show']);
 			Route::resource('perkembangan', 'PerkembanganController')->except(['create']);
 
 			// data peternak
-			Route::resource('peternak', 'PeternakController')->except(['create']);
+			Route::resource('peternak', 'PeternakController')->except(['create', 'show']);
 
 			// data peternak yang belum terverifikasi
 			Route::get('verifikasi', 'VerifikasiController@index')->name('verifikasi');
