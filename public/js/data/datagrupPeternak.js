@@ -10,14 +10,14 @@ $('select[name="provinsi"]').on('change', function() {
     var prov_id = $(this).val();
     if(prov_id) {
         $.ajax({
-            url: segments[0]+'/wilayah/kabupaten/'+prov_id,
+            url: segments[0]+'/wilayah/kabupaten/'+prov_id.split('-')[0],
             type: "GET",
             dataType: "json",
             success:function(data) {
                 $('select[name="kab_kota"]').empty();
 
                 $.each(data.kab, function(key, value) {
-                    $('select[name="kab_kota"]').append('<option value="'+ value.kode +'">'+ value.nama +'</option>');
+                    $('select[name="kab_kota"]').append('<option value="'+ value['id'] + '-' + value['name'] +'">'+ value['name'] +'</option>');
                 });
             }
         });
@@ -30,14 +30,14 @@ $('select[name="kab_kota"]').on('change', function() {
     var kab_id = $(this).val();
     if(kab_id) {
         $.ajax({
-            url: segments[0]+'/wilayah/kecamatan/'+kab_id,
+            url: segments[0]+'/wilayah/kecamatan/'+kab_id.split('-')[0],
             type: "GET",
             dataType: "json",
             success:function(data) {
                 $('select[name="kecamatan"]').empty();
 
                 $.each(data.kec, function(key, value) {
-                    $('select[name="kecamatan"]').append('<option value="'+ value.kode +'">'+ value.nama +'</option>');
+                    $('select[name="kecamatan"]').append('<option value="'+ value['id'] + '-' + value['name'] +'">'+ value['name'] +'</option>');
                 });
             }
         });
@@ -82,7 +82,6 @@ $('#tambah_data_form').on('submit', function(event){
 		data: $(this).serialize(),
 		datatype: "json",
 		success: function(data){
-            console.log(data);
 			var html = '';
 			if (data.errors) {
 				html = '<div class="alert alert-danger">';
@@ -90,14 +89,22 @@ $('#tambah_data_form').on('submit', function(event){
 					html += '<p>' + data.errors[count] + '</p>';
 				}
 				html += '</div>';
+                $('#form_result').html(html);
 			}
 			if (data.success) {
-				html = '<div class="alert alert-success">' + data.success + '</div>';
+            	$('#formModal').modal('hide');
+                swal({
+                    title: "Berhasil!",
+                    type: "success",
+                    text: data.success,
+                });
 				$('#tambah_data_form')[0].reset();
 				$('#grup-peternak-table').DataTable().ajax.reload();
 			}
-			$('#form_result').html(html);
-		}
+		},
+        error: function (jqXHR, textStatus, errorThrown) { 
+            console.log(jqXHR); 
+        }
     });
 });
 

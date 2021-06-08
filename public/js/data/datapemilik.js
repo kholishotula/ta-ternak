@@ -61,13 +61,18 @@ $('#tambah_data_form').on('submit', function(event){
                     html += '<p>' + data.errors[count] + '</p>';
                 }
                 html += '</div>';
+                $('#form_result').html(html);
             }
             if (data.success) {
-                html = '<div class="alert alert-success">' + data.success + '</div>';
+                $('#formModal').modal('hide');
+                swal({
+                    title: "Berhasil!",
+                    type: "success",
+                    text: data.success,
+                });
                 $('#tambah_data_form')[0].reset();
                 $('#pemilik-table').DataTable().ajax.reload();
             }
-            $('#form_result').html(html);
         }
     });
 });

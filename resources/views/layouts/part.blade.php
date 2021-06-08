@@ -161,7 +161,7 @@
                         <a href="{{ route('admin.verifikasi') }}">
                             <!-- <i class="material-icons">how_to_reg</i> -->
                             <i class="material-icons">verified_user</i>
-                            <span>Peternak perlu verifikasi</span>
+                            <span>Verifikasi Akun Peternak</span>
                         </a>
                     </li>
                     @elsecan('isKetua')

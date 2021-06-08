@@ -37,28 +37,16 @@
                             <input type="text" name="alamat" id="alamat" class="form-control">
                         </div>
                     </div>
-                    <!-- <div class="form-group">
-                        <label class="control-label">Provinsi</label>
-                        <div class="form-line col-md-8">
-                            <input type="text" name="provinsi" id="provinsi" class="form-control">
-                        </div>
-                    </div> -->
                     <div class="form-group">
                         <label class="control-label">Provinsi<span class="text-danger">*</span></label>
                         <div>
                             <select id="provinsi" class="form-control js-select-search" name="provinsi">
                                 @foreach ($provinsi as $prov)
-                                    <option value="{{ $prov->kode }}">{{ $prov->nama }}</option>
+                                    <option value="{{ $prov['id'] }}-{{ $prov['name'] }}">{{ $prov['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <!-- <div class="form-group">
-                        <label class="control-label">Kabupaten/Kota</label>
-                        <div class="form-line col-md-8">
-                            <input type="text" name="kab_kota" id="kab_kota" class="form-control">
-                        </div>
-                    </div> -->
                     <div class="form-group">
                         <label class="control-label">Kabupaten/Kota<span class="text-danger">*</span></label>
                         <div>
@@ -67,12 +55,6 @@
                             </select>
                         </div>
                     </div>
-                    <!-- <div class="form-group">
-                        <label class="control-label">Kecamatan</label>
-                        <div class="form-line col-md-8">
-                            <input type="text" name="kecamatan" id="kecamatan" class="form-control">
-                        </div>
-                    </div> -->
                     <div class="form-group">
                         <label class="control-label">Kecamatan<span class="text-danger">*</span></label>
                         <div>

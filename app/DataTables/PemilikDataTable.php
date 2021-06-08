@@ -38,16 +38,7 @@ class PemilikDataTable extends DataTable
      */
     public function query()
     {
-        if($this->peternak_id != null){
-            $pemilik_ids = Ternak::where('user_id', $this->peternak_id)
-                                ->distinct()
-                                ->pluck('pemilik_id')->toArray();
-            return Pemilik::whereIn('id', $pemilik_ids)
-                        ->select('*');
-        }
-        else {
-            return Pemilik::select('*');
-        }
+        return Pemilik::select('*');
     }
 
     /**

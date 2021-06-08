@@ -64,8 +64,6 @@ $('#tambah_edit_data_form').on('submit', function(e) {
         contentType: false,
         processData: false,
         success: (data) => {
-            // $("#formModal").modal('hide');
-
             var html = '';
             if (data.errors) {
                 html = '<div class="alert alert-danger">';
@@ -75,7 +73,12 @@ $('#tambah_edit_data_form').on('submit', function(e) {
                 html += '</div>';
             }
             if (data.success) {
-                html = '<div class="alert alert-success">' + data.success + '</div>';
+                $('#formModal').modal('hide');
+                swal({
+                    title: "Berhasil!",
+                    type: "success",
+                    text: data.success,
+                });
                 $('#tambah_edit_data_form')[0].reset();
                 $('#perkembangan-table').DataTable().ajax.reload();
             }

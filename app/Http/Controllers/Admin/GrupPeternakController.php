@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
+use GuzzleHttp\Client;
 use Validator;
 
 class GrupPeternakController extends Controller
@@ -21,9 +22,12 @@ class GrupPeternakController extends Controller
     {
         $title = 'GRUP PETERNAK';
         $page = 'Grup Peternak';
-        $provinsi = DB::table('wilayahs')->whereRaw('LENGTH(kode) = 2')->orderBy('nama')->get();
 
-        return $dataTable->render('data.grup-peternak', ['title' => $title, 'page' => $page, 'provinsi' => $provinsi]);
+        $client = new Client();
+        $response = $client->get('https://kholishotula.github.io/api-wilayah-indonesia/api/provinces.json');
+        $prov = json_decode($response->getBody(), true);
+
+        return $dataTable->render('data.grup-peternak', ['title' => $title, 'page' => $page, 'provinsi' => $prov]);
     }
 
     /**
@@ -58,16 +62,16 @@ class GrupPeternakController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
-        $provinsi = DB::table('wilayahs')->select('nama')->where('kode', $request->provinsi)->get();
-        $kab_kota = DB::table('wilayahs')->select('nama')->where('kode', $request->kab_kota)->get();
-        $kecamatan = DB::table('wilayahs')->select('nama')->where('kode', $request->kecamatan)->get();
+        $provinsi = explode('-', $request->provinsi)[1];
+        $kab_kota = explode('-', $request->kab_kota)[1];
+        $kecamatan = explode('-', $request->kecamatan)[1];
 
         $form_data = array(
             'nama_grup' => $request->nama_grup,
             'alamat' => $request->alamat,
-            'provinsi' => $provinsi[0]->nama,
-            'kab_kota' => $kab_kota[0]->nama,
-            'kecamatan' => $kecamatan[0]->nama,
+            'provinsi' => $provinsi,
+            'kab_kota' => $kab_kota,
+            'kecamatan' => $kecamatan,
             'keterangan' => $request->keterangan,
         );
 
@@ -100,8 +104,12 @@ class GrupPeternakController extends Controller
     {
         if(request()->ajax()){
             $data = GrupPeternak::findOrFail($id);
-            $provinsi = DB::table('wilayahs')->whereRaw('LENGTH(kode) = 2')->orderBy('nama')->get();
-            return response()->json(['result' => $data, 'provinsi' => $provinsi]);
+
+            $client = new Client();
+            $response = $client->get('https://kholishotula.github.io/api-wilayah-indonesia/api/provinces.json');
+            $prov = json_decode($response->getBody(), true);
+
+            return response()->json(['result' => $data, 'provinsi' => $prov]);
         }
     }
 
@@ -128,16 +136,16 @@ class GrupPeternakController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
-        $provinsi = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->provinsi)->get();
-        $kab_kota = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kab_kota)->get();
-        $kecamatan = DB::table('wilayahs')->select('nama')->where('kode', '=', $request->kecamatan)->get();
+        $provinsi = explode('-', $request->provinsi)[1];
+        $kab_kota = explode('-', $request->kab_kota)[1];
+        $kecamatan = explode('-', $request->kecamatan)[1];
 
         $form_data = array(
             'nama_grup' => $request->nama_grup,
             'alamat' => $request->alamat,
-            'provinsi' => preg_split('/["]/', $provinsi)[3],
-            'kab_kota' => preg_split('/["]/', $kab_kota)[3],
-            'kecamatan' => preg_split('/["]/', $kecamatan)[3],
+            'provinsi' => $provinsi,
+            'kab_kota' => $kab_kota,
+            'kecamatan' => $kecamatan,
             'keterangan' => $request->keterangan,
         );
 

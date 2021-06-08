@@ -110,7 +110,12 @@ $('#tambah_data_form').on('submit', function(event){
 				html = '<div class="alert alert-danger">' + data.error + '</div>';
 			}
 			if (data.success) {
-				html = '<div class="alert alert-success">' + data.success + '</div>';
+				$('#formModal').modal('hide');
+                swal({
+                    title: "Berhasil!",
+                    type: "success",
+                    text: data.success,
+                });
 				$('#tambah_data_form')[0].reset();
 				$('#ternak-table').DataTable().ajax.reload();
 			}

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Peternak;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Pemilik;
 use App\Ternak;
 use App\DataTables\PemilikDataTable;
@@ -23,7 +22,7 @@ class PemilikController extends Controller
         $title = 'PEMILIK';
         $page = 'Pemilik';
 
-        return $dataTable->with('peternak_id', Auth::id())->render('data.pemilik', [
+        return $dataTable->render('data.pemilik', [
             'title' => $title,
             'page' => $page
         ]);
@@ -79,7 +78,6 @@ class PemilikController extends Controller
         if(request()->ajax()){
             $data = Pemilik::findOrFail($id);
             $ternak = Ternak::where('pemilik_id', $data->id)
-                            ->where('user_id', Auth::id())
                             ->get();
 
             return response()->json(['result' => $data, 'ternak' => $ternak]);
