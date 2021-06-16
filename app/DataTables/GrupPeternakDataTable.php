@@ -36,8 +36,11 @@ class GrupPeternakDataTable extends DataTable
      */
     public function query()
     {
-        $model = new GrupPeternak();
-        return $model->newQuery()->select('*');
+        $model = GrupPeternak::join('users', 'users.grup_id', '=', 'grup_peternaks.id')
+            ->selectRaw('grup_peternaks.*, coalesce(count(users.id), 0) as jumlah')
+            ->groupBy('grup_peternaks.id')
+            ->orderBy('grup_peternaks.id');
+        return $model;
     }
 
     /**
@@ -83,6 +86,8 @@ class GrupPeternakDataTable extends DataTable
                 ->title('Kecamatan'),
             Column::make('keterangan')
                 ->title('Keterangan'),
+            Column::make('jumlah')
+                ->title('Jumlah Peternak'),
             Column::make('created_at')
                 ->title('Created At'),
             Column::make('updated_at')

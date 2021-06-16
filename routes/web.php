@@ -18,6 +18,8 @@
 
 	//index
 	Route::get('/', 'Auth\LoginController@showLoginForm');
+	Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+	Route::post('register', 'Auth\RegisterController@create');
 	Route::get('/home', 'HomeController@index')->middleware('auth')->name('home');
 	// Route::get('/home', 'HomeController@index')->middleware('auth', 'verified')->name('home');
 

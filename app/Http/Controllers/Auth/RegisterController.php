@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
 use App\User;
 use App\GrupPeternak;
+use Redirect;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -63,14 +65,14 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'ktp' => ['required', 'string', 'max:16'],
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'grup_peternak' => ['required'],
-        ]);
+        // return Validator::make($data, [
+        //     'ktp' => ['required', 'string', 'max:16'],
+        //     'name' => ['required', 'string', 'max:255'],
+        //     'username' => ['required', 'string', 'max:255', 'unique:users'],
+        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //     'password' => ['required', 'string', 'min:8', 'confirmed'],
+        //     'grup_peternak' => ['required'],
+        // ]);
     }
 
     /**
@@ -79,17 +81,51 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
+    public function create(Request $data)
     {
-        $user = new User([
-            'grup_id' => $data['grup_peternak'],
-            'ktp_user' => $data['ktp'],
-            'name' => $data['name'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        // $error = validator($data->all());
+
+        // if($error->fails()){
+        //     session()->flash('failure', $error->errors()->all());
+        //     $this->redirectTo = route('login');
+        //     return $this->redirectTo;
+        // }
+
+        // $rules = array(
+        //     'password' => 'required|string|min:8|confirmed',
+        //     'grup_peternak' => 'required',
+        //     'name' => 'required',
+        //     'ktp' => 'required|max:16',
+        //     'username' => 'required|string|max:255|unique:users',
+        //     'email' => 'required|string|email|max:255|unique:users'
+        // );
+
+        // $error = Validator::make($data->all(), $rules);
+
+        // // dd($error->errors()->all());
+        // if($error->fails()){
+        //     // session()->flash('failure', $error->errors()->all());
+        //     return redirect('/register')->with('failure', $error->errors()->all());
+        // }
+
+        $this->validate($data, [
+            'password' => 'required|string|min:8|confirmed',
+            'grup_peternak' => 'required',
+            'name' => 'required',
+            'ktp' => 'required|min:16|max:16',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users'
         ]);
-        
-        return $user;
+
+        $user = User::create([
+            'grup_id' => $data->grup_peternak,
+            'ktp_user' => $data->ktp,
+            'name' => $data->name,
+            'username' => $data->username,
+            'email' => $data->email,
+            'password' => Hash::make($data->password),
+        ]);
+
+        return redirect('/')->with('success', 'Akun Anda berhasil terdaftar. Tunggu verifikasi dari Ketua Grup/Admin');
     }
 }

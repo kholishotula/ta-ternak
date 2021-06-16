@@ -23,6 +23,9 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet"/>
+
+	@stack('styles')
+	
 </head>
 <body>
 
@@ -43,4 +46,7 @@
 	<script src="{{ asset('vendor/auth/main.js') }}"></script>
 
 </body>
+
+@stack('scripts')
+
 </html>

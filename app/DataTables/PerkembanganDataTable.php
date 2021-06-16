@@ -42,11 +42,14 @@ class PerkembanganDataTable extends DataTable
             $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)
                                     ->pluck('necktag')->toArray();
             return Perkembangan::whereIn('necktag', $necktag_ternaks)
-                                ->orderBy('necktag', 'asc')
-                                ->select('*');
+                                ->join('ternaks', 'ternaks.necktag', '=', 'perkembangans.necktag')
+                                ->selectRaw('perkembangans.*, ternaks.jenis_kelamin as jenis_kelamin')
+                                ->orderBy('necktag', 'asc');
         }
         else{
-            return Perkembangan::select('*');
+            return Perkembangan::join('ternaks', 'ternaks.necktag', '=', 'perkembangans.necktag')
+                    ->selectRaw('perkembangans.*, ternaks.jenis_kelamin as jenis_kelamin')
+                    ->orderBy('necktag', 'asc');;
         }
     }
 
@@ -83,6 +86,8 @@ class PerkembanganDataTable extends DataTable
                 ->title('ID'),
             Column::make('necktag')
                 ->title('Necktag'),
+            Column::make('jenis_kelamin')
+                ->title('Jenis Kelamin'),
             Column::make('tgl_perkembangan')
                 ->title('Tgl Perkembangan'),
             Column::make('keterangan')

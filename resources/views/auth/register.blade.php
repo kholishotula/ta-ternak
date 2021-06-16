@@ -7,12 +7,12 @@
     </span>
 </div>
 
-@if( session('failure') )
+<!-- @if( session('failure') )
     <div class="alert alert-danger" role="alert">
         <button type="button" class="close" data-dismiss="alert">×</button> 
         {{ session('failure') }}
     </div>
-@endif
+@endif -->
 
 <form class="login100-form validate-form" method="POST" action="{{ route('register') }}">
     @csrf

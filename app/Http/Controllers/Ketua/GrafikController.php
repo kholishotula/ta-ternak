@@ -198,33 +198,33 @@ class GrafikController extends Controller
 
         $count = Ternak::where('status_ada', '=', true)
                         ->whereIn('user_id', $user_ids)
-                        ->selectRaw('count(*) as jumlah, coalesce((extract(year from current_date) -
-    extract(year from ternaks.tgl_lahir)), 0) as tahun')
-                        ->groupBy('tahun')
-                        ->orderBy('tahun')
+                        ->selectRaw('count(*) as jumlah, coalesce((extract(month from current_date) -
+    extract(month from ternaks.tgl_lahir)), 0) as bulan')
+                        ->groupBy('bulan')
+                        ->orderBy('bulan')
                         ->get();
 
         $count_jantan = Ternak::where('status_ada', '=', true)
                         ->whereIn('user_id', $user_ids)
                         ->where('jenis_kelamin', '=', 'Jantan')
-                        ->selectRaw('count(*) as jumlah, coalesce((extract(year from current_date) -
-    extract(year from ternaks.tgl_lahir)), 0) as tahun')
-                        ->groupBy('tahun')
-                        ->orderBy('tahun')
+                        ->selectRaw('count(*) as jumlah, coalesce((extract(month from current_date) -
+    extract(month from ternaks.tgl_lahir)), 0) as bulan')
+                        ->groupBy('bulan')
+                        ->orderBy('bulan')
                         ->get();
 
         $count_betina = Ternak::where('status_ada', '=', true)
                         ->whereIn('user_id', $user_ids)
                         ->where('jenis_kelamin', '=', 'Betina')
-                        ->selectRaw('count(*) as jumlah, coalesce((extract(year from current_date) -
-    extract(year from ternaks.tgl_lahir)), 0) as tahun')
-                        ->groupBy('tahun')
-                        ->orderBy('tahun')
+                        ->selectRaw('count(*) as jumlah, coalesce((extract(month from current_date) -
+    extract(month from ternaks.tgl_lahir)), 0) as bulan')
+                        ->groupBy('bulan')
+                        ->orderBy('bulan')
                         ->get();
 
         $i = 0;
         foreach($count as $umur){
-        	$label[] = $umur->tahun;
+        	$label[] = $umur->bulan;
         	$data[] = $umur->jumlah;
             $umurj[$i] = null;
             $umurb[$i] = null;
@@ -233,14 +233,14 @@ class GrafikController extends Controller
 
         $i = 0;
         foreach($count_jantan as $umur){
-            $umurj[$i] = $umur->tahun;
+            $umurj[$i] = $umur->bulan;
             $jt[] = $umur->jumlah;
             $i++;
         }
 
         $i = 0;
         foreach($count_betina as $umur){
-            $umurb[$i] = $umur->tahun;
+            $umurb[$i] = $umur->bulan;
             $bt[] = $umur->jumlah;
             $i++;
         }
@@ -277,7 +277,7 @@ class GrafikController extends Controller
         }
 
         $chart = new UmurChart;
-        $chart->title('Grafik Ternak - Umur (tahun)');
+        $chart->title('Grafik Ternak - Umur (bulan)');
         $chart->labels($label);
 
         if($count_jantan != null){

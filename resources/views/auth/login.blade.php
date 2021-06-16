@@ -1,5 +1,10 @@
 @extends('layouts.auth')
 
+@push('styles')
+<!-- Sweetalert Css -->
+<link href="{{ asset('/adminbsb/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+@endpush
+
 @section('content')
 <div class="login100-form-title" style="background-image: url(images/siternak-cover.png);">
     <span class="login100-form-title-1">
@@ -71,3 +76,13 @@
     </div>
 </form>
 @endsection
+
+@push('scripts')
+<!-- SweetAlert Plugin Js -->
+<script src="{{ asset('/adminbsb/plugins/sweetalert/sweetalert.min.js') }}"></script>
+@if(Session::has('success'))
+<script>
+    swal("Success!", "{{ Session::get('success') }}", "success");
+</script>
+@endif
+@endpush
