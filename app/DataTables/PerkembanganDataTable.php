@@ -41,10 +41,12 @@ class PerkembanganDataTable extends DataTable
         if($this->peternak_id != null){
             $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)
                                     ->pluck('necktag')->toArray();
-            return Perkembangan::whereIn('necktag', $necktag_ternaks)
-                                ->join('ternaks', 'ternaks.necktag', '=', 'perkembangans.necktag')
-                                ->selectRaw('perkembangans.*, ternaks.jenis_kelamin as jenis_kelamin')
-                                ->orderBy('necktag', 'asc');
+            if($necktag_ternaks != null){
+                return Perkembangan::whereIn('perkembangans.necktag', $necktag_ternaks)
+                                    ->join('ternaks', 'ternaks.necktag', '=', 'perkembangans.necktag')
+                                    ->selectRaw('perkembangans.*, ternaks.jenis_kelamin as jenis_kelamin')
+                                    ->orderBy('necktag', 'asc');
+            }
         }
         else{
             return Perkembangan::join('ternaks', 'ternaks.necktag', '=', 'perkembangans.necktag')
