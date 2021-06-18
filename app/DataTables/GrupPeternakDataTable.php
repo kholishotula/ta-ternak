@@ -36,7 +36,7 @@ class GrupPeternakDataTable extends DataTable
      */
     public function query()
     {
-        $model = GrupPeternak::join('users', 'users.grup_id', '=', 'grup_peternaks.id')
+        $model = GrupPeternak::leftJoin('users', 'users.grup_id', '=', 'grup_peternaks.id')
             ->selectRaw('grup_peternaks.*, coalesce(count(users.id), 0) as jumlah')
             ->groupBy('grup_peternaks.id')
             ->orderBy('grup_peternaks.id');

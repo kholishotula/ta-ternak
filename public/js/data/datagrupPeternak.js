@@ -78,9 +78,9 @@ $('#tambah_data_form').on('submit', function(event){
 
     $.ajax({
         url: action_url,
-		method: method_form,
-		data: $(this).serialize(),
-		datatype: "json",
+        method: method_form,
+        data: $(this).serialize(),
+        datatype: "json",
 		success: function(data){
 			var html = '';
 			if (data.errors) {

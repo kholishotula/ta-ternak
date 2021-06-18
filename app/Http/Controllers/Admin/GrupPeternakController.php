@@ -48,6 +48,7 @@ class GrupPeternakController extends Controller
      */
     public function store(Request $request)
     {
+        // return response()->json(['errors' => $request->nama_grup]);
         $rules = array(
             'nama_grup' => 'required',
             'alamat' => 'required',
@@ -75,9 +76,9 @@ class GrupPeternakController extends Controller
             'keterangan' => $request->keterangan,
         );
 
-        GrupPeternak::create($form_data);
+        $grupPeternak = GrupPeternak::create($form_data);
 
-        return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
+        return response()->json(['success' => $grupPeternak->id]);
     }
 
     /**
@@ -86,13 +87,10 @@ class GrupPeternakController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        if(request()->ajax()){
-            $data = GrupPeternak::findOrFail($id);
-            return response()->json(['result' => $data]);
-        }
-    }
+    // public function show($id)
+    // {
+    //     
+    // }
 
     /**
      * Show the form for editing the specified resource.

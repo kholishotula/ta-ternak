@@ -32,6 +32,6 @@ class CreateGrupPeternaksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('peternakans');
+        Schema::dropIfExists('grup_peternaks');
     }
 }
