@@ -48,7 +48,6 @@ class GrupPeternakController extends Controller
      */
     public function store(Request $request)
     {
-        // return response()->json(['errors' => $request->nama_grup]);
         $rules = array(
             'nama_grup' => 'required',
             'alamat' => 'required',
@@ -76,9 +75,9 @@ class GrupPeternakController extends Controller
             'keterangan' => $request->keterangan,
         );
 
-        $grupPeternak = GrupPeternak::create($form_data);
+        GrupPeternak::create($form_data);
 
-        return response()->json(['success' => $grupPeternak->id]);
+        return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
 
     /**
