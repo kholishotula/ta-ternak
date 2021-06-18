@@ -247,6 +247,7 @@ $(document).on('click', '.g-umur', function(){
             umur_id.data.datasets[0].data = data.jantan;
             umur_id.data.datasets[1].data = data.betina;
             umur_id.data.datasets[2].data = data.data;
+            umur_id.data.labels = data.label;
             umur_id.update();
         },
         error: function (jqXHR, textStatus, errorThrown) { 
@@ -279,6 +280,7 @@ $(document).on('click', '.g-ras', function(){
             ras_id.data.datasets[0].data = data.jantan;
             ras_id.data.datasets[1].data = data.betina;
             ras_id.data.datasets[2].data = data.data;
+            ras_id.data.labels = data.label;
             ras_id.update();
         },
         error: function (jqXHR, textStatus, errorThrown) { 
