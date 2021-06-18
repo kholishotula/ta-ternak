@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Ketua;
 
-use App\User;
+use App\Ras;
 use App\Ternak;
+use App\Perkawinan;
+use App\GrupPeternak;
+use App\User;
 use App\Charts\RasChart;
 use App\Charts\UmurChart;
 use App\Charts\KelahiranChart;
 use App\Charts\KematianChart;
 use App\Charts\PenjualanChart;
+use App\Charts\PerkawinanChart;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +21,25 @@ class GrafikController extends Controller
 {
     public function index(Request $request)
     {
-	    $ras = $this->grafikRas();
-	    $umur = $this->grafikUmur();
+	    $ras = $this->grafikRas($request);
+	    $umur = $this->grafikUmur($request);
 	    $lahir = $this->grafikLahir($request);
 	    $mati = $this->grafikMati($request);
 	    $jual = $this->grafikJual($request);
+        $kawin = $this->grafikKawin($request);
         
         $yearNow = date('Y');
         $year = array();
 
         for($i = $yearNow; $i > $yearNow-5; $i--){
             $year[] = $i;
+        }
+        
+        if($request->ajax()){
+            return response()->json([
+                'grup_id' => Auth::user()->grup_id,
+                'years' => $year,
+            ]);
         }
 
         return view('grafik.grafik')->with([
@@ -36,11 +48,13 @@ class GrafikController extends Controller
             'lahir'=> $lahir,
             'mati' => $mati,
             'jual' => $jual,
+            'kawin'=> $kawin,
+            'grup_id' => Auth::user()->grup_id,
             'years' => $year,
         ]);
     }
 
-    public function grafikRas()
+    public function grafikRas(Request $request)
     {
         $jantan = array();
         $betina = array();
@@ -48,6 +62,7 @@ class GrafikController extends Controller
         $data = array();
 
         $ketua_grup = Auth::user();
+        $nama_grup = GrupPeternak::where('id', $ketua_grup->grup_id)->first()->nama_grup;
         $user_ids = User::where('grup_id', $ketua_grup->grup_id)->pluck('id')->toArray();
 
         $count = Ternak::where('status_ada', '=', true)
@@ -141,7 +156,7 @@ class GrafikController extends Controller
         }
 
         $chart = new RasChart;
-        $chart->title('Grafik Ternak - Ras');
+        $chart->title('Grafik Ternak - Ras - Grup Peternak "' . $nama_grup . '"');
         $chart->displayLegend(true);
         $chart->labels($label);
 
@@ -184,7 +199,7 @@ class GrafikController extends Controller
         return $chart;
     }
 
-    public function grafikUmur()
+    public function grafikUmur(Request $request)
     {
         $umurj = array();
         $umurb = array();
@@ -194,6 +209,7 @@ class GrafikController extends Controller
         $data = array();
 
         $ketua_grup = Auth::user();
+        $nama_grup = GrupPeternak::where('id', $ketua_grup->grup_id)->first()->nama_grup;
         $user_ids = User::where('grup_id', $ketua_grup->grup_id)->pluck('id')->toArray();
 
         $count = Ternak::where('status_ada', '=', true)
@@ -277,7 +293,7 @@ class GrafikController extends Controller
         }
 
         $chart = new UmurChart;
-        $chart->title('Grafik Ternak - Umur (bulan)');
+        $chart->title('Grafik Ternak - Umur (bulan) - Grup Peternak "' . $nama_grup . '"');
         $chart->labels($label);
 
         if($count_jantan != null){
@@ -331,6 +347,7 @@ class GrafikController extends Controller
         }
 
         $ketua_grup = Auth::user();
+        $nama_grup = GrupPeternak::where('id', $ketua_grup->grup_id)->first()->nama_grup;
         $user_ids = User::where('grup_id', $ketua_grup->grup_id)->pluck('id')->toArray();
 
         $count = Ternak::whereYear('tgl_lahir', '=' , $yearNow)
@@ -375,7 +392,7 @@ class GrafikController extends Controller
         }
 
         $chart = new KelahiranChart;
-        $chart->title('Grafik Ternak - Kelahiran ('. $yearNow .')');
+        $chart->title('Grafik Ternak - Kelahiran ('. $yearNow .') - Grup Peternak "' . $nama_grup . '"');
         $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
 
         if($count_jantan != null){
@@ -415,7 +432,7 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
         }
 
         return $chart;
@@ -430,6 +447,7 @@ class GrafikController extends Controller
         }
 
         $ketua_grup = Auth::user();
+        $nama_grup = GrupPeternak::where('id', $ketua_grup->grup_id)->first()->nama_grup;
         $user_ids = User::where('grup_id', $ketua_grup->grup_id)->pluck('id')->toArray();
 
         $count = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
@@ -480,7 +498,7 @@ class GrafikController extends Controller
         }
 
         $chart = new KematianChart;
-        $chart->title('Grafik Ternak - Kematian ('. $yearNow .')');
+        $chart->title('Grafik Ternak - Kematian ('. $yearNow .') - Grup Peternak "' . $nama_grup . '"');
         $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
 
         if($count_jantan != null){
@@ -520,7 +538,7 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
         }
 
         return $chart;
@@ -535,6 +553,7 @@ class GrafikController extends Controller
         }
 
         $ketua_grup = Auth::user();
+        $nama_grup = GrupPeternak::where('id', $ketua_grup->grup_id)->first()->nama_grup;
         $user_ids = User::where('grup_id', $ketua_grup->grup_id)->pluck('id')->toArray();
 
         $count = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
@@ -585,7 +604,7 @@ class GrafikController extends Controller
         }
 
         $chart = new PenjualanChart;
-        $chart->title('Grafik Ternak - Penjualan ('. $yearNow .')');
+        $chart->title('Grafik Ternak - Penjualan ('. $yearNow .') - Grup Peternak "' . $nama_grup . '"');
         $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
 
         if($count_jantan != null){
@@ -625,7 +644,60 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
+        }
+
+		return $chart;
+    }
+
+    public function grafikKawin(Request $request)
+    {
+        $yearNow = date('Y');
+
+        if ($request->ajax()) {
+           $yearNow = $request->tahun;
+        }
+
+        $ketua_grup = Auth::user();
+        $nama_grup = GrupPeternak::where('id', $ketua_grup->grup_id)->first()->nama_grup;
+        $user_ids = User::where('grup_id', $ketua_grup->grup_id)
+                                    ->pluck('id')->toArray();
+        $necktag_ternaks = Ternak::whereIn('user_id', $user_ids)
+                                    ->pluck('necktag')->toArray();
+
+        $count = Perkawinan::whereIn('necktag', $necktag_ternaks)
+                            ->whereYear('tgl_kawin', '=', $yearNow)
+                            ->selectRaw('count(*) as jumlah, coalesce(extract(month from perkawinans.tgl_kawin), 0) as kawin')
+                            ->groupBy('kawin')
+                            ->orderBy('kawin')
+                            ->get();
+
+        for($i=0; $i<12; $i++){
+            $data[$i] = 0;
+        }
+
+        foreach($count as $ternak){
+        	$data[$ternak->kawin - 1] = $ternak->jumlah;
+        }
+
+        $chart = new PerkawinanChart;
+        $chart->title('Grafik Ternak - Perkawinan ('. $yearNow .') - Grup Peternak "' . $nama_grup . '"');
+        $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
+
+        if($count != null){
+    	    $chart->dataset('Jumlah Ternak', 'bar', $data)->options([
+                'responsive' => true,
+    			'fill' => 'true',
+    			'backgroundColor' => '#B2DFDB',
+                'borderColor' => '#809689',
+                 'tooltip' => [
+                    'show' => true
+                ],
+    		]);
+        }
+
+        if ($request->ajax()) {
+           return response()->json(['data' => $data, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
         }
 
 		return $chart;

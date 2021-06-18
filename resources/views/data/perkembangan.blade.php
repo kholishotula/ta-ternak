@@ -1,8 +1,11 @@
 @extends('data.index')
 
 @push('link2')
-<!-- Dropzone Css -->
-<link href="{{ asset('adminbsb/plugins/dropzone/dropzone.css') }}" rel="stylesheet">
+<style>
+	.d-none{
+		display: none;
+	}
+</style>
 @endpush
 
 @section('table-content')
@@ -198,7 +201,4 @@
 @push('script2')
 {{ $dataTable->scripts() }}
 <script src="{{ asset('/js/data/dataperkembangan.js') }}"></script>
-
-<!-- Dropzone Plugin Js -->
-<script src="{{ asset('adminbsb/plugins/dropzone/dropzone.js') }}"></script>
 @endpush

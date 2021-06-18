@@ -9,6 +9,7 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Facades\URL;
 
 class PerkembanganDataTable extends DataTable
 {
@@ -20,6 +21,8 @@ class PerkembanganDataTable extends DataTable
      */
     public function dataTable()
     {
+        $current_url = URL::current();
+
         return datatables()
             ->eloquent($this->query())
             ->addColumn('action', function($row){
@@ -27,6 +30,10 @@ class PerkembanganDataTable extends DataTable
                 $btn .= '<button type="button" name="edit" id="'.$row->id.'" class="edit btn btn-warning btn-sm" ><i class="material-icons">mode_edit</i></button>';
                 $btn .= '<button type="button" name="delete" id="'.$row->id.'" class="delete btn btn-danger btn-sm" ><i class="material-icons">delete</i></button>';
                 return $btn;
+            })
+            ->addColumn('foto', function($row){
+                $img = URL::to('/').'/'.$row->foto;
+                return $img;
             });
     }
 
@@ -92,6 +99,24 @@ class PerkembanganDataTable extends DataTable
                 ->title('Jenis Kelamin'),
             Column::make('tgl_perkembangan')
                 ->title('Tgl Perkembangan'),
+            Column::make('berat_badan')
+                ->title('Berat Badan')
+                ->addClass('d-none'),
+            Column::make('panjang_badan')
+                ->title('Panjang Badan')
+                ->addClass('d-none'),
+            Column::make('lingkar_dada')
+                ->title('Lingkar Dada')
+                ->addClass('d-none'),
+            Column::make('tinggi_pundak')
+                ->title('Tinggi Pundak')
+                ->addClass('d-none'),
+            Column::make('lingkar_skrotum')
+                ->title('Lingkar Skrotum')
+                ->addClass('d-none'),
+            Column::make('foto')
+                ->title('Foto')
+                ->addClass('d-none'),
             Column::make('keterangan')
                 ->title('Keterangan'),
             Column::make('created_at')

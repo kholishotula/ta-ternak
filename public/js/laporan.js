@@ -22,104 +22,7 @@ else if(seg == 'ketua-grup'){
 $('#laporan-hasil').hide();
 
 var begin, finish;
-var from, to, grup_id = null;
-// var start = moment().subtract(29, 'days');
-// var end = moment();
-// var from = '', to = '', grup_id = null;
-
-// function cb(start, end) {
-//     $('#reportrange').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-
-//     from = start.format('YYYY-MM-DD');
-//     to = end.format('YYYY-MM-DD');
-// }
-
-// $('select[name="grup"]').on('change', function() {
-//     var grup_id = $(this).val();
-//     if(grup_id) {
-//         $.ajax({
-//             url: url_seg+"/laporan",
-//             method: "GET", 
-//             data: {
-//                 grup: grup_id,
-//                 datefrom: start.format('YYYY-MM-DD'), 
-//                 dateto: end.format('YYYY-MM-DD')
-//             },
-//             dataType: "json",
-//             success:function(data) {
-//                 from = start.format('YYYY-MM-DD');
-//                 to = end.format('YYYY-MM-DD');
-//                 $('#date-span').html(data.start + ' sampai ' + data.end);
-
-//                 $('#lahir-table').DataTable().ajax.reload();
-//                 $('#mati-table').DataTable().ajax.reload();
-//                 $('#kawin-table').DataTable().ajax.reload();
-//                 $('#sakit-table').DataTable().ajax.reload();
-//                 $('#ada-table').DataTable().ajax.reload();
-//             },
-//             error: function (jqXHR, textStatus, errorThrown) { 
-//                 console.log(jqXHR); 
-//             }
-//         });
-//     }
-// });
-
-// $('#reportrange').daterangepicker({
-//     startDate: start,
-//     endDate: end,
-//     ranges: {
-//        'Today': [moment(), moment()],
-//        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-//        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-//        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-//        'This Month': [moment().startOf('month'), moment().endOf('month')],
-//        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-//     },
-//     locale: {
-//     	"format": "YYYY-MM-DD"
-//     }
-// }, function(start, end, label) {
-//     $.ajax({
-//         url: url_seg+"/laporan",
-//         method: "GET", 
-//         data: {
-//             datefrom: start.format('YYYY-MM-DD'), 
-//             dateto: end.format('YYYY-MM-DD')
-//         },
-//         dataType: "json",
-//         success:function(data) {
-//             from = start.format('YYYY-MM-DD');
-//             to = end.format('YYYY-MM-DD');
-//             $('#date-span').html(data.start + ' sampai ' + data.end);
-
-//             $('#lahir-table').DataTable().ajax.reload();
-//             $('#mati-table').DataTable().ajax.reload();
-//             $('#kawin-table').DataTable().ajax.reload();
-//             $('#sakit-table').DataTable().ajax.reload();
-//             $('#ada-table').DataTable().ajax.reload();
-//         },
-//         error: function (jqXHR, textStatus, errorThrown) { 
-//             console.log(jqXHR); 
-//         }
-//     });
-// });
-
-// $('#reportrange').daterangepicker({
-//     startDate: start,
-//     endDate: end,
-//     ranges: {
-//        'Today': [moment(), moment()],
-//        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-//        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-//        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-//        'This Month': [moment().startOf('month'), moment().endOf('month')],
-//        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-//     },
-//     locale: {
-//         "format": "YYYY-MM-DD"
-//     }
-//     // opens: 'left'
-// }, cb);
+var from, to, grup_id = null, nama_grup = null;
 
 $('#reportrange').daterangepicker({
     opens: 'left'
@@ -130,7 +33,9 @@ $('#reportrange').daterangepicker({
 });
 
 $('#filter-form').on('submit', function(event){
-	event.preventDefault();
+    $('#laporan-hasil').hide();
+	
+    event.preventDefault();
         $.ajax({
             url: url_seg+"/laporan",
             method: "GET", 
@@ -142,20 +47,25 @@ $('#filter-form').on('submit', function(event){
             },
             dataType: "json",
             success:function(data) {
-                // console.log(data);
+                console.log(data);
 
                 from = begin;
                 to = finish;
                 grup_id = data.grup_id;
                 $('#date-span').html('tanggal ' + from + ' sampai ' + to);
-                if(grup_id != null){
-                    $('#grup-name').html(' untuk Grup Peternak id ' + grup_id);
+                if(data.nama_grup != null){
+                    $('#grup-name').html(' untuk Grup Peternak "' + data.nama_grup + '"');
+                }
+                else{
+                    $('#grup-name').html('');
                 }
 
                 $('#lahir-table').DataTable().ajax.reload();
                 $('#mati-table').DataTable().ajax.reload();
+                $('#jual-table').DataTable().ajax.reload();
                 $('#kawin-table').DataTable().ajax.reload();
                 $('#sakit-table').DataTable().ajax.reload();
+                $('#perkembangan-table').DataTable().ajax.reload();
                 $('#ada-table').DataTable().ajax.reload();
 
                 $('#laporan-hasil').show();
@@ -165,9 +75,6 @@ $('#filter-form').on('submit', function(event){
             }
         });
 });
-
-// cb(start, end);
-
 
 $('#lahir-table').DataTable({
     processing: true,
@@ -330,6 +237,37 @@ $('#sakit-table').DataTable({
         {data: 'nama_penyakit', name: 'nama_penyakit'},
         {data: 'obat', name: 'obat'},
         {data: 'lama_sakit', name: 'lama_sakit'},
+        {data: 'keterangan', name: 'keterangan'},
+        {data: 'created_at', name: 'created_at'},
+        {data: 'updated_at', name: 'updated_at'},
+    ],
+});
+
+$('#perkembangan-table').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+        url: url_seg+'/laporan/perkembangan',
+        method: 'POST',
+        data: function(d){
+            d.datefrom = from;
+            d.dateto = to;
+            d.grup_id = grup_id;
+        },
+        error: function (jqXHR, textStatus, errorThrown) { 
+            console.log(jqXHR); 
+        }
+    },
+    columns: [
+        {data: 'id', name: 'id'},
+        {data: 'necktag', name: 'necktag'},
+        {data: 'jenis_kelamin', name: 'jenis_kelamin'},
+        {data: 'tgl_perkembangan', name: 'tgl_perkembangan'},
+        {data: 'berat_badan', name: 'berat_badan'},
+        {data: 'panjang_badan', name: 'panjang_badan'},
+        {data: 'lingkar_dada', name: 'lingkar_dada'},
+        {data: 'tinggi_pundak', name: 'tinggi_pundak'},
+        {data: 'lingkar_skrotum', name: 'lingkar_skrotum'},
         {data: 'keterangan', name: 'keterangan'},
         {data: 'created_at', name: 'created_at'},
         {data: 'updated_at', name: 'updated_at'},

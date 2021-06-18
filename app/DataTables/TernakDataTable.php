@@ -87,29 +87,39 @@ class TernakDataTable extends DataTable
                 ->width(150)
                 ->addClass('text-center'),
             Column::make('pemilik_id')
-                ->title('ID Pemilik'),
+                ->title('ID Pemilik')
+                ->addClass('d-none'),
             Column::make('user_id')
-                ->title('ID Peternak'),
+                ->title('ID Peternak')
+                ->addClass('d-none'),
             Column::make('ras_id')
-                ->title('ID Ras'),
+                ->title('ID Ras')
+                ->addClass('d-none'),
             Column::make('kematian_id')
-                ->title('ID Kematian'),
+                ->title('ID Kematian')
+                ->addClass('d-none'),
             Column::make('penjualan_id')
-                ->title('ID Penjualan'),
+                ->title('ID Penjualan')
+                ->addClass('d-none'),
             Column::make('jenis_kelamin')
                 ->title('Jenis Kelamin'),
             Column::make('tgl_lahir')
                 ->title('Tanggal Lahir'),
             Column::make('bobot_lahir')
-                ->title('Bobot Lahir'),
+                ->title('Bobot Lahir')
+                ->addClass('d-none'),
             Column::make('pukul_lahir')
-                ->title('Pukul Lahir'),
+                ->title('Pukul Lahir')
+                ->addClass('d-none'),
             Column::make('lama_dikandungan')
-                ->title('Lama diKandungan'),
+                ->title('Lama diKandungan')
+                ->addClass('d-none'),
             Column::make('lama_laktasi')
-                ->title('Lama Laktasi'),
+                ->title('Lama Laktasi')
+                ->addClass('d-none'),
             Column::make('tgl_lepas_sapih')
-                ->title('Tanggal Lepas Sapih'),
+                ->title('Tanggal Lepas Sapih')
+                ->addClass('d-none'),
             Column::make('necktag_ayah')
                 ->title('Ayah'),
             Column::make('necktag_ibu')

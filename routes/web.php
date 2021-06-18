@@ -78,9 +78,12 @@
 
 			//grafik
 			Route::get('grafik', 'GrafikController@index')->name('grafik');
+			Route::get('grafik/ras', 'GrafikController@grafikRas')->name('grafik.ras');
+			Route::get('grafik/umur', 'GrafikController@grafikUmur')->name('grafik.umur');
 			Route::get('grafik/lahir', 'GrafikController@grafikLahir')->name('grafik.lahir');
 			Route::get('grafik/mati', 'GrafikController@grafikMati')->name('grafik.mati');
 			Route::get('grafik/jual', 'GrafikController@grafikJual')->name('grafik.jual');
+			Route::get('grafik/kawin', 'GrafikController@grafikKawin')->name('grafik.kawin');
 
 			//laporan
 			Route::get('laporan', 'LaporanController@index')->name('laporan');
@@ -89,6 +92,7 @@
 			Route::post('laporan/jual', 'LaporanController@jual')->middleware('cors')->name('laporan.jual');
 			Route::post('laporan/kawin', 'LaporanController@kawin')->middleware('cors')->name('laporan.kawin');
 			Route::post('laporan/sakit', 'LaporanController@sakit')->middleware('cors')->name('laporan.sakit');
+			Route::post('laporan/perkembangan', 'LaporanController@perkembangan')->middleware('cors')->name('laporan.perkembangan');
 			Route::post('laporan/ada', 'LaporanController@ada')->middleware('cors')->name('laporan.ada');
 			Route::get('laporan/export/{param}', 'LaporanController@export')->name('laporan.export');
 		});
@@ -137,9 +141,12 @@
 
 			//grafik
 			Route::get('grafik', 'GrafikController@index')->name('grafik');
+			Route::get('grafik/ras', 'GrafikController@grafikRas')->name('grafik.ras');
+			Route::get('grafik/umur', 'GrafikController@grafikUmur')->name('grafik.umur');
 			Route::get('grafik/lahir', 'GrafikController@grafikLahir')->name('grafik.lahir');
 			Route::get('grafik/mati', 'GrafikController@grafikMati')->name('grafik.mati');
 			Route::get('grafik/jual', 'GrafikController@grafikJual')->name('grafik.jual');
+			Route::get('grafik/kawin', 'GrafikController@grafikKawin')->name('grafik.kawin');
 
 			//laporan
 			Route::get('laporan', 'LaporanController@index')->name('laporan');
@@ -148,6 +155,7 @@
 			Route::post('laporan/jual', 'LaporanController@jual')->middleware('cors')->name('laporan.jual');
 			Route::post('laporan/kawin', 'LaporanController@kawin')->middleware('cors')->name('laporan.kawin');
 			Route::post('laporan/sakit', 'LaporanController@sakit')->middleware('cors')->name('laporan.sakit');
+			Route::post('laporan/perkembangan', 'LaporanController@perkembangan')->middleware('cors')->name('laporan.perkembangan');
 			Route::post('laporan/ada', 'LaporanController@ada')->middleware('cors')->name('laporan.ada');
 			Route::get('laporan/export/{param}', 'LaporanController@export')->name('laporan.export');
 		});
@@ -210,9 +218,12 @@
 	
 			//grafik
 			Route::get('grafik', 'GrafikController@index')->name('grafik');
+			Route::get('grafik/ras', 'GrafikController@grafikRas')->name('grafik.ras');
+			Route::get('grafik/umur', 'GrafikController@grafikUmur')->name('grafik.umur');
 			Route::get('grafik/lahir', 'GrafikController@grafikLahir')->name('grafik.lahir');
 			Route::get('grafik/mati', 'GrafikController@grafikMati')->name('grafik.mati');
 			Route::get('grafik/jual', 'GrafikController@grafikJual')->name('grafik.jual');
+			Route::get('grafik/kawin', 'GrafikController@grafikKawin')->name('grafik.kawin');
 	
 			//laporan
 			Route::get('laporan', 'LaporanController@index')->name('laporan');
@@ -221,6 +232,7 @@
 			Route::post('laporan/jual', 'LaporanController@jual')->middleware('cors')->name('laporan.jual');
 			Route::post('laporan/kawin', 'LaporanController@kawin')->middleware('cors')->name('laporan.kawin');
 			Route::post('laporan/sakit', 'LaporanController@sakit')->middleware('cors')->name('laporan.sakit');
+			Route::post('laporan/perkembangan', 'LaporanController@perkembangan')->middleware('cors')->name('laporan.perkembangan');
 			Route::post('laporan/ada', 'LaporanController@ada')->middleware('cors')->name('laporan.ada');
 			Route::get('laporan/export/{param}', 'LaporanController@export')->name('laporan.export');
 		});

@@ -131,7 +131,6 @@ $('#tambah_data_form').on('submit', function(event){
 $(document).on('click', '.view', function(){
 	var id = $(this).attr('id');
     var txt = '', txt2 = '';
-    // var rp = [];
 
     txt = '<tr>';
     txt += '<th>Nama Penyakit</th>';

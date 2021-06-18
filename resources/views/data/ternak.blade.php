@@ -1,5 +1,13 @@
 @extends('data.index')
 
+@push('link2')
+<style>
+	.d-none{
+		display: none;
+	}
+</style>
+@endpush
+
 @section('table-content')
 <div align="left">
     <button type="button" name="tambah_data" id="tambah_data" class="btn btn-success btn-sm">

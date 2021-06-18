@@ -43,7 +43,7 @@
                                 <label class="control-label">Grup Peternak</label>
                                 <div class="form-line">
                                     <select class="form-control js-select-search" name="grup" id="grup">
-                                        <option></option>
+                                        <option value=""></option>
                                         @foreach ($grups as $grup)
                                         <option value="{{ $grup->id }}">{{ $grup->nama_grup }}</option>
                                         @endforeach  
@@ -53,6 +53,10 @@
                             @elsecan('isKetua')
                             <select class="form-control js-select-search hidden" name="grup" id="grup">
                                 <option value="{{ $grup_id }}" type="hidden"></option> 
+                            </select>
+                            @elsecan('isPeternak')
+                            <select class="form-control js-select-search hidden" name="grup" id="grup">
+                                <option value="" type="hidden"></option> 
                             </select>
                             @endcan
                             <div class="form-group">
@@ -102,6 +106,7 @@
                     <li role="presentation"><a href="#jual" data-toggle="tab">JUAL</a></li>
                     <li role="presentation"><a href="#kawin" data-toggle="tab">KAWIN</a></li>
                     <li role="presentation"><a href="#sakit" data-toggle="tab">SAKIT</a></li>
+                    <li role="presentation"><a href="#perkembangan" data-toggle="tab">PERKEMBANGAN</a></li>
                     <li role="presentation"><a href="#ada" data-toggle="tab">TOTAL ADA</a></li>
                 </ul>
 
@@ -230,6 +235,30 @@
                                         <th>Nama Penyakit</th>
                                         <th>Obat</th>
                                         <th>Lama Sakit</th>
+                                        <th>Keterangan</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="perkembangan">
+                        <h4 align="center"><b>Data Perkembangan Ternak</b></h4>
+                        <div class="table-responsive">
+                            <table id="perkembangan-table" class="table table-bordered table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Necktag</th>
+                                        <th>Jenis Kelamin</th>
+                                        <th>Tgl Perkembangan</th>
+                                        <th>Berat Badan</th>
+                                        <th>Panjang Badan</th>
+                                        <th>Lingkar Dada</th>
+                                        <th>Tinggi Pundak</th>
+                                        <th>Lingkar Skrotum</th>
                                         <th>Keterangan</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>

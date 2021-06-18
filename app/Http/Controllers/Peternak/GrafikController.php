@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Peternak;
 
 use App\Ras;
 use App\Ternak;
+use App\Perkawinan;
+use App\GrupPeternak;
+use App\User;
 use App\Charts\RasChart;
 use App\Charts\UmurChart;
 use App\Charts\KelahiranChart;
 use App\Charts\KematianChart;
 use App\Charts\PenjualanChart;
+use App\Charts\PerkawinanChart;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +21,12 @@ class GrafikController extends Controller
 {
     public function index(Request $request)
     {
-	    $ras = $this->grafikRas();
-	    $umur = $this->grafikUmur();
+	    $ras = $this->grafikRas($request);
+	    $umur = $this->grafikUmur($request);
 	    $lahir = $this->grafikLahir($request);
 	    $mati = $this->grafikMati($request);
 	    $jual = $this->grafikJual($request);
+        $kawin = $this->grafikKawin($request);
         
         $yearNow = date('Y');
         $year = array();
@@ -30,17 +35,26 @@ class GrafikController extends Controller
             $year[] = $i;
         }
 
+        if($request->ajax()){
+            return response()->json([
+                'grup_id' => Auth::user()->grup_id,
+                'years' => $year,
+            ]);
+        }
+
         return view('grafik.grafik')->with([
             'ras' => $ras,
             'umur' => $umur,
             'lahir'=> $lahir,
             'mati' => $mati,
             'jual' => $jual,
+            'kawin'=> $kawin,
+            'grup_id' => Auth::user()->grup_id,
             'years' => $year,
         ]);
     }
 
-    public function grafikRas()
+    public function grafikRas(Request $request)
     {
         $jantan = array();
         $betina = array();
@@ -181,7 +195,7 @@ class GrafikController extends Controller
         return $chart;
     }
 
-    public function grafikUmur()
+    public function grafikUmur(Request $request)
     {
         $umurj = array();
         $umurb = array();
@@ -406,7 +420,7 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow]);
         }
 
         return $chart;
@@ -508,7 +522,7 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow]);
         }
 
         return $chart;
@@ -610,7 +624,56 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina]);
+           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow]);
+        }
+
+		return $chart;
+    }
+
+    public function grafikKawin(Request $request)
+    {
+        $yearNow = date('Y');
+
+        if ($request->ajax()) {
+           $yearNow = $request->tahun;
+        }
+
+        $necktag_ternaks = Ternak::where('user_id', Auth::id())
+                                    ->pluck('necktag')->toArray();
+
+        $count = Perkawinan::whereIn('necktag', $necktag_ternaks)
+                            ->whereYear('tgl_kawin', '=', $yearNow)
+                            ->selectRaw('count(*) as jumlah, coalesce(extract(month from perkawinans.tgl_kawin), 0) as kawin')
+                            ->groupBy('kawin')
+                            ->orderBy('kawin')
+                            ->get();
+
+        for($i=0; $i<12; $i++){
+            $data[$i] = 0;
+        }
+
+        foreach($count as $ternak){
+        	$data[$ternak->kawin - 1] = $ternak->jumlah;
+        }
+
+        $chart = new PerkawinanChart;
+        $chart->title('Grafik Ternak - Perkawinan ('. $yearNow .')');
+        $chart->labels(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
+
+        if($count != null){
+    	    $chart->dataset('Jumlah Ternak', 'bar', $data)->options([
+                'responsive' => true,
+    			'fill' => 'true',
+    			'backgroundColor' => '#B2DFDB',
+                'borderColor' => '#809689',
+                 'tooltip' => [
+                    'show' => true
+                ],
+    		]);
+        }
+
+        if ($request->ajax()) {
+           return response()->json(['data' => $data, 'tahun' => $yearNow]);
         }
 
 		return $chart;

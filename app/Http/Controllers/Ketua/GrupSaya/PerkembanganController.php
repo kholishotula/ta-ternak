@@ -29,8 +29,6 @@ class PerkembanganController extends Controller
                                     ->orderBy('necktag', 'asc')
                                     ->get();
 
-        // $baseURL = explode('ketua-grup/', URL::current())[0];
-
         return DataTables::of($perkembangans)
                     ->addIndexColumn()
                     ->addColumn('foto', function($data){

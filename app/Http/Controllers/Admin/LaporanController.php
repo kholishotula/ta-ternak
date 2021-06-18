@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Ternak;
 use App\Perkawinan;
 use App\RiwayatPenyakit;
+use App\Perkembangan;
 use App\Kematian;
 use App\Penjualan;
 use App\GrupPeternak;
@@ -21,33 +22,45 @@ class LaporanController extends Controller
     public function index(Request $request)
     {
         $grup = GrupPeternak::all();
+        $grup_id = null;
+        $nama_grup = null;
         
         if($request->ajax()){
+            if($request->grup_id != null){
+                $grup_id = $request->grup_id;
+                $nama_grup = GrupPeternak::where('id', $request->grup_id)->first()
+                            ->nama_grup;
+            }
             return response()->json([
                 'start' => $request->datefrom,
                 'end' => $request->dateto,
-                'grup_id' => $request->grup_id
+                'grup_id' => $grup_id,
+                'nama_grup' => $nama_grup
             ]);
         }
 
-        return view('laporan.laporan')->with('grups', $grup);
+        return view('laporan.laporan')->with(['grups' => $grup]);
     }
 
     public function lahir(Request $request)
     {
         if($request->ajax()){
             if($request->grup_id != null){
-                $user_ids = User::where('grup_id', $request->grup_id)->pluck('id')->toArray();
+                $user_ids = User::where('grup_id', $request->grup_id)
+                                ->pluck('id')->toArray();
 
                 if($user_ids != null){
-                    $lahir = Ternak::whereBetween('tgl_lahir', [$request->datefrom, $request->dateto])->whereIn('user_id', $user_ids)->get();
+                    $lahir = Ternak::whereBetween('tgl_lahir', [$request->datefrom, $request->dateto])
+                                    ->whereIn('user_id', $user_ids)
+                                    ->get();
                 }
                 else{
                     $lahir = [];
                 }
             }
             else{
-                $lahir = Ternak::whereBetween('tgl_lahir', [$request->datefrom, $request->dateto])->get();
+                $lahir = Ternak::whereBetween('tgl_lahir', [$request->datefrom, $request->dateto])
+                                ->get();
             }
 
             return DataTables::of($lahir)
@@ -60,7 +73,8 @@ class LaporanController extends Controller
     {
         if($request->ajax()){
             if($request->grup_id != null){
-                $user_ids = User::where('grup_id', $request->grup_id)->pluck('id')->toArray();
+                $user_ids = User::where('grup_id', $request->grup_id)
+                                ->pluck('id')->toArray();
 
                 if($user_ids != null){
                     $mati = Kematian::select('ternaks.necktag', 'ternaks.kematian_id', 'kematians.tgl_kematian', 'kematians.waktu_kematian', 'kematians.penyebab', 'kematians.kondisi', 'ternaks.pemilik_id', 'ternaks.user_id', 'ternaks.ras_id', 'ternaks.jenis_kelamin', 'ternaks.tgl_lahir', 'ternaks.necktag_ayah', 'ternaks.necktag_ibu', 'ternaks.cacat_fisik', 'ternaks.ciri_lain', 'ternaks.status_ada', 'ternaks.created_at', 'ternaks.updated_at')
@@ -118,8 +132,22 @@ class LaporanController extends Controller
     public function kawin(Request $request)
     {
         if($request->ajax()){
-            $kawin = Perkawinan::whereBetween('tgl_kawin', [$request->datefrom, $request->dateto])->get();
-
+            if($request->grup_id != null){
+                $user_ids = User::where('grup_id', $request->grup_id)
+                                ->pluck('id')->toArray();
+                if($user_ids != null){
+                    $kawin = Perkawinan::select('perkawinans.*')
+                                        ->join('public.ternaks', 'perkawinans.necktag', '=', 'ternaks.necktag')
+                                        ->whereIn('ternaks.user_id', $user_ids)
+                                        ->whereBetween('tgl_kawin', [$request->datefrom, $request->dateto])->get();
+                }
+                else{
+                    $kawin = [];
+                }
+            }
+            else{
+                $kawin = Perkawinan::whereBetween('tgl_kawin', [$request->datefrom, $request->dateto])->get();
+            }
             return DataTables::of($kawin)
                   ->make(true);
         }
@@ -128,9 +156,53 @@ class LaporanController extends Controller
     public function sakit(Request $request)
     {
         if($request->ajax()){
-            $sakit = RiwayatPenyakit::whereBetween('tgl_sakit', [$request->datefrom, $request->dateto])->get();
-
+            if($request->grup_id != null){
+                $user_ids = User::where('grup_id', $request->grup_id)
+                                ->pluck('id')->toArray();
+                if($user_ids != null){
+                    $sakit = RiwayatPenyakit::select('riwayat_penyakits.*')
+                                        ->join('public.ternaks', 'riwayat_penyakits.necktag', '=', 'ternaks.necktag')
+                                        ->whereIn('ternaks.user_id', $user_ids)
+                                        ->whereBetween('tgl_sakit', [$request->datefrom, $request->dateto])->get();
+                }
+                else{
+                    $sakit = [];
+                }
+            }
+            else{
+                $sakit = RiwayatPenyakit::whereBetween('tgl_sakit', [$request->datefrom, $request->dateto])
+                                        ->get();
+            }
             return DataTables::of($sakit)
+                  ->make(true);
+        }
+    }
+
+    public function perkembangan(Request $request)
+    {
+        if($request->ajax()){
+            if($request->grup_id != null){
+                $user_ids = User::where('grup_id', $request->grup_id)->pluck('id')->toArray();
+
+                if($user_ids != null){
+                    $perkembangan = Perkembangan::select('perkembangans.*', 'ternaks.jenis_kelamin')
+                                            ->join('public.ternaks', 'perkembangans.necktag', '=', 'ternaks.necktag')
+                                            ->whereBetween('perkembangans.tgl_perkembangan', [$request->datefrom, $request->dateto])
+                                            ->whereIn('ternaks.user_id', $user_ids)
+                                            ->get();
+                }
+                else{
+                    $perkembangan = [];
+                }
+            }
+            else{
+                $perkembangan = Perkembangan::select('perkembangans.*', 'ternaks.jenis_kelamin')
+                                        ->join('public.ternaks', 'perkembangans.necktag', '=', 'ternaks.necktag')
+                                        ->whereBetween('perkembangans.tgl_perkembangan', [$request->datefrom, $request->dateto])
+                                        ->get();
+            }
+            return DataTables::of($perkembangan)
+                  ->addIndexColumn()
                   ->make(true);
         }
     }
@@ -169,7 +241,8 @@ class LaporanController extends Controller
         $export = new LaporanExport($sp[1], $sp[3], $sp[5], null);
 
         if($sp[5] != null){
-            return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'_grup_peternak_id_'.$sp[5].'.xlsx');
+            $nama_grup = GrupPeternak::where('id', $sp[5])->first()->nama_grup;
+            return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'_grup_peternak_'.$nama_grup.'.xlsx');
         }
         else{
             return Excel::download($export, 'SITERNAK_Laporan_'.$sp[1].'_'.$sp[3].'.xlsx');
