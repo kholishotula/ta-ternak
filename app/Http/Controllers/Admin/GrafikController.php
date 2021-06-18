@@ -225,7 +225,7 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-            return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'nama_grup' => $nama_grup]);
+            return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'label' => $label, 'nama_grup' => $nama_grup]);
         }
 
 		return $chart;
@@ -402,7 +402,7 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-            return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'nama_grup' => $nama_grup]);
+            return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'label' => $label, 'nama_grup' => $nama_grup]);
         }
 
 		return $chart;
