@@ -104,7 +104,9 @@ class PenjualanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Penjualan::where('necktag', $request->necktag)->exists()){
+        if(Penjualan::where('necktag', $request->necktag)
+                    ->where('id', '<>', $id)
+                    ->exists()){
             return response()->json(['errors' => ['Data penjualan untuk ternak '.$request->necktag.' sudah ada.']]);
         }
         $rules = array(

@@ -111,7 +111,9 @@ class KematianController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Kematian::where('necktag', $request->necktag)->exists()){
+        if(Kematian::where('necktag', $request->necktag)
+                    ->where('id', '<>', $id)
+                    ->exists()){
             return response()->json(['errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']]);
         }
         $rules = array(
