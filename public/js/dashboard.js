@@ -77,7 +77,6 @@ $('#search_form').on('submit', function(event){
             else{ //jika data error
                 $('#exist').hide();
                 $('#not-exist').show();
-                console.log(data.errors.result);
                 $('#not-exist').text(data.errors.result);
             }
 		},
@@ -141,7 +140,6 @@ function buildData(data){
         }
     }
     createChart(family);
-    // console.log(family);
 }
 
 function checkParentInstance(family, key){

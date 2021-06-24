@@ -38,7 +38,6 @@ class HomeController extends Controller
         $inst = DB::select('SELECT * FROM public."search_inst"(?)', [$request->necktag]);
 
     	if($inst != null){
-            $inst[0]->searched = true;
             $spouse = DB::select('SELECT * FROM public."search_spouse"(?)', [$inst[0]->necktag]);
             $parents = DB::select('SELECT * FROM public."search_parent"(?,?)', [$inst[0]->ayah, $inst[0]->ibu]);
             $siblings = DB::select('SELECT * FROM public."search_sibling"(?,?,?)', [$inst[0]->necktag, $inst[0]->ayah, $inst[0]->ibu]);

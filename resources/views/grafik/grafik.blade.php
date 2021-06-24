@@ -318,6 +318,7 @@ $('#filter-form').on('submit', function(event){
                 url: url_seg+"/grafik/lahir",
                 method: "GET", 
                 data: {
+                    // grup_id=(val)&tahun=(val)
                     grup_id: $(this).serialize().split('&')[0].split('=')[1],
                     tahun : $(this).serialize().split('&')[1].split('=')[1],
                 },
@@ -349,6 +350,7 @@ $('#filter-form').on('submit', function(event){
                 url: url_seg+"/grafik/mati",
                 method: "GET", 
                 data: {
+                    // grup_id=(val)&tahun=(val)
                     grup_id: $(this).serialize().split('&')[0].split('=')[1],
                     tahun : $(this).serialize().split('&')[1].split('=')[1],
                 },
@@ -380,6 +382,7 @@ $('#filter-form').on('submit', function(event){
                 url: url_seg+"/grafik/jual",
                 method: "GET", 
                 data: {
+                    // grup_id=(val)&tahun=(val)
                     grup_id: $(this).serialize().split('&')[0].split('=')[1],
                     tahun : $(this).serialize().split('&')[1].split('=')[1],
                 },
@@ -411,6 +414,7 @@ $('#filter-form').on('submit', function(event){
                 url: url_seg+"/grafik/kawin",
                 method: "GET", 
                 data: {
+                    // grup_id=(val)&tahun=(val)
                     grup_id: $(this).serialize().split('&')[0].split('=')[1],
                     tahun : $(this).serialize().split('&')[1].split('=')[1],
                 },

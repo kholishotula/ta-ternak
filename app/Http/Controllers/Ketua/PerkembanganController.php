@@ -73,7 +73,7 @@ class PerkembanganController extends Controller
             $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
 
             $img = Image::make($file->path());
-            $img->resize(1024, 1024, function ($constraint) {
+            $img->resize(1280, 1280, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             })->save($name_img);
@@ -161,7 +161,7 @@ class PerkembanganController extends Controller
             $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
 
             $img = Image::make($file->path());
-            $img->resize(1024, 1024, function ($constraint) {
+            $img->resize(1280, 1280, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             })->save($name_img);

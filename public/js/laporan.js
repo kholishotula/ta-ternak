@@ -27,7 +27,6 @@ var from, to, grup_id = null, nama_grup = null;
 $('#reportrange').daterangepicker({
     opens: 'left'
 }, function(start, end, label) {
-    // console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
     begin = start.format('YYYY-MM-DD');
     finish = end.format('YYYY-MM-DD');
 });
@@ -47,8 +46,6 @@ $('#filter-form').on('submit', function(event){
             },
             dataType: "json",
             success:function(data) {
-                console.log(data);
-
                 from = begin;
                 to = finish;
                 grup_id = data.grup_id;
