@@ -63,6 +63,7 @@ $('#tambah_edit_data_form').on('submit', function(e) {
         data: formData,
         contentType: false,
         processData: false,
+        cache: false,
         success: (data) => {
             var html = '';
             if (data.errors) {
