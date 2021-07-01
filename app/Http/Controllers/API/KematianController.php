@@ -33,11 +33,16 @@ class KematianController extends Controller
      */
     public function store(Request $request)
     {
+        if(Kematian::where('necktag', $request->necktag)->exists()){
+            return response()->json([
+                'status' => 'error',
+                'errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']
+            ]);
+        }
+        
         $rules = array(
+            'necktag' => 'required',
             'tgl_kematian' => 'required',
-            'waktu_kematian' => 'required',
-            'penyebab' => 'required',
-            'kondisi' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -50,6 +55,7 @@ class KematianController extends Controller
         }
 
         $form_data = array(
+            'necktag' => $request->necktag,
             'tgl_kematian' => $request->tgl_kematian,
             'waktu_kematian' => $request->waktu_kematian,
             'penyebab' => $request->penyebab,
@@ -89,11 +95,18 @@ class KematianController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Kematian::where('necktag', $request->necktag)
+                    ->where('id', '<>', $id)
+                    ->exists()){
+            return response()->json([
+                'status' => 'error',
+                'errors' => ['Data kematian untuk ternak '.$request->necktag.' sudah ada.']
+            ]);
+        }
+
         $rules = array(
-            'tgl_kematian' => 'required',
-            'waktu_kematian' => 'required',
-            'penyebab' => 'required',
-            'kondisi' => 'required'
+            'necktag' => 'required',
+            'tgl_kematian' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -106,6 +119,7 @@ class KematianController extends Controller
         }
 
         $form_data = array(
+            'necktag' => $request->necktag,
             'tgl_kematian' => $request->tgl_kematian,
             'waktu_kematian' => $request->waktu_kematian,
             'penyebab' => $request->penyebab,

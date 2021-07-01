@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::prefix('v1')->namespace('API')->group(function(){
+Route::prefix('v2')->namespace('API')->group(function(){
 	Route::post('login', 'UserController@login');
 	Route::post('register', 'UserController@register');
 
@@ -23,13 +23,14 @@ Route::prefix('v1')->namespace('API')->group(function(){
 
 		Route::apiResource('ras', 'RasController');
 		Route::apiResource('pemilik', 'PemilikController');
-		Route::apiResource('penyakit', 'PenyakitController');
 		Route::apiResource('kematian', 'KematianController');
+		Route::apiResource('penjualan', 'PenjualanController');
 		Route::apiResource('ternak', 'TernakController');
 		Route::apiResource('peternak', 'PeternakController');
-		Route::apiResource('peternakan', 'PeternakanController');
+		Route::apiResource('grup-peternak', 'GrupPeternakController');
 		Route::apiResource('perkawinan', 'PerkawinanController');
 		Route::apiResource('riwayat', 'RiwayatPenyakitController');
+		Route::apiResource('perkembangan', 'PerkembanganController');
 
 		Route::get('ternaktrash', 'TernakController@trash');
 		Route::get('ternaktrash/{id}', 'TernakController@trashid');
@@ -44,6 +45,8 @@ Route::prefix('v1')->namespace('API')->group(function(){
 		Route::get('grafik', 'GrafikController@index');
 		Route::get('grafik/lahir', 'GrafikController@grafikLahir');
 		Route::get('grafik/mati', 'GrafikController@grafikMati');
+		Route::get('grafik/jual', 'GrafikController@grafikJual');
+		Route::get('grafik/kawin', 'GrafikController@grafikKawin');
 
 		Route::get('barcode', 'BarcodeController@index');
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Ternak;
 use App\User;
 use Validator;
 
@@ -18,7 +19,7 @@ class PeternakController extends Controller
      */
     public function index()
     {
-        $peternak = User::where('role', '=', 'peternak')->orderBy("id")->get();
+        $peternak = User::where('role', '<>', 'admin')->orderBy("id")->get();
 
         return response()->json([
             'status' => 'success',
@@ -35,8 +36,10 @@ class PeternakController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'peternakan_id' => 'required',
+            'grup_peternak' => 'required',
             'name' => 'required',
+            'role' => 'required',
+            'ktp_user' => 'required|max:16',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users'
         );
@@ -50,16 +53,29 @@ class PeternakController extends Controller
             ]);
         }
 
+        if($request->role == 'ketua grup'){
+            $ketua_grup = User::where('grup_id', $request->grup_peternak)
+                            ->where('role', 'ketua grup')
+                            ->first();
+            if($ketua_grup != null){
+                return response()->json([
+                    'status' => 'error',
+                    'error' => ['Ketua grup untuk Grup Peternak ID '.$request->grup_peternak.' sudah ada.']
+                ]);
+            }
+        }
+
         $password = Str::random(8);
 
         $form_data = array(
             'name' => $request->name,
+            'ktp_user' => $request->ktp_user,
             'username' => $request->username,
-            'peternakan_id' => $request->peternakan_id,
+            'grup_id' => $request->grup_peternak,
             'email' => $request->email,
             'password_first' => $password,
             'password' => Hash::make($password),
-            'register_from_admin' => true,
+            'role' => $request->role,
         );
 
         $peternak = User::create($form_data);
@@ -96,8 +112,9 @@ class PeternakController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'peternakan_id' => 'required',
-            'name' => 'required'
+            'grup_peternak' => 'required',
+            'name' => 'required',
+            'role' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -109,9 +126,22 @@ class PeternakController extends Controller
             ]);
         }
 
+        if($request->role == 'ketua grup'){
+            $ketua_grup = User::where('grup_id', $request->grup_peternak)
+                            ->where('role', 'ketua grup')
+                            ->first();
+            if($ketua_grup != null){
+                return response()->json([
+                    'status' => 'error',
+                    'error' => ['Ketua grup untuk Grup Peternak ID '.$request->grup_peternak.' sudah ada.']
+                ]);
+            }
+        }
+
         $form_data = array(
-            'peternakan_id' => $request->peternakan_id,
-            'name' => $request->name
+            'grup_id' => $request->grup_peternak,
+            'name' => $request->name,
+            'role' => $request->role,
         );
 
         $peternak = User::find($id);
@@ -132,7 +162,16 @@ class PeternakController extends Controller
     public function destroy($id)
     {
         $data = User::find($id);
-        $data->delete();
+        if(Ternak::where('user_id', $id)->exists()){
+            $err = 'Data peternak id '. $id .' tidak dapat dihapus.';
+            return response()->json([
+                'status' => 'error',
+                'error' => $err
+            ]);
+        }
+        else{
+            $data->delete();
+        }
 
         return response()->json([
             'status' => 'success',

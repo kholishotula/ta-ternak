@@ -109,6 +109,7 @@ class PenjualanController extends Controller
                     ->exists()){
             return response()->json(['errors' => ['Data penjualan untuk ternak '.$request->necktag.' sudah ada.']]);
         }
+        
         $rules = array(
             'necktag' => 'required',
             'tgl_terjual' => 'required',

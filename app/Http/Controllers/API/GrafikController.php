@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Ras;
 use App\Ternak;
+use App\Perkawinan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,8 @@ class GrafikController extends Controller
 	    $umur = $this->grafikUmur();
 	    $lahir = $this->grafikLahir($request);
 	    $mati = $this->grafikMati($request);
+        $jual = $this->grafikJual($request);
+        $kawin = $this->grafikKawin($request);
 
         return response()->json([
             'status' => 'success',
@@ -22,6 +25,8 @@ class GrafikController extends Controller
             'umur' => $umur,
             'lahir'=> $lahir,
             'mati' => $mati,
+            'jual' => $jual,
+            'kawin' => $kawin,
         ], 200);
 
     }
@@ -336,12 +341,12 @@ class GrafikController extends Controller
         	$data[$mati->mati - 1] = $mati->jumlah;
         }
 
-        foreach($count_jantan as $lahir){
-            $jantan[$lahir->mati - 1] = $lahir->jumlah;
+        foreach($count_jantan as $mati){
+            $jantan[$mati->mati - 1] = $mati->jumlah;
         }
 
-        foreach($count_betina as $lahir){
-            $betina[$lahir->mati - 1] = $lahir->jumlah;
+        foreach($count_betina as $mati){
+            $betina[$mati->mati - 1] = $mati->jumlah;
         }
 
         $label = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -351,6 +356,123 @@ class GrafikController extends Controller
             'data' => $data, 
             'jantan' => $jantan, 
             'betina' => $betina,
+        ];
+
+        if ($request->tahun) {
+           return response()->json([
+                'status' => 'success',
+                'data' => $data,
+            ], 200);
+        }
+
+        return $data;
+    }
+
+    public function grafikJual(Request $request)
+    {
+        $jantan = array();
+        $betina = array();
+        $label = array();
+        $data = array();
+        
+        $yearNow = date('Y');
+
+        if ($request->tahun) {
+           $yearNow = $request->tahun;
+        }
+
+        $count = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                            ->whereNotNull('penjualan_id')
+                            ->whereYear('tgl_terjual', '=', $yearNow)
+                            ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                            ->groupBy('jual')
+                            ->orderBy('jual')
+                            ->get();
+
+        $count_jantan = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                            ->whereNotNull('penjualan_id')
+                            ->whereYear('tgl_terjual', '=', $yearNow)
+                            ->where('ternaks.jenis_kelamin', '=', 'Jantan')
+                            ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                            ->groupBy('jual')
+                            ->orderBy('jual')
+                            ->get();
+
+        $count_betina = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                            ->whereNotNull('penjualan_id')
+                            ->whereYear('tgl_terjual', '=', $yearNow)
+                            ->where('ternaks.jenis_kelamin', '=', 'Betina')
+                            ->selectRaw('count(*) as jumlah, coalesce(extract(month from penjualans.tgl_terjual), 0) as jual')
+                            ->groupBy('jual')
+                            ->orderBy('jual')
+                            ->get();
+
+        for($i=0; $i<12; $i++){
+            $data[$i] = 0;
+            $jantan[$i] = 0;
+            $betina[$i] = 0;
+        }
+
+        foreach($count as $jual){
+        	$data[$jual->jual - 1] = $jual->jumlah;
+        }
+
+        foreach($count_jantan as $jual){
+            $jantan[$jual->jual - 1] = $jual->jumlah;
+        }
+
+        foreach($count_betina as $jual){
+            $betina[$jual->jual - 1] = $jual->jumlah;
+        }
+
+        $label = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        $data = [
+            'label' => $label,
+            'data' => $data, 
+            'jantan' => $jantan, 
+            'betina' => $betina,
+        ];
+
+        if ($request->tahun) {
+           return response()->json([
+                'status' => 'success',
+                'data' => $data,
+            ], 200);
+        }
+
+        return $data;
+    }
+
+    public function grafikKawin(Request $request){
+        $label = array();
+        $data = array();
+        
+        $yearNow = date('Y');
+
+        if ($request->tahun) {
+           $yearNow = $request->tahun;
+        }
+
+        $count = Perkawinan::whereYear('tgl_kawin', '=', $yearNow)
+                            ->selectRaw('count(*)/2 as jumlah, coalesce(extract(month from perkawinans.tgl_kawin), 0) as kawin')
+                            ->groupBy('kawin')
+                            ->orderBy('kawin')
+                            ->get();
+        
+        for($i=0; $i<12; $i++){
+            $data[$i] = 0;
+        }
+
+        foreach($count as $ternak){
+        	$data[$ternak->kawin - 1] = $ternak->jumlah;
+        }
+
+        $label = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        $data = [
+            'label' => $label,
+            'data' => $data, 
         ];
 
         if ($request->tahun) {

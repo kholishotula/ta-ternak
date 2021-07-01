@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Kematian;
 use App\Pemilik;
-use App\Penyakit;
-use App\Peternakan;
+use App\GrupPeternak;
 use App\Ras;
 use App\Ternak;
+use App\Penjualan;
 
 class OptionsController extends Controller
 {
@@ -17,18 +17,18 @@ class OptionsController extends Controller
     {
     	$kematian = Kematian::orderBy("id")->select("id", "waktu_kematian", "tgl_kematian", "penyebab", "kondisi")->get();
     	$pemilik = Pemilik::orderBy("id")->select("id", "nama_pemilik")->get();
-    	$penyakit = Penyakit::orderBy("id")->select("id", "nama_penyakit")->get();
-    	$peternakan = Peternakan::orderBy("id")->select("id", "nama_peternakan")->get();
+    	$grup = GrupPeternak::orderBy("id")->select("id", "nama_grup")->get();
     	$ras = Ras::orderBy("id")->select("id", "jenis_ras")->get();
     	$ternak = Ternak::orderBy("created_at")->select("necktag", "jenis_kelamin")->get(); 
+        $penjualan = Penjualan::orderBy("id")->select('id', 'tgl_terjual', 'ket_pembeli');
 
         return response()->json([
             'kematian' => $kematian,
             'pemilik' => $pemilik,
-            'penyakit' => $penyakit,
-            'peternakan' => $peternakan,
+            'grup' => $grup,
             'ras' => $ras,
             'ternak' => $ternak,
+            'penjualan' => $penjualan
         ], 200);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\GrupPeternak;
+use App\User;
 use App\DataTables\GrupPeternakDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -160,6 +161,10 @@ class GrupPeternakController extends Controller
     public function destroy($id)
     {
         $data = GrupPeternak::findOrFail($id);
+        if(User::where('grup_id', $id)->exists()){
+            $err = 'Data grup peternak id '. $id .' tidak dapat dihapus.';
+            return response()->json(['error' => $err]);
+        }
         $data->delete();
     }
 }

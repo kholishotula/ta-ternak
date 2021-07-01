@@ -49,7 +49,7 @@ class PemilikController extends Controller
 
         $form_data = array(
             'nama_pemilik' => $request->nama_pemilik,
-            'ktp' => $request->ktp
+            'ktp_pemilik' => $request->ktp
         );
 
         $pemilik = Pemilik::create($form_data);
@@ -101,7 +101,7 @@ class PemilikController extends Controller
 
         $form_data = array(
             'nama_pemilik' => $request->nama_pemilik,
-            'ktp' => $request->ktp
+            'ktp_pemilik' => $request->ktp
         );
 
         Pemilik::whereId($id)->update($form_data);

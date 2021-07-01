@@ -36,7 +36,7 @@ class PerkawinanController extends Controller
         $rules = array(
             'necktag' => 'required',
             'necktag_psg' => 'required',
-            'tgl' => 'required'
+            'tgl_kawin' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -58,7 +58,7 @@ class PerkawinanController extends Controller
         $form_data = array(
             'necktag' => $request->necktag,
             'necktag_psg' => $request->necktag_psg,
-            'tgl' => $request->tgl
+            'tgl_kawin' => $request->tgl_kawin
         );
 
         $perkawinan = Perkawinan::create($form_data);
@@ -97,7 +97,7 @@ class PerkawinanController extends Controller
         $rules = array(
             'necktag' => 'required',
             'necktag_psg' => 'required',
-            'tgl' => 'required'
+            'tgl_kawin' => 'required'
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -119,7 +119,7 @@ class PerkawinanController extends Controller
         $form_data = array(
             'necktag' => $request->necktag,
             'necktag_psg' => $request->necktag_psg,
-            'tgl' => $request->tgl
+            'tgl_kawin' => $request->tgl_kawin
         );
 
         Perkawinan::whereId($id)->update($form_data);

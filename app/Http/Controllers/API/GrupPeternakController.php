@@ -4,12 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Peternakan;
+use App\GrupPeternak;
 use App\User;
-use App\Ternak;
 use Validator;
 
-class PeternakanController extends Controller
+class GrupPeternakController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,11 +17,11 @@ class PeternakanController extends Controller
      */
     public function index()
     {
-        $peternakan = Peternakan::orderBy("id")->get();
+        $grup = GrupPeternak::orderBy("id")->get();
 
         return response()->json([
             'status' => 'success',
-            'peternakan' => $peternakan,
+            'grup' => $grup,
         ], 200);
     }
 
@@ -35,8 +34,11 @@ class PeternakanController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'nama_peternakan' => 'required',
-            'keterangan' => 'required'
+            'nama_grup' => 'required',
+            'alamat' => 'required',
+            'provinsi' => 'required',
+            'kab_kota' => 'required',
+            'kecamatan' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -49,15 +51,19 @@ class PeternakanController extends Controller
         }
 
         $form_data = array(
-            'nama_peternakan' => $request->nama_peternakan,
-            'keterangan' => $request->keterangan
+            'nama_grup' => $request->nama_grup,
+            'alamat' => $request->alamat,
+            'provinsi' => $request->provinsi,
+            'kab_kota' => $request->kab_kota,
+            'kecamatan' => $request->kecamatan,
+            'keterangan' => $request->keterangan,
         );
 
-        $peternakan = Peternakan::create($form_data);
+        $grup = GrupPeternak::create($form_data);
 
         return response()->json([
             'status' => 'success',
-            'peternakan' => $peternakan,
+            'grup' => $grup,
         ], 200);
     }
 
@@ -69,11 +75,11 @@ class PeternakanController extends Controller
      */
     public function show($id)
     {
-        $peternakan = Peternakan::find($id);
+        $grup = GrupPeternak::find($id);
         
         return response()->json([
             'status' => 'success',
-            'peternakan' => $peternakan,
+            'grup' => $grup,
         ], 200);
     }
 
@@ -87,8 +93,11 @@ class PeternakanController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'nama_peternakan' => 'required',
-            'keterangan' => 'required'
+            'nama_grup' => 'required',
+            'alamat' => 'required',
+            'provinsi' => 'required',
+            'kab_kota' => 'required',
+            'kecamatan' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -101,16 +110,20 @@ class PeternakanController extends Controller
         }
 
         $form_data = array(
-            'nama_peternakan' => $request->nama_peternakan,
-            'keterangan' => $request->keterangan
+            'nama_grup' => $request->nama_grup,
+            'alamat' => $request->alamat,
+            'provinsi' => $request->provinsi,
+            'kab_kota' => $request->kab_kota,
+            'kecamatan' => $request->kecamatan,
+            'keterangan' => $request->keterangan,
         );
 
-        Peternakan::find($id)->update($form_data);
-        $peternakan = Peternakan::find($id);
+        GrupPeternak::find($id)->update($form_data);
+        $grup = GrupPeternak::find($id);
         
         return response()->json([
             'status' => 'success',
-            'peternakan' => $peternakan,
+            'grup' => $grup,
         ], 200);
     }
 
@@ -122,12 +135,12 @@ class PeternakanController extends Controller
      */
     public function destroy($id)
     {
-        $data = Peternakan::find($id);
+        $data = GrupPeternak::find($id);
 
-        if(Ternak::where('peternakan_id', $id)->exists() || User::where('peternakan_id', $id)->exists()){
+        if(User::where('grup_id', $id)->exists()){
             return response()->json([
                 'status' => 'error',
-                'message' => "Data peternakan id ". $id ." tidak dapat dihapus.",
+                'message' => "Data grup peternak id ". $id ." tidak dapat dihapus.",
             ], 200);
         }
         else{
@@ -136,7 +149,7 @@ class PeternakanController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => "Data peternakan id ". $id ." telah berhasil dihapus.",
+            'message' => "Data grup peternak id ". $id ." telah berhasil dihapus.",
         ], 200);
     }
 }

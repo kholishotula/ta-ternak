@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Penyakit;
-use Validator;
-use Illuminate\Support\Facades\DB;
+use App\Perkembangan;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator;
 
-class PenyakitController extends Controller
+class PerkembanganController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,11 +17,11 @@ class PenyakitController extends Controller
      */
     public function index()
     {
-        $penyakit = Penyakit::orderBy("id")->get();
+        $perkembangan = Perkembangan::orderBy("id")->get();
 
         return response()->json([
             'status' => 'success',
-            'penyakit' => $penyakit,
+            'perkembangan'  => $perkembangan,
         ], 200);
     }
 
@@ -34,8 +34,10 @@ class PenyakitController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'nama_penyakit' => 'required',
-            'ket_penyakit' => 'required'
+            'necktag' => 'required',
+            'tgl_perkembangan' => 'required',
+            'berat_badan' => 'required',
+            'panjang_badan' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -48,15 +50,21 @@ class PenyakitController extends Controller
         }
 
         $form_data = array(
-            'nama_penyakit' => $request->nama_penyakit,
-            'ket_penyakit' => $request->ket_penyakit
+            'necktag' => $request->necktag,
+            'tgl_perkembangan' => $request->tgl_perkembangan,
+            'berat_badan' => $request->berat_badan,
+            'panjang_badan' => $request->panjang_badan,
+            'lingkar_dada' => $request->lingkar_dada,
+            'tinggi_pundak' => $request->tinggi_pundak,
+            'lingkar_skrotum' => $request->lingkar_skrotum,
+            'keterangan' => $request->keterangan,
         );
 
-        $penyakit = Penyakit::create($form_data);
+        $perkembangan = Perkembangan::create($form_data);
 
         return response()->json([
             'status' => 'success',
-            'penyakit' => $penyakit,
+            'perkembangan'  => $perkembangan,
         ], 200);
     }
 
@@ -68,11 +76,11 @@ class PenyakitController extends Controller
      */
     public function show($id)
     {
-        $penyakit = Penyakit::find($id);
+        $perkembangan = Perkembangan::find($id);
         
         return response()->json([
             'status' => 'success',
-            'penyakit' => $penyakit,
+            'perkembangan'  => $perkembangan,
         ], 200);
     }
 
@@ -86,8 +94,10 @@ class PenyakitController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'nama_penyakit' => 'required',
-            'ket_penyakit' => 'required'
+            'necktag' => 'required',
+            'tgl_perkembangan' => 'required',
+            'berat_badan' => 'required',
+            'panjang_badan' => 'required',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -100,16 +110,23 @@ class PenyakitController extends Controller
         }
 
         $form_data = array(
-            'nama_penyakit' => $request->nama_penyakit,
-            'ket_penyakit' => $request->ket_penyakit
+            'necktag' => $request->necktag,
+            'tgl_perkembangan' => $request->tgl_perkembangan,
+            'berat_badan' => $request->berat_badan,
+            'panjang_badan' => $request->panjang_badan,
+            'lingkar_dada' => $request->lingkar_dada,
+            'tinggi_pundak' => $request->tinggi_pundak,
+            'lingkar_skrotum' => $request->lingkar_skrotum,
+            'keterangan' => $request->keterangan,
+            'updated_at' => Carbon::now()
         );
 
-        Penyakit::whereId($id)->update($form_data);
-        $penyakit = Penyakit::find($id);
+        Perkembangan::find($id)->update($form_data);
+        $perkembangan = Perkembangan::find($id);
         
         return response()->json([
             'status' => 'success',
-            'penyakit' => $penyakit,
+            'perkembangan'  => $perkembangan,
         ], 200);
     }
 
@@ -121,25 +138,12 @@ class PenyakitController extends Controller
      */
     public function destroy($id)
     {
-        $data = Penyakit::find($id);
+        $data = Perkembangan::find($id);
+        $data->delete();
 
-        $exists= DB::table('public.riwayat_penyakits')
-                            ->where('penyakit_id', '=', $id)
-                            ->first();
-
-        if(is_null($exists)){
-            $data->delete();
-        }
-        else{
-            return response()->json([
-                'status' => 'error',
-                'message' => "Data penyakit id ". $id ." tidak dapat dihapus.",
-            ], 200);
-        }
-        
         return response()->json([
             'status' => 'success',
-            'message' => "Data penyakit id ". $id ." telah berhasil dihapus.",
+            'message'  => "Data perkembangan id ". $id ." telah berhasil dihapus.",
         ], 200);
     }
 }

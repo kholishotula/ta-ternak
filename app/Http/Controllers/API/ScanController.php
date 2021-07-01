@@ -10,119 +10,122 @@ class ScanController extends Controller
 {
     public function search($id)
     {
-    	// if(Ternak::::where('necktag', $id)->exists()){}
-        $inst = DB::select('SELECT public."search_inst"(?)', [$id]);
+		$inst = DB::select('SELECT * FROM public."search_inst"(?)', [$request->necktag]);
 
     	if($inst != null){
-    		$sp = preg_split("/[(),]/", $inst[0]->search_inst); 
-            //split karena hasil bukan array, tapi string
-            //0: kosong, 1:necktag, 2:jenis_kelamin, 3:ras, 4:tgl_lahir, 5:blood, 6:peternakan, 7:ayah, 8:ibu, 9:kosong
-
-            $parent = DB::select('SELECT public."search_parent"(?,?)', [$sp[7], $sp[8]]);
-            $sibling = DB::select('SELECT public."search_sibling"(?,?,?)', [$sp[1], $sp[7], $sp[8]]);
-            $child = DB::select('SELECT public."search_child"(?)', [$sp[1]]);
-            $gparent = DB::select('SELECT public."search_gparent"(?,?)', [$sp[7], $sp[8]]);
-            $gchild = DB::select('SELECT public."search_gchild"(?)', [$sp[1]]);
-
+    		$spouse = DB::select('SELECT * FROM public."search_spouse"(?)', [$inst[0]->necktag]);
+            $parents = DB::select('SELECT * FROM public."search_parent"(?,?)', [$inst[0]->ayah, $inst[0]->ibu]);
+            $siblings = DB::select('SELECT * FROM public."search_sibling"(?,?,?)', [$inst[0]->necktag, $inst[0]->ayah, $inst[0]->ibu]);
+            $gparents = DB::select('SELECT * FROM public."search_gparent"(?,?)', [$inst[0]->ayah, $inst[0]->ibu]);
+            $children = DB::select('SELECT * FROM public."search_child"(?)', [$inst[0]->necktag]);
+            $gchildren = DB::select('SELECT * FROM public."search_gchild"(?)', [$inst[0]->necktag]);
 
             //inst
 			$dataInst = [
-				'necktag' => $sp[1],
-				'jenis_kelamin' => $sp[2],
-				'ras' => $sp[3],
-				'tgl_lahir' => $sp[4],
-				'blood' => $sp[5],
-				'peternakan' => $sp[6],
-				'ayah' => $sp[7],
-				'ibu' => $sp[8],
+				'necktag' => $inst[0]->necktag,
+				'jenis_kelamin' => $inst[0]->jenis_kelamin,
+				'ras' => $inst[0]->jenis_ras,
+				'tgl_lahir' => $inst[0]->tgl_lahir,
+				'pemilik' => $inst[0]->pemilik,
+				'peternak' => $inst[0]->peternak,
+				'ayah' => $inst[0]->ayah,
+				'ibu' => $inst[0]->ibu,
+			];
+
+			//spouse
+			$dataSpouse = [
+				'necktag' => $spouse[0]->necktag,
+				'jenis_kelamin' => $spouse[0]->jenis_kelamin,
+				'ras' => $spouse[0]->jenis_ras,
+				'tgl_lahir' => $spouse[0]->tgl_lahir,
+				'pemilik' => $spouse[0]->pemilik,
+				'peternak' => $spouse[0]->peternak,
+				'ayah' => $spouse[0]->ayah,
+				'ibu' => $spouse[0]->ibu,
 			];
 
 			//parent
 			$dataParent = [];
-			if($parent != null){
-	            foreach($parent as $n){
-					$p = preg_split("/[(),]/", $n->search_parent);
+			if($parents != null){
+	            foreach($parents as $n){
 					$dataParent[] = [
-						'necktag' => $p[1],
-						'jenis_kelamin' => $p[2],
-						'ras' => $p[3],
-						'tgl_lahir' => $p[4],
-						'blood' => $p[5],
-						'peternakan' => $p[6],
-						'ayah' => $p[7],
-						'ibu' => $p[8],
+						'necktag' => $n->necktag,
+						'jenis_kelamin' => $n->jenis_kelamin,
+						'ras' => $n->jenis_ras,
+						'tgl_lahir' => $n->tgl_lahir,
+						'pemilik' => $n->pemilik,
+						'peternak' => $n->peternak,
+						'ayah' => $n->ayah,
+						'ibu' => $n->ibu,
 					];
 				}
 			}
 
 			//sibling
 			$dataSibling = [];
-			if($sibling != null){
-				foreach($sibling as $n){
-					$s = preg_split("/[(),]/", $n->search_sibling);
+			if($siblings != null){
+				foreach($siblings as $n){
 					$dataSibling[] = [
-						'necktag' => $s[1],
-						'jenis_kelamin' => $s[2],
-						'ras' => $s[3],
-						'tgl_lahir' => $s[4],
-						'blood' => $s[5],
-						'peternakan' => $s[6],
-						'ayah' => $s[7],
-						'ibu' => $s[8],
+						'necktag' => $n->necktag,
+						'jenis_kelamin' => $n->jenis_kelamin,
+						'ras' => $n->jenis_ras,
+						'tgl_lahir' => $n->tgl_lahir,
+						'pemilik' => $n->pemilik,
+						'peternak' => $n->peternak,
+						'ayah' => $n->ayah,
+						'ibu' => $n->ibu,
 					];
 				}
 			}
 
 			//child
 			$dataChild = [];
-			if($child != null){
-				foreach($child as $n){
+			if($children != null){
+				foreach($children as $n){
 					$c = preg_split("/[(),]/", $n->search_child);
 					$dataChild[] = [
-						'necktag' => $c[1],
-						'jenis_kelamin' => $c[2],
-						'ras' => $c[3],
-						'tgl_lahir' => $c[4],
-						'blood' => $c[5],
-						'peternakan' => $c[6],
-						'ayah' => $c[7],
-						'ibu' => $c[8],
+						'necktag' => $n->necktag,
+						'jenis_kelamin' => $n->jenis_kelamin,
+						'ras' => $n->jenis_ras,
+						'tgl_lahir' => $n->tgl_lahir,
+						'pemilik' => $n->pemilik,
+						'peternak' => $n->peternak,
+						'ayah' => $n->ayah,
+						'ibu' => $n->ibu,
 					];
 				}
 			}
 
 			//gparent
 			$dataGParent = [];
-			if($gparent != null){
-				foreach($gparent as $n){
-					$gp = preg_split("/[(),]/", $n->search_gparent);
+			if($gparents != null){
+				foreach($gparents as $n){
 					$dataGParent[] = [
-						'necktag' => $gp[1],
-						'jenis_kelamin' => $gp[2],
-						'ras' => $gp[3],
-						'tgl_lahir' => $gp[4],
-						'blood' => $gp[5],
-						'peternakan' => $gp[6],
-						'ayah' => $gp[7],
-						'ibu' => $gp[8],
+						'necktag' => $n->necktag,
+						'jenis_kelamin' => $n->jenis_kelamin,
+						'ras' => $n->jenis_ras,
+						'tgl_lahir' => $n->tgl_lahir,
+						'pemilik' => $n->pemilik,
+						'peternak' => $n->peternak,
+						'ayah' => $n->ayah,
+						'ibu' => $n->ibu,
 					];
 				}
 			}
 
 			//gchild
 			$dataGChild = [];
-			if($gchild != null){
-				foreach($gchild as $n){
-					$gc = preg_split("/[(),]/", $n->search_gchild);
+			if($gchildren != null){
+				foreach($gchildren as $n){
 					$dataGChild[] = [
-						'necktag' => $gc[1],
-						'jenis_kelamin' => $gc[2],
-						'ras' => $gc[3],
-						'tgl_lahir' => $gc[4],
-						'blood' => $gc[5],
-						'peternakan' => $gc[6],
-						'ayah' => $gc[7],
-						'ibu' => $gc[8],
+						'necktag' => $n->necktag,
+						'jenis_kelamin' => $n->jenis_kelamin,
+						'ras' => $n->jenis_ras,
+						'tgl_lahir' => $n->tgl_lahir,
+						'pemilik' => $n->pemilik,
+						'peternak' => $n->peternak,
+						'ayah' => $n->ayah,
+						'ibu' => $n->ibu,
 					];
 				}
 			}
@@ -130,6 +133,7 @@ class ScanController extends Controller
 			
 			$data = [
 				'inst' => $dataInst,
+				'spouse' => $dataSpouse,
 	        	'parent' => $dataParent,
 	        	'sibling' => $dataSibling,
 	        	'child' => $dataChild,
