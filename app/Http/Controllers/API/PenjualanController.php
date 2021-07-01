@@ -6,6 +6,7 @@ use App\Penjualan;
 use App\Ternak;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class PenjualanController extends Controller
@@ -17,7 +18,15 @@ class PenjualanController extends Controller
      */
     public function index()
     {
-        $penjualan = Penjualan::orderBy("id")->get();
+        if(Auth::user()->role == 'admin'){
+            $penjualan = Penjualan::orderBy("id")->get();
+        }
+        else{
+            $necktag_ternaks = Ternak::where('user_id', Auth::id())
+                                    ->pluck('necktag')->toArray();
+            $penjualan = Penjualan::whereIn('necktag', $necktag_ternaks)
+                            ->orderBy("id")->get();
+        }
 
         return response()->json([
             'status' => 'success',
@@ -141,7 +150,7 @@ class PenjualanController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => "Data perkawinan id ". $id ." telah berhasil dihapus.",
+            'message' => "Data penjualan id ". $id ." telah berhasil dihapus.",
         ], 200);
     }
 }

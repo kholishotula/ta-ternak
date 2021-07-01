@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Ternak;
 use App\Perkembangan;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
+use File;
+use Image;
 
 class PerkembanganController extends Controller
 {
@@ -17,7 +21,15 @@ class PerkembanganController extends Controller
      */
     public function index()
     {
-        $perkembangan = Perkembangan::orderBy("id")->get();
+        if(Auth::user()->role == 'admin'){
+            $perkembangan = Perkembangan::orderBy("id")->get();
+        }
+        else{
+            $necktag_ternaks = Ternak::where('user_id', Auth::id())
+                                ->pluck('necktag')->toArray();
+            $perkembangan = Perkembangan::whereIn('necktag', $necktag_ternaks)
+                                ->orderBy("id")->get();
+        }
 
         return response()->json([
             'status' => 'success',
@@ -38,6 +50,7 @@ class PerkembanganController extends Controller
             'tgl_perkembangan' => 'required',
             'berat_badan' => 'required',
             'panjang_badan' => 'required',
+            'foto' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -49,6 +62,22 @@ class PerkembanganController extends Controller
             ]);
         }
 
+        $date = date('Y-m-d', strtotime($request->tgl_perkembangan));
+
+        if($request->hasFile('foto')){                
+            $file = $request->file('foto');
+            $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
+
+            $img = Image::make($file->path());
+            $img->resize(1280, 1280, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save($name_img);
+        }
+        else{
+            $name_img = null;
+        }
+
         $form_data = array(
             'necktag' => $request->necktag,
             'tgl_perkembangan' => $request->tgl_perkembangan,
@@ -57,6 +86,7 @@ class PerkembanganController extends Controller
             'lingkar_dada' => $request->lingkar_dada,
             'tinggi_pundak' => $request->tinggi_pundak,
             'lingkar_skrotum' => $request->lingkar_skrotum,
+            'foto' => $name_img,
             'keterangan' => $request->keterangan,
         );
 
@@ -98,6 +128,7 @@ class PerkembanganController extends Controller
             'tgl_perkembangan' => 'required',
             'berat_badan' => 'required',
             'panjang_badan' => 'required',
+            'foto' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -109,6 +140,37 @@ class PerkembanganController extends Controller
             ]);
         }
 
+        $date = date('Y-m-d', strtotime($request->tgl_perkembangan));
+
+        $perkembangan = Perkembangan::find($id);
+
+        if($request->hasFile('foto')){
+            unlink($perkembanganData->foto);
+                
+            $file = $request->file('foto');
+            $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
+
+            $img = Image::make($file->path());
+            $img->resize(1280, 1280, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save($name_img);
+        }
+        elseif($request->tgl_perkembangan != $perkembanganData->tgl_perkembangan){
+            $extension = explode('.', $perkembanganData->foto)[1];
+            $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $extension;
+                
+            rename(public_path($perkembanganData->foto), public_path($name_img));
+        }
+        else{
+            if($perkembanganData->foto != null){
+                $name_img = $perkembanganData->foto;
+            }
+            else{
+                $name_img = null;
+            }
+        }
+
         $form_data = array(
             'necktag' => $request->necktag,
             'tgl_perkembangan' => $request->tgl_perkembangan,
@@ -117,12 +179,12 @@ class PerkembanganController extends Controller
             'lingkar_dada' => $request->lingkar_dada,
             'tinggi_pundak' => $request->tinggi_pundak,
             'lingkar_skrotum' => $request->lingkar_skrotum,
+            'foto' => $name_img,
             'keterangan' => $request->keterangan,
             'updated_at' => Carbon::now()
         );
 
-        Perkembangan::find($id)->update($form_data);
-        $perkembangan = Perkembangan::find($id);
+        $perkembangan->update($form_data);
         
         return response()->json([
             'status' => 'success',
@@ -138,7 +200,10 @@ class PerkembanganController extends Controller
      */
     public function destroy($id)
     {
-        $data = Perkembangan::find($id);
+        $data = Perkembangan::findOrFail($id);
+        if($data->foto){
+            unlink($data->foto);
+        }
         $data->delete();
 
         return response()->json([

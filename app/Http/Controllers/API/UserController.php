@@ -23,11 +23,19 @@ class UserController extends Controller
 	    ];
 
 	    if(Auth::attempt($credentials)){ 
-	     	$user = Auth::user(); 
-	      	$token['token'] = $this->get_user_token($user, "appToken");
-	      	$response = self::HTTP_OK;
+	     	$user = Auth::user();
+			if($user->verified_at == null && $user->role != 'admin'){
+				$error = "Unauthorized Access";
+				$response = self::HTTP_UNAUTHORIZED;
 
-	    	return $this->get_http_response("success", $token, $response);
+				return $this->get_http_response("error", $error, $response);
+			}
+			else{
+				$token['token'] = $this->get_user_token($user, "appToken");
+				$response = self::HTTP_OK;
+
+				return $this->get_http_response("success", $token, $response);
+			}
 	    }
 	    else { 
 	      	$error = "Unauthorized Access";
@@ -40,8 +48,9 @@ class UserController extends Controller
 
 	public function register(Request $request){ 
     	$validator = Validator::make($request->all(), [ 
+            'grup_peternak' => 'required',
 	      	'name' => 'required', 
-			'ktp' => 'required',
+			'ktp' => 'required|digits:16',
 	      	'username' => 'required|unique:users', 
 	      	'email' => 'required|email|unique:users', 
 	      	'password' => 'required|min:8', 

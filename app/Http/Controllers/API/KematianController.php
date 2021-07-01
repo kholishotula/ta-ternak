@@ -7,6 +7,7 @@ use App\Ternak;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KematianController extends Controller
 {
@@ -17,7 +18,15 @@ class KematianController extends Controller
      */
     public function index()
     {
-        $kematian = Kematian::orderBy("id")->get();
+        if(Auth::user()->role == 'admin'){
+            $kematian = Kematian::orderBy("id")->get();
+        }
+        else{
+            $necktag_ternaks = Ternak::where('user_id', Auth::id())
+                                ->pluck('necktag')->toArray();
+            $kematian = Kematian::whereIn('necktag', $necktag_ternaks)
+                            ->orderBy("id")->get();
+        }
 
         return response()->json([
             'status' => 'success',
@@ -144,16 +153,7 @@ class KematianController extends Controller
     public function destroy($id)
     {
         $data = Kematian::find($id);
-
-        if(Ternak::where('kematian_id', $id)->exists()){
-            return response()->json([
-                'status' => 'error',
-                'message' => "Data kematian id ". $id ." tidak dapat dihapus.",
-            ], 200);
-        }
-        else{
-            $data->delete();
-        }
+        $data->delete();
 
         return response()->json([
             'status' => 'success',

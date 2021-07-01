@@ -441,8 +441,8 @@ class GrafikController extends Controller
                             ->get();
         }
         else{
-           $nama_grup = GrupPeternak::where('id', $grup_id)->first()->nama_grup;
-           $user_ids = User::where('grup_id', $grup_id)
+            $nama_grup = GrupPeternak::where('id', $grup_id)->first()->nama_grup;
+            $user_ids = User::where('grup_id', $grup_id)
                             ->pluck('id')->toArray();
             $count = Ternak::whereYear('tgl_lahir', '=' , $yearNow)
                             ->whereIn('user_id', $user_ids)

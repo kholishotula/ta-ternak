@@ -42,7 +42,17 @@ Route::prefix('v2')->namespace('API')->group(function(){
 		Route::get('scan/{id}', 'ScanController@search');
 		Route::get('match', 'MatchController@match');
 
+		Route::get('verifikasi', 'VerifikasiController@index');
+		Route::get('verifikasi/{id}', 'VerifikasiController@verifyUser');
+
+		Route::get('grup-saya/peternak', 'GrupSayaController@peternak');
+		Route::get('grup-saya/ternak', 'GrupSayaController@ternak');
+		Route::get('grup-saya/riwayat', 'GrupSayaController@riwayat');
+		Route::get('grup-saya/perkembangan', 'GrupSayaController@perkembangan');
+
 		Route::get('grafik', 'GrafikController@index');
+		Route::get('grafik/ras', 'GrafikController@grafikRas');
+		Route::get('grafik/umur', 'GrafikController@grafikUmur');
 		Route::get('grafik/lahir', 'GrafikController@grafikLahir');
 		Route::get('grafik/mati', 'GrafikController@grafikMati');
 		Route::get('grafik/jual', 'GrafikController@grafikJual');

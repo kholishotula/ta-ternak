@@ -39,7 +39,7 @@ class PeternakController extends Controller
             'grup_peternak' => 'required',
             'name' => 'required',
             'role' => 'required',
-            'ktp_user' => 'required|max:16',
+            'ktp_user' => 'required|digits:16',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users'
         );

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Ternak;
 use App\RiwayatPenyakit;
 use Carbon\Carbon;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RiwayatPenyakitController extends Controller
 {
@@ -17,7 +19,15 @@ class RiwayatPenyakitController extends Controller
      */
     public function index()
     {
-        $riwayat = RiwayatPenyakit::orderBy('created_at')->get();
+        if(Auth::user()->role == 'admin'){
+            $riwayat = RiwayatPenyakit::orderBy('created_at')->get();
+        }
+        else{
+            $necktag_ternaks = Ternak::where('user_id', Auth::id())
+                                ->pluck('necktag')->toArray();
+            $riwayat = RiwayatPenyakit::whereIn('necktag', $necktag_ternaks)
+                        ->orderBy('created_at')->get();
+        }
 
         return response()->json([
             'status' => 'success',

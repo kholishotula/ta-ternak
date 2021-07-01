@@ -7,6 +7,7 @@ use App\Perkawinan;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PerkawinanController extends Controller
 {
@@ -17,7 +18,15 @@ class PerkawinanController extends Controller
      */
     public function index()
     {
-        $perkawinan = Perkawinan::orderBy("id")->get();
+        if(Auth::user()->role == 'admin'){
+            $perkawinan = Perkawinan::orderBy("id")->get();
+        }
+        else{
+            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)
+                                    ->pluck('necktag')->toArray();
+            $perkawinan = Perkawinan::whereIn('necktag', $necktag_ternaks)
+                            ->orderBy("id")->get();
+        }
 
         return response()->json([
             'status' => 'success',

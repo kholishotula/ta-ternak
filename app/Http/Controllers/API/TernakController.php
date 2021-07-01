@@ -8,6 +8,7 @@ use App\RiwayatPenyakit;
 use App\Kematian;
 use App\Perkembangan;
 use App\Penjualan;
+use App\User;
 use Validator;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
@@ -23,20 +24,17 @@ class TernakController extends Controller
      */
     public function index()
     {
-        if(Auth::user()->role = 'admin'){
+        if(Auth::user()->role == 'admin'){
             $ternak = Ternak::orderBy("created_at")->get();
-
-            return response()->json([
-                'status' => 'success',
-                'ternak' => $ternak,
-            ], 200);
         }
         else{
-            return response()->json([
-                'status' => 'success',
-                'ternak' => 'anda bukan admin',
-            ], 200);
+            $ternak = Ternak::where('user_id', Auth::id())
+                        ->orderBy("created_at")->get();
         }
+        return response()->json([
+            'status' => 'success',
+            'ternak' => $ternak,
+        ], 200);
     }
 
     /**
@@ -207,8 +205,15 @@ class TernakController extends Controller
     //trash
     public function trash()
     {
-        $ternak = Ternak::onlyTrashed()->orderBy("deleted_at")->get();
-
+        if(Auth::user()->role == 'admin'){
+            $ternak = Ternak::onlyTrashed()
+                        ->orderBy("deleted_at")->get();
+        }
+        else{
+            $ternak = Ternak::onlyTrashed()
+                        ->where('user_id', Auth::id())
+                        ->orderBy("deleted_at")->get();
+        }
         return response()->json([
             'status' => 'success',
             'ternak' => $ternak,
@@ -239,8 +244,14 @@ class TernakController extends Controller
 
     public function restoreAll()
     {
-        $ternak = Ternak::onlyTrashed();
-        $ternak->restore();
+        if(Auth::user()->role == 'admin'){
+            $ternak = Ternak::onlyTrashed();
+            $ternak->restore();
+        }
+        else{
+            $ternak = Ternak::onlyTrashed()->where('user_id', Auth::id());
+            $ternak->restore();
+        }
 
         return response()->json([
             'status' => 'success',
@@ -262,8 +273,14 @@ class TernakController extends Controller
 
     public function fdeleteAll()
     {
-        $ternak = Ternak::onlyTrashed();
-        $ternak->forceDelete();
+        if(Auth::user()->role == 'admin'){
+            $ternak = Ternak::onlyTrashed();
+            $ternak->forceDelete();
+        }
+        else{
+            $ternak = Ternak::onlyTrashed()->where('user_id', Auth::id());
+            $ternak->forceDelete();
+        }
 
         return response()->json([
             'status' => 'success',

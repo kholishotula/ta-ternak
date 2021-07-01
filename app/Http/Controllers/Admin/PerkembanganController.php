@@ -52,7 +52,7 @@ class PerkembanganController extends Controller
             'tgl_perkembangan' => 'required',
             'berat_badan' => 'required',
             'panjang_badan' => 'required',
-            'image' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
+            'foto' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -136,7 +136,7 @@ class PerkembanganController extends Controller
             'tgl_perkembangan' => 'required',
             'berat_badan' => 'required',
             'panjang_badan' => 'required',
-            'image' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
+            'foto' => 'image|mimes:jpeg,jpg,bmp,png,gif,svg|max:2048',
         );
 
         $error = Validator::make($request->all(), $rules);
