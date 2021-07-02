@@ -150,7 +150,9 @@ class PerkembanganController extends Controller
         $perkembanganData = Perkembangan::find($id);
 
         if($request->hasFile('foto')){
-            unlink($perkembanganData->foto);
+            if($perkembanganData->foto != null){
+                unlink($perkembanganData->foto);
+            }
                 
             $file = $request->file('foto');
             $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();

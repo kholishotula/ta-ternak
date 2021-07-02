@@ -145,7 +145,9 @@ class PerkembanganController extends Controller
         $perkembangan = Perkembangan::find($id);
 
         if($request->hasFile('foto')){
-            unlink($perkembanganData->foto);
+            if($perkembangan->foto != null){
+                unlink($perkembangan->foto);
+            }
                 
             $file = $request->file('foto');
             $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $file->getClientOriginalExtension();
@@ -156,15 +158,15 @@ class PerkembanganController extends Controller
                 $constraint->upsize();
             })->save($name_img);
         }
-        elseif($request->tgl_perkembangan != $perkembanganData->tgl_perkembangan){
-            $extension = explode('.', $perkembanganData->foto)[1];
+        elseif($request->tgl_perkembangan != $perkembangan->tgl_perkembangan){
+            $extension = explode('.', $perkembangan->foto)[1];
             $name_img = 'images/perkembangan/' . $request->necktag . '_' . $date . '_' . time(). '.' . $extension;
                 
-            rename(public_path($perkembanganData->foto), public_path($name_img));
+            rename(public_path($perkembangan->foto), public_path($name_img));
         }
         else{
-            if($perkembanganData->foto != null){
-                $name_img = $perkembanganData->foto;
+            if($perkembangan->foto != null){
+                $name_img = $perkembangan->foto;
             }
             else{
                 $name_img = null;
