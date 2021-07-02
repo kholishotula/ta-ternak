@@ -28,7 +28,7 @@ class VerifikasiController extends Controller
         
         return response()->json([
             'status' => 'success',
-            'user' => $user,
+            'message' => 'Berhasil memverifikasi akun peternak id '.$id,
         ], 200);
     }
 }
