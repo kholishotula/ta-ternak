@@ -10,7 +10,7 @@ class ScanController extends Controller
 {
     public function search($id)
     {
-		$inst = DB::select('SELECT * FROM public."search_inst"(?)', [$request->necktag]);
+		$inst = DB::select('SELECT * FROM public."search_inst"(?)', [$id]);
 
     	if($inst != null){
     		$spouse = DB::select('SELECT * FROM public."search_spouse"(?)', [$inst[0]->necktag]);
