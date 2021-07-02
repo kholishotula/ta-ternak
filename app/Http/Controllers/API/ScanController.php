@@ -35,7 +35,7 @@ class ScanController extends Controller
 
 			//spouse
 			$dataSpouse = [];
-			if($spouse[0] != null){
+			if($spouse != null){
 				$dataSpouse = [
 					'necktag' => $spouse[0]->necktag,
 					'jenis_kelamin' => $spouse[0]->jenis_kelamin,
