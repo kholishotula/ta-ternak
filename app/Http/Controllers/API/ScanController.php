@@ -32,17 +32,21 @@ class ScanController extends Controller
 				'ibu' => $inst[0]->ibu,
 			];
 
+
 			//spouse
-			$dataSpouse = [
-				'necktag' => $spouse[0]->necktag,
-				'jenis_kelamin' => $spouse[0]->jenis_kelamin,
-				'ras' => $spouse[0]->jenis_ras,
-				'tgl_lahir' => $spouse[0]->tgl_lahir,
-				'pemilik' => $spouse[0]->pemilik,
-				'peternak' => $spouse[0]->peternak,
-				'ayah' => $spouse[0]->ayah,
-				'ibu' => $spouse[0]->ibu,
-			];
+			$dataSpouse = [];
+			if($spouse[0] != null){
+				$dataSpouse = [
+					'necktag' => $spouse[0]->necktag,
+					'jenis_kelamin' => $spouse[0]->jenis_kelamin,
+					'ras' => $spouse[0]->jenis_ras,
+					'tgl_lahir' => $spouse[0]->tgl_lahir,
+					'pemilik' => $spouse[0]->pemilik,
+					'peternak' => $spouse[0]->peternak,
+					'ayah' => $spouse[0]->ayah,
+					'ibu' => $spouse[0]->ibu,
+				];
+			}
 
 			//parent
 			$dataParent = [];
