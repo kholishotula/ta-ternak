@@ -432,7 +432,13 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
+            return response()->json([
+               'data' => $data,
+               'jantan' => $jantan,
+               'betina' => $betina,
+               'tahun' => $yearNow,
+               'nama_grup' => $nama_grup
+            ]);
         }
 
         return $chart;
@@ -538,7 +544,13 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
+            return response()->json([
+                'data' => $data,
+                'jantan' => $jantan,
+                'betina' => $betina,
+                'tahun' => $yearNow,
+                'nama_grup' => $nama_grup
+            ]);
         }
 
         return $chart;
@@ -644,7 +656,13 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
+            return response()->json([
+               'data' => $data,
+               'jantan' => $jantan,
+               'betina' => $betina,
+               'tahun' => $yearNow,
+               'nama_grup' => $nama_grup
+            ]);
         }
 
 		return $chart;
@@ -697,7 +715,11 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'tahun' => $yearNow, 'nama_grup' => $nama_grup]);
+            return response()->json([
+               'data' => $data,
+               'tahun' => $yearNow,
+               'nama_grup' => $nama_grup
+            ]);
         }
 
 		return $chart;

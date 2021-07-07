@@ -9,7 +9,7 @@ class Pemilik extends Model
     protected $table = 'pemiliks';
 	
     protected $fillable = [
-    	'ktp_pemilik', 'nama_pemilik', 'adalah_peternak'
+    	'ktp_pemilik', 'nama_pemilik'
     ];
 
     public function ternak(){

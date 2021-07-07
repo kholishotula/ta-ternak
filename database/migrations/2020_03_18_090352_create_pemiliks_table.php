@@ -17,7 +17,6 @@ class CreatePemiliksTable extends Migration
             $table->bigIncrements('id');
             $table->char('ktp_pemilik', 16);
             $table->string('nama_pemilik', 100);
-            $table->boolean('adalah_peternak')->default(false);
             $table->timestamps();
         });
     }

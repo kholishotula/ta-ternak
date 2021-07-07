@@ -42,6 +42,8 @@ class GrafikController extends Controller
         $label = array();
         $data = array();
 
+        $grup_id = null;
+
         if(Auth::user()->role == 'peternak'){
             $count = Ternak::where('status_ada', '=', true)
                         ->where('user_id', Auth::id())
@@ -70,8 +72,6 @@ class GrafikController extends Controller
                             ->get();
         }
         else{
-            $grup_id = null;
-
             if($request->grup_id != null){
                 $grup_id = $request->grup_id;
             }
@@ -195,12 +195,21 @@ class GrafikController extends Controller
             }
         }
 
-       	return [
-       		'label' => $label,
-       		'data' => $data, 
-       		'jantan' => $jantan, 
-       		'betina' => $betina
-       	];
+        $data = [
+            'label' => $label,
+            'data' => $data, 
+            'jantan' => $jantan, 
+            'betina' => $betina,
+        ];
+
+        if ($grup_id != null) {
+            return response()->json([
+                 'status' => 'success',
+                 'data' => $data,
+             ], 200);
+         }
+
+       	return $data;
 
     }
 
@@ -212,6 +221,8 @@ class GrafikController extends Controller
         $betina = array();
         $label = array();
         $data = array();
+
+        $grup_id = null;
 
         if(Auth::user()->role == 'peternak'){
             $count = Ternak::where('status_ada', '=', true)
@@ -241,8 +252,6 @@ class GrafikController extends Controller
                         ->get();
         }
         else{
-            $grup_id = null;
-
             if($request->grup_id != null){
                 $grup_id = $request->grup_id;
             }
@@ -356,12 +365,21 @@ class GrafikController extends Controller
             }
         }
         
-        return [
-        	'label' => $label,
-       		'data' => $data, 
-       		'jantan' => $jantan, 
-       		'betina' => $betina
-       	];
+        $data = [
+            'label' => $label,
+            'data' => $data, 
+            'jantan' => $jantan, 
+            'betina' => $betina,
+        ];
+
+        if ($grup_id != null) {
+            return response()->json([
+                 'status' => 'success',
+                 'data' => $data,
+             ], 200);
+         }
+
+       	return $data;
     }
 
     public function grafikLahir(Request $request)
@@ -372,6 +390,7 @@ class GrafikController extends Controller
         $data = array();
 
         $yearNow = date('Y');
+        $grup_id = null;
 
         if ($request->tahun) {
            $yearNow = $request->tahun;
@@ -402,9 +421,11 @@ class GrafikController extends Controller
                             ->get();
         }
         else{
-            $grup_id = null;
+            if($request->grup_id != null){
+                $grup_id = $request->grup_id;
+            }
 
-            if($request->grup_id == null){
+            if($grup_id == null){
                 $count = Ternak::whereYear('tgl_lahir', '=' , $yearNow)
                         ->selectRaw('count(*) as jumlah, coalesce(extract(month from tgl_lahir), 0) as lahir')
                         ->groupBy('lahir')
@@ -498,6 +519,7 @@ class GrafikController extends Controller
         $data = array();
         
         $yearNow = date('Y');
+        $grup_id = null;
 
         if ($request->tahun) {
            $yearNow = $request->tahun;
@@ -534,9 +556,7 @@ class GrafikController extends Controller
                             ->get();
         }
         else{
-            $grup_id = null;
-
-            if($request->grup_id){
+            if($request->grup_id != null){
                 $grup_id = $request->grup_id;
             }
 
@@ -646,6 +666,7 @@ class GrafikController extends Controller
         $data = array();
         
         $yearNow = date('Y');
+        $grup_id = null;
 
         if ($request->tahun) {
            $yearNow = $request->tahun;
@@ -682,9 +703,7 @@ class GrafikController extends Controller
                             ->get();
         }
         else{
-            $grup_id = null;
-
-            if($request->grup_id){
+            if($request->grup_id != null){
                 $grup_id = $request->grup_id;
             }
 
@@ -791,6 +810,7 @@ class GrafikController extends Controller
         $data = array();
         
         $yearNow = date('Y');
+        $grup_id = null;
 
         if ($request->tahun) {
            $yearNow = $request->tahun;
@@ -808,9 +828,7 @@ class GrafikController extends Controller
                             ->get();
         }
         else{
-            $grup_id = null;
-
-            if($request->grup_id){
+            if($request->grup_id != null){
                 $grup_id = $request->grup_id;
             }
 

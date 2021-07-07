@@ -420,7 +420,12 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow]);
+            return response()->json([
+               'data' => $data,
+               'jantan' => $jantan,
+               'betina' => $betina,
+               'tahun' => $yearNow
+            ]);
         }
 
         return $chart;
@@ -522,7 +527,12 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow]);
+            return response()->json([
+                'data' => $data, 
+                'jantan' => $jantan, 
+                'betina' => $betina, 
+                'tahun' => $yearNow
+            ]);
         }
 
         return $chart;
@@ -624,7 +634,12 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'jantan' => $jantan, 'betina' => $betina, 'tahun' => $yearNow]);
+            return response()->json([
+               'data' => $data, 
+               'jantan' => $jantan, 
+               'betina' => $betina, 
+               'tahun' => $yearNow
+            ]);
         }
 
 		return $chart;
@@ -673,7 +688,10 @@ class GrafikController extends Controller
         }
 
         if ($request->ajax()) {
-           return response()->json(['data' => $data, 'tahun' => $yearNow]);
+            return response()->json([
+                'data' => $data,
+                'tahun' => $yearNow
+            ]);
         }
 
 		return $chart;
