@@ -36,16 +36,18 @@ class ScanController extends Controller
 			//spouse
 			$dataSpouse = [];
 			if($spouse != null){
-				$dataSpouse = [
-					'necktag' => $spouse[0]->necktag,
-					'jenis_kelamin' => $spouse[0]->jenis_kelamin,
-					'ras' => $spouse[0]->jenis_ras,
-					'tgl_lahir' => $spouse[0]->tgl_lahir,
-					'pemilik' => $spouse[0]->pemilik,
-					'peternak' => $spouse[0]->peternak,
-					'ayah' => $spouse[0]->ayah,
-					'ibu' => $spouse[0]->ibu,
-				];
+				foreach($spouse as $s){
+					$dataSpouse[] = [
+						'necktag' => $s->necktag,
+						'jenis_kelamin' => $s->jenis_kelamin,
+						'ras' => $s->jenis_ras,
+						'tgl_lahir' => $s->tgl_lahir,
+						'pemilik' => $s->pemilik,
+						'peternak' => $s->peternak,
+						'ayah' => $s->ayah,
+						'ibu' => $s->ibu,
+					];
+				}
 			}
 
 			//parent
@@ -86,7 +88,6 @@ class ScanController extends Controller
 			$dataChild = [];
 			if($children != null){
 				foreach($children as $n){
-					$c = preg_split("/[(),]/", $n->search_child);
 					$dataChild[] = [
 						'necktag' => $n->necktag,
 						'jenis_kelamin' => $n->jenis_kelamin,

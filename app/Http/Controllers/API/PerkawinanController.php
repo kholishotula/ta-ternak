@@ -22,7 +22,7 @@ class PerkawinanController extends Controller
             $perkawinan = Perkawinan::orderBy("id")->get();
         }
         else{
-            $necktag_ternaks = Ternak::where('user_id', $this->peternak_id)
+            $necktag_ternaks = Ternak::where('user_id', Auth::id())
                                     ->pluck('necktag')->toArray();
             $perkawinan = Perkawinan::whereIn('necktag', $necktag_ternaks)
                             ->orderBy("id")->get();

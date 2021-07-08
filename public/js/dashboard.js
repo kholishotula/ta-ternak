@@ -48,10 +48,12 @@ $('#search_form').on('submit', function(event){
                         family.push(data.parents[i])
                     }
                 }
-                if(data.spouse[0] != null){
-                    family.push(data.spouse[0]);
-                }
                 family.push(data.inst);
+                if(data.spouse != null){
+                    for(i = 0; i<data.spouse.length; i++){
+                        family.push(data.spouse[i]);
+                    }
+                }
                 if(data.siblings != null){
                     for(i = 0; i<data.siblings.length; i++){
                         family.push(data.siblings[i])
@@ -178,7 +180,7 @@ function createChart(data){
                 }, 
                 color: '#dcead7', 
                 tooltip: 
-                'necktag: <b>%name</b><br/>pemilik: %pemilik<br/>peternak: %peternak<br/>ras: %ras<br/>tgl lahir: %lahir'
+                'necktag: <b>%name</b><br>pemilik: %pemilik<br>peternak: %peternak<br>ras: %ras<br>tgl lahir: %lahir'
             }, 
             points: data
             } 
