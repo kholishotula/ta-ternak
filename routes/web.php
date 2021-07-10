@@ -197,7 +197,7 @@
 			//peternak
 			Route::get('grup-saya/peternak', 'GrupSaya\PeternakController@index')->name('grup-saya.peternak');
 			Route::get('grup-saya/peternak/get', 'GrupSaya\PeternakController@getUsers')->name('grup-saya.peternak.get');
-			Route::get('grup-saya/peternak/verify/{id}', 'GrupSaya\PeternakController@verifyUser');
+			Route::get('grup-saya/peternak/verifikasi/{id}', 'GrupSaya\PeternakController@verifyUser');
 			//ternak
 			Route::get('grup-saya/ternak', 'GrupSaya\TernakController@index')->name('grup-saya.ternak');
 			Route::get('grup-saya/ternak/get', 'GrupSaya\TernakController@getTernaks')->name('grup-saya.ternak.get');

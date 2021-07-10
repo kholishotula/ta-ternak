@@ -36,7 +36,7 @@ class PeternakController extends Controller
                   })
                   ->addColumn('action', function($row){
                       if($row->verified_at == null){
-                        $btn = '<a href="grup-saya/peternak/verify/'.$row->id.'" class="btn btn-info btn-sm" style="margin: 2px;"><i class="material-icons">done</i> Verifikasi</button>';
+                        $btn = '<a href="peternak/verifikasi/'.$row->id.'" class="btn btn-info btn-sm" style="margin: 2px;"><i class="material-icons">done</i> Verifikasi</button>';
                         return $btn;
                       }
                       else{
