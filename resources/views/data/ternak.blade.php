@@ -80,6 +80,12 @@
 				<form method="post" id="tambah_data_form">
 					@csrf
 					
+					<div class="form-group" id="necktag_form">
+						<label class="control-label">Necktag</label>
+						<div class="form-line col-md-8">
+							<input type="text" name="necktag" id="necktag" class="form-control">
+						</div>
+					</div>
 					<div class="form-group">
 						<label class="control-label">Pemilik<span class="text-danger">*</span></label>
 						<div>

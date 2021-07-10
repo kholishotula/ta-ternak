@@ -59,7 +59,6 @@ $('#tambah_data').click(function(){
 	$('#action_button').show();
 	$('#form_result').html('');
 	
-	$('#kematian_form').hide();
 	$('#necktag_form').hide();
 
     $('#tambah_data_form')[0].reset();
@@ -67,7 +66,6 @@ $('#tambah_data').click(function(){
     $('#pemilik_id').val('').change();
     $('#peternak_id').val('').change();
     $('#ras_id').val('').change();
-    $('#kematian_id').val('').change();
     $('#necktag_ayah').val('').change();
     $('#necktag_ibu').val('').change();
 
@@ -224,7 +222,6 @@ $(document).on('click', '.edit', function(){
 			$('#ciri_lain').val(data.result.ciri_lain);
 			$('#status_ada').val(data.result.status_ada);
 
-            $('#kematian_form').show();
             $('#necktag_form').show();
 			$('#necktag').attr('readonly', true);
 			$('#hidden_id').val(id);
