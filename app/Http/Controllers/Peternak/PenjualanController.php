@@ -22,7 +22,8 @@ class PenjualanController extends Controller
     {
         $title = 'TERNAK TERJUAL';
         $page = 'Ternak Terjual';
-        $ternaks = Ternak::where('user_id', Auth::id())->get();
+        $ternaks = Ternak::where('user_id', Auth::id())
+                        ->where('kematian_id', null)->get();
 
         return $dataTable->with('peternak_id', Auth::id())->render('data.penjualan', [
             'title' => $title,

@@ -21,7 +21,7 @@ class PenjualanController extends Controller
     {
         $title = 'TERNAK TERJUAL';
         $page = 'Ternak Terjual';
-        $ternaks = Ternak::all();
+        $ternaks = Ternak::where('kematian_id', null)->get();
 
         return $dataTable->render('data.penjualan', ['title' => $title, 'page' => $page, 'ternaks' => $ternaks]);
     }

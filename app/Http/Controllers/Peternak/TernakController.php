@@ -31,8 +31,9 @@ class TernakController extends Controller
     {
         $title = 'TERNAK';
         $page = 'Ternak';
-        $pemilik_ids = Ternak::where('user_id', Auth::id())->distinct()->pluck('pemilik_id')->toArray();
-        $pemilik = Pemilik::whereIn('id', $pemilik_ids)->get();
+        // $pemilik_ids = Ternak::where('user_id', Auth::id())->distinct()->pluck('pemilik_id')->toArray();
+        // $pemilik = Pemilik::whereIn('id', $pemilik_ids)->get();
+        $pemilik = Pemilik::all();
         $ras = Ras::all();
         $peternak = User::where('id', Auth::id())->get();
         $datas = Ternak::join('ras', 'ras.id', '=', 'ternaks.ras_id')->get();

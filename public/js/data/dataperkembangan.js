@@ -36,7 +36,7 @@ $('#tambah_data').click(function () {
     $('#formModal').modal('show');
     $('#necktag').val('');
     $('#hidden_id').val('');
-    $('#preview-image').attr('src', 'https://www.riobeauty.co.uk/images/product_image_not_found.gif');
+    $('#preview-image').attr('src', segments[0] + '/' + 'images/image_not_found.gif');
     $('#btn-save').text('Tambah');
     $('#btn-save').addClass('btn-success');
     $('#btn-save').removeClass('btn-warning');
@@ -146,7 +146,7 @@ $(document).on('click', '.edit', function(){
                 $('#preview-image').attr('src', segments[0] + '/' + data.result.foto).width(150); 
             }
             else{
-                $('#preview-image').attr('src', 'https://www.riobeauty.co.uk/images/product_image_not_found.gif');
+                $('#preview-image').attr('src', segments[0] + '/' + 'images/image_not_found.gif');
             }
             $('#keterangan').val(data.result.keterangan);
 

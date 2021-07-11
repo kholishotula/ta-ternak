@@ -87,11 +87,12 @@
 					</div>
                     <div class="form-group">
                         <label class="control-label">Foto</label>
-                        <div class="form-line col-md-6">
+                        <div class="form-line col-md-6" style="margin-bottom: 0px">
                             <input type="file" class="form-control" id="foto" name="foto">
-                        </div>               
+                        </div>     
+                        <p style="font-size: smaller">Max file size: 2MB, Allowed type: JPEG, JPG, PNG, GIF</p>          
                         <div class="form-line col-md-6">
-                            <img id="preview-image" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif"
+                            <img id="preview-image" src="{{ asset('/images/image_not_found.gif') }}"
                                 alt="preview image" style="max-height: 250px;">
                         </div>
                     </div>

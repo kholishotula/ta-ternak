@@ -49,7 +49,7 @@ $('#search_form').on('submit', function(event){
                     }
                 }
                 family.push(data.inst);
-                if(data.spouse != null){
+                if(data.spouse != null || data.children != null){
                     for(i = 0; i<data.spouse.length; i++){
                         family.push(data.spouse[i]);
                     }
@@ -73,6 +73,7 @@ $('#search_form').on('submit', function(event){
                 }
 
                 $('#exist').show();
+                console.log(family);
                 buildData(family);
                 $('#not-exist').hide();
             }
@@ -159,14 +160,13 @@ function createChart(data){
     var chart = JSC.chart('chartDiv', { 
         debug: true, 
         type: 'organization down', 
-        legend_visible: true, 
+        legend_visible: false, 
         series: [ 
             { 
             line_color: '#747c72', 
             defaultPoint: { 
                 label: { 
-                    text: '<b>%name</b>', 
-                    autoWrap: false
+                    text: '<b>%name</b>'
                 }, 
                 annotation: { 
                     padding: 9, 

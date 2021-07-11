@@ -22,7 +22,8 @@ class KematianController extends Controller
     {
         $title = 'TERNAK MATI';
         $page = 'Ternak Mati';
-        $ternaks = Ternak::where('user_id', Auth::id());
+        $ternaks = Ternak::where('user_id', Auth::id())
+                        ->where('penjualan_id', null)->get();
 
         return $dataTable->with('peternak_id', Auth::id())->render('data.kematian', [
             'title' => $title,

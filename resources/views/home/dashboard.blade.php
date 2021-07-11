@@ -165,19 +165,17 @@
                             <div id="chartDiv" style="max-width: 740px; height: 400px; margin: 0px auto"></div>
                         </div>
                         <div class="col-lg-2 col-xs-2" style="height: 400px; padding: 0px">
-                        <div class='my-legend'>
-<div class='legend-title'>Keterangan</div>
-<div class='legend-scale'>
-  <ul class='legend-labels'>
-    <li><span style='background: red;'></span>Betina</li>
-    <li><span style='background: blue;'></span>Jantan</li>
-  </ul>
-</div>
-</div>
+                            <div class='my-legend'>
+                                <div class='legend-title'>Keterangan</div>
+                                <div class='legend-scale'>
+                                    <ul class='legend-labels'>
+                                        <li><span style='background: red;'></span>Betina</li>
+                                        <li><span style='background: blue;'></span>Jantan</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-
                 </div>
             </div>
         </div>
