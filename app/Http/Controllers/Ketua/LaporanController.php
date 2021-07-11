@@ -144,9 +144,24 @@ class LaporanController extends Controller
             $user_ids = User::where('grup_id', $request->grup_id)
                             ->pluck('id')->toArray();
 
+            $existFromDead = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                            ->whereIn('ternaks.user_id', $user_ids)
+                            ->where('kematians.tgl_kematian', '>', $request->dateto)
+                            ->where('ternaks.tgl_lahir', '<=', $request->dateto)
+                            ->selectRaw('ternaks.*');
+
+            $existFromSold = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                            ->whereIn('ternaks.user_id', $user_ids)
+                            ->where('penjualans.tgl_terjual', '>', $request->dateto)
+                            ->where('ternaks.tgl_lahir', '<=', $request->dateto)
+                            ->selectRaw('ternaks.*');
+
             $exists = Ternak::where('status_ada', true)
-                        ->whereIn('user_id', $user_ids)
-                        ->get();
+                    ->whereIn('user_id', $user_ids)
+                    ->where('tgl_lahir', '<=', $request->dateto)
+                    ->union($existFromDead)
+                    ->union($existFromSold)
+                    ->get();
 
             return DataTables::of($exists)
                   ->addIndexColumn()

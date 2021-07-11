@@ -118,9 +118,24 @@ class LaporanController extends Controller
     public function ada(Request $request)
     {
         if($request->ajax()){
+            $existFromDead = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                                ->where('ternaks.user_id', Auth::id())
+                                ->where('kematians.tgl_kematian', '>', $request->dateto)
+                                ->where('ternaks.tgl_lahir', '<', $request->dateto)
+                                ->selectRaw('ternaks.*');
+
+            $existFromSold = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                                ->where('ternaks.user_id', Auth::id())
+                                ->where('penjualans.tgl_terjual', '>', $request->dateto)
+                                ->where('ternaks.tgl_lahir', '<=', $request->dateto)
+                                ->selectRaw('ternaks.*');
+
             $exists = Ternak::where('status_ada', true)
-                        ->where('user_id', Auth::id())
-                        ->get();
+                    ->where('user_id', Auth::id())
+                    ->where('tgl_lahir', '<=', $request->dateto)
+                    ->union($existFromDead)
+                    ->union($existFromSold)
+                    ->get();
 
             return DataTables::of($exists)
                   ->addIndexColumn()

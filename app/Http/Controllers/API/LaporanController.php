@@ -46,13 +46,21 @@ class LaporanController extends Controller
                                 ->whereBetween('perkembangans.tgl_perkembangan', [$request->datefrom, $request->dateto])
                                 ->where('ternaks.user_id', Auth::id())->get();
 
-            $exists_union = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                                ->where('tgl_kematian', '>', $request->dateto)
-                                ->where('tgl_lahir', '<', $request->dateto)
+            $existFromDead = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                                ->where('ternaks.user_id', Auth::id())
+                                ->where('kematians.tgl_kematian', '>', $request->dateto)
+                                ->where('ternaks.tgl_lahir', '<', $request->dateto)
+                                ->selectRaw('ternaks.*');
+
+            $existFromSold = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                                ->where('ternaks.user_id', Auth::id())
+                                ->where('penjualans.tgl_terjual', '>', $request->dateto)
+                                ->where('ternaks.tgl_lahir', '<=', $request->dateto)
                                 ->selectRaw('ternaks.*');
             $exists = Ternak::where('status_ada', true)
                         ->where('tgl_lahir', '<', $request->dateto)
-                        ->union($exists_union)
+                        ->union($existFromDead)
+                        ->union($existFromSold)
                         ->where('ternaks.user_id', Auth::id())->get();
         }
         else{
@@ -95,14 +103,22 @@ class LaporanController extends Controller
                                         ->whereIn('ternaks.user_id', $user_ids)
                                         ->get();
                     
-                    $exists_union = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                                    ->where('tgl_kematian', '>', $request->dateto)
-                                    ->where('tgl_lahir', '<', $request->dateto)
-                                    ->selectRaw('ternaks.*');
+                    $existFromDead = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                                        ->whereIn('ternaks.user_id', $user_ids)
+                                        ->where('kematians.tgl_kematian', '>', $request->dateto)
+                                        ->where('ternaks.tgl_lahir', '<=', $request->dateto)
+                                        ->selectRaw('ternaks.*');
+
+                    $existFromSold = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                                        ->whereIn('ternaks.user_id', $user_ids)
+                                        ->where('penjualans.tgl_terjual', '>', $request->dateto)
+                                        ->where('ternaks.tgl_lahir', '<=', $request->dateto)
+                                        ->selectRaw('ternaks.*');
                     $exists = Ternak::where('status_ada', true)
                                 ->where('tgl_lahir', '<', $request->dateto)
                                 ->whereIn('user_id', $user_ids)
-                                ->union($exists_union)
+                                ->union($existFromSold)
+                                ->union($existFromDead)
                                 ->get();
                 }
                 else{
@@ -140,13 +156,19 @@ class LaporanController extends Controller
                                     ->whereBetween('perkembangans.tgl_perkembangan', [$request->datefrom, $request->dateto])
                                     ->get();
 
-                $exists_union = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
-                                    ->where('tgl_kematian', '>', $request->dateto)
-                                    ->where('tgl_lahir', '<', $request->dateto)
+                $existFromDead = Ternak::join('kematians', 'kematians.id', '=', 'ternaks.kematian_id')
+                                    ->where('kematians.tgl_kematian', '>', $request->dateto)
+                                    ->where('ternaks.tgl_lahir', '<', $request->dateto)
+                                    ->selectRaw('ternaks.*');
+
+                $existFromSold = Ternak::join('penjualans', 'penjualans.id', '=', 'ternaks.penjualan_id')
+                                    ->where('penjualans.tgl_terjual', '>', $request->dateto)
+                                    ->where('ternaks.tgl_lahir', '<', $request->dateto)
                                     ->selectRaw('ternaks.*');
                 $exists = Ternak::where('status_ada', true)
                             ->where('tgl_lahir', '<', $request->dateto)
-                            ->union($exists_union)
+                            ->union($existFromDead)
+                            ->union($existFromSold)
                             ->get();
             }
         }
