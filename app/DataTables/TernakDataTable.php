@@ -19,15 +19,27 @@ class TernakDataTable extends DataTable
      */
     public function dataTable()
     {
-        return datatables()
-            ->eloquent($this->query())
-            ->addIndexColumn()
-            ->addColumn('action', function($row){
-                $btn = '<button type="button" name="view" id="'.$row->necktag.'" class="view btn btn-info btn-sm" ><i class="material-icons">remove_red_eye</i></button>';
-                $btn .= '<button type="button" name="edit" id="'.$row->necktag.'" class="edit btn btn-warning btn-sm" ><i class="material-icons">mode_edit</i></button>';
-                $btn .= '<button type="button" name="delete" id="'.$row->necktag.'" class="delete btn btn-danger btn-sm" ><i class="material-icons">delete</i></button>';
-                return $btn;
-            });
+        if($this->peternak_id != null){
+            return datatables()
+                ->eloquent($this->query())
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $btn = '<button type="button" name="view" id="'.$row->necktag.'" class="view btn btn-info btn-sm" ><i class="material-icons">remove_red_eye</i></button>';
+                    $btn .= '<button type="button" name="edit" id="'.$row->necktag.'" class="edit btn btn-warning btn-sm" ><i class="material-icons">mode_edit</i></button>';
+                    $btn .= '<button type="button" name="delete" id="'.$row->necktag.'" class="delete btn btn-danger btn-sm" ><i class="material-icons">delete</i></button>';
+                    return $btn;
+                });
+        }
+        else{
+            return datatables()
+                ->eloquent($this->query())
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $btn = '<button type="button" name="view" id="'.$row->necktag.'" class="view btn btn-info btn-sm" ><i class="material-icons">remove_red_eye</i></button>';
+                    $btn .= '<button type="button" name="edit" id="'.$row->necktag.'" class="edit btn btn-warning btn-sm" ><i class="material-icons">mode_edit</i></button>';
+                    return $btn;
+                });
+        }
     }
 
     /**

@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Ternak;
 use App\Perkembangan;
+use App\Log;
 use Carbon\Carbon;
 use App\DataTables\PerkembanganDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\Datatables\Datatables;
 use Validator;
 use File;
@@ -89,7 +91,14 @@ class PerkembanganController extends Controller
             'keterangan' => $request->keterangan,
         );
 
-        Perkembangan::create($form_data);
+        $perkembangan = Perkembangan::create($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'perkembangans',
+            'pk_tabel' => $perkembangan->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -193,6 +202,14 @@ class PerkembanganController extends Controller
 
         $perkembanganData->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'perkembangans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
 
@@ -209,5 +226,12 @@ class PerkembanganController extends Controller
             unlink($data->foto);
         }
         $data->delete();
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'delete',
+            'tabel' => 'perkembangans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 }

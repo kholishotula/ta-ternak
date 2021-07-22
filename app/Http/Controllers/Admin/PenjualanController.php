@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Penjualan;
 use App\Ternak;
+use App\Log;
 use App\DataTables\PenjualanDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\Datatables\Datatables;
 use Validator;
+use Carbon\Carbon;
 
 class PenjualanController extends Controller
 {
@@ -66,6 +69,13 @@ class PenjualanController extends Controller
         );
 
         $penjualan = Penjualan::create($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'penjualans',
+            'pk_tabel' => $penjualan->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -128,6 +138,13 @@ class PenjualanController extends Controller
         );
 
         Penjualan::whereId($id)->update($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'penjualans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -142,5 +159,12 @@ class PenjualanController extends Controller
     {
         $data = Penjualan::findOrFail($id);
         $data->delete();
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'delete',
+            'tabel' => 'penjualans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 }

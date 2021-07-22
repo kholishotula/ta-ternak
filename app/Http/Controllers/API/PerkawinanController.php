@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Ternak;
 use App\Perkawinan;
+use App\Log;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PerkawinanController extends Controller
 {
@@ -72,6 +74,14 @@ class PerkawinanController extends Controller
 
         $perkawinan = Perkawinan::create($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'perkawinans',
+            'pk_tabel' => $perkawinan->id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json([
             'status' => 'success',
             'perkawinan' => $perkawinan,
@@ -133,6 +143,14 @@ class PerkawinanController extends Controller
 
         Perkawinan::whereId($id)->update($form_data);
         $perkawinan = Perkawinan::find($id);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'perkawinans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
         
         return response()->json([
             'status' => 'success',
@@ -150,6 +168,14 @@ class PerkawinanController extends Controller
     {
         $data = Perkawinan::find($id);
         $data->delete();
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'delete',
+            'tabel' => 'perkawinans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json([
             'status' => 'success',

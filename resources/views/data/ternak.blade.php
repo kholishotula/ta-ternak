@@ -18,8 +18,12 @@
 <br>
 
 <ul class="nav nav-tabs tab-nav-right" role="tablist">
+	@can('isAdmin')
+	<li role="presentation" class="active"><a href="#data-ternak" data-toggle="tab"><i class="material-icons">dns</i><span class="icon-name">DATA TERNAK</span></a></li>
+	@else
 	<li role="presentation" class="active"><a href="#data-ternak" data-toggle="tab"><i class="material-icons">dns</i><span class="icon-name">DATA TERNAK</span></a></li>
 	<li role="presentation"><a href="#tongsampah" data-toggle="tab" onclick="tongsampahDT();"><i class="material-icons">delete</i><span class="icon-name">TONG SAMPAH</span></a></li>
+	@endcan
 </ul>
 
 <div class="tab-content">

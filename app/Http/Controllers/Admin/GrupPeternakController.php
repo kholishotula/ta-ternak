@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\GrupPeternak;
 use App\User;
+use App\Log;
 use App\DataTables\GrupPeternakDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Yajra\Datatables\Datatables;
 use GuzzleHttp\Client;
 use Validator;
+use Carbon\Carbon;
 
 class GrupPeternakController extends Controller
 {
@@ -76,7 +79,15 @@ class GrupPeternakController extends Controller
             'keterangan' => $request->keterangan,
         );
 
-        GrupPeternak::create($form_data);
+        $grup = GrupPeternak::create($form_data);
+        
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'grup_peternaks',
+            'pk_tabel' => $grup->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -149,6 +160,14 @@ class GrupPeternakController extends Controller
 
         GrupPeternak::whereId($id)->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'grup_peternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
 
@@ -166,5 +185,13 @@ class GrupPeternakController extends Controller
             return response()->json(['error' => $err]);
         }
         $data->delete();
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'delete',
+            'tabel' => 'grup_peternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 }

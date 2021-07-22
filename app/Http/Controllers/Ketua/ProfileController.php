@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
+use App\Log;
 use Validator;
+use Carbon\Carbon;
 use App\Http\Requests\ChangePasswordRequest;
 
 class ProfileController extends Controller
@@ -63,6 +65,14 @@ class ProfileController extends Controller
         $data = Auth::user();
         $data->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'users',
+            'pk_tabel' => $data->id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
 
@@ -85,6 +95,14 @@ class ProfileController extends Controller
             if(\Hash::check($request->current_password, Auth::User()->password)){
                 $data = Auth::user();
                 $user = User::find($data->id)->update(["password"=> bcrypt($request->password)]);
+
+                Log::create([
+                    'user_id' => Auth::id(),
+                    'aktivitas' => 'update',
+                    'tabel' => 'users',
+                    'pk_tabel' => $user->id,
+                    'waktu' => Carbon::now()
+                ]);
             }else{
                 return response()->json(['error' => 'Detail yang dimasukkan salah!']);
             }

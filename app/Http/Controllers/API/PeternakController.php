@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Ternak;
 use App\User;
+use App\Log;
 use Validator;
+use Carbon\Carbon;
 
 class PeternakController extends Controller
 {
@@ -80,6 +83,14 @@ class PeternakController extends Controller
 
         $peternak = User::create($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'users',
+            'pk_tabel' => $peternak->id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json([
             'status' => 'success',
             'peternak' => $peternak,
@@ -147,6 +158,14 @@ class PeternakController extends Controller
         $peternak = User::find($id);
         $peternak->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'users',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json([
             'status' => 'success',
             'peternak' => $peternak,
@@ -171,6 +190,14 @@ class PeternakController extends Controller
         }
         else{
             $data->delete();
+            
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'delete',
+                'tabel' => 'users',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
 
         return response()->json([

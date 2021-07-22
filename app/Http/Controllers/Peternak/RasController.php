@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Peternak;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 use App\Ras;
 use App\Ternak;
+use App\Log;
 use App\DataTables\RasDataTable;
 use Validator;
+use Carbon\Carbon;
 
 class RasController extends Controller
 {
@@ -59,7 +62,15 @@ class RasController extends Controller
             'ket_ras' => $request->ket_ras
         );
 
-        Ras::create($form_data);
+        $ras = Ras::create($form_data);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'ras',
+            'pk_tabel' => $ras->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -116,6 +127,14 @@ class RasController extends Controller
 
         Ras::whereId($id)->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'ras',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
 
@@ -135,6 +154,14 @@ class RasController extends Controller
         }
         else{
             $data->delete();
+
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'delete',
+                'tabel' => 'ras',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
     }
 }

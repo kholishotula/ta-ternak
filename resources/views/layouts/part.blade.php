@@ -273,7 +273,7 @@
                     &copy; 2020 <a href="javascript:void(0);"> Sistem Informasi Ternak - SITERNAK </a>.
                 </div>
                 <div class="version">
-                    <b>Version: </b> 1.0
+                    <b>Version: </b> 2.0
                 </div>
             </div>
             <!-- #Footer -->

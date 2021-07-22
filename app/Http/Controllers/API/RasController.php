@@ -4,9 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Ras;
 use App\Ternak;
+use App\Log;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class RasController extends Controller
 {
@@ -53,6 +56,14 @@ class RasController extends Controller
         );
 
         $ras = Ras::create($form_data);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'ras',
+            'pk_tabel' => $ras->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json([
             'status' => 'success',
@@ -106,6 +117,14 @@ class RasController extends Controller
 
         Ras::find($id)->update($form_data);
         $ras = Ras::find($id);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'ras',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
         
         return response()->json([
             'status' => 'success',
@@ -131,6 +150,14 @@ class RasController extends Controller
         }
         else{
             $data->delete();
+
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'delete',
+                'tabel' => 'ras',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
 
         return response()->json([

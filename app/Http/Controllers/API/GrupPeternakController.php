@@ -4,9 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\GrupPeternak;
 use App\User;
+use App\Log;
 use Validator;
+use Carbon\Carbon;
 
 class GrupPeternakController extends Controller
 {
@@ -60,6 +63,14 @@ class GrupPeternakController extends Controller
         );
 
         $grup = GrupPeternak::create($form_data);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'grup_peternaks',
+            'pk_tabel' => $grup->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json([
             'status' => 'success',
@@ -120,6 +131,14 @@ class GrupPeternakController extends Controller
 
         GrupPeternak::find($id)->update($form_data);
         $grup = GrupPeternak::find($id);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'grup_peternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
         
         return response()->json([
             'status' => 'success',
@@ -145,6 +164,13 @@ class GrupPeternakController extends Controller
         }
         else{
             $data->delete();
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'delete',
+                'tabel' => 'grup_peternaks',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
 
         return response()->json([

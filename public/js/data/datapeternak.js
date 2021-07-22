@@ -110,10 +110,10 @@ $(document).on('click', '.delete', function(){
                 $('#peternak-table').DataTable().ajax.reload();
                 swal("Terhapus!", "Data peternak id "+peternak_id+" telah terhapus.", "success");
             },
-            error : function(){
+            error : function(data){
                 swal({
                     title: 'Opps...',
-                    text : data.message,
+                    text : data.err,
                     type : 'error',
                     timer : '1500'
                 })

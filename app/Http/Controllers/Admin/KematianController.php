@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Kematian;
 use App\Ternak;
+use App\Log;
 use App\DataTables\KematianDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\Datatables\Datatables;
 use Validator;
+use Carbon\Carbon;
 
 class KematianController extends Controller
 {
@@ -68,6 +71,13 @@ class KematianController extends Controller
         );
 
         $kematian = Kematian::create($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'kematians',
+            'pk_tabel' => $kematian->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -131,6 +141,13 @@ class KematianController extends Controller
         );
 
         Kematian::whereId($id)->update($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'kematians',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -145,5 +162,12 @@ class KematianController extends Controller
     {
         $data = Kematian::findOrFail($id);
         $data->delete();
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'delete',
+            'tabel' => 'kematians',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 }

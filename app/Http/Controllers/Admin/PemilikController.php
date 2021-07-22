@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Pemilik;
 use App\Ternak;
+use App\Log;
 use App\DataTables\PemilikDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\Datatables\Datatables;
 use Validator;
-
+use Carbon\Carbon;
 
 class PemilikController extends Controller
 {
@@ -60,7 +62,14 @@ class PemilikController extends Controller
             'ktp_pemilik' => $request->ktp_pemilik
         );
 
-        Pemilik::create($form_data);
+        $pemilik = Pemilik::create($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'pemiliks',
+            'pk_tabel' => $pemilik->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -121,6 +130,13 @@ class PemilikController extends Controller
         );
 
         Pemilik::whereId($id)->update($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'pemiliks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -141,6 +157,13 @@ class PemilikController extends Controller
         }
         else{
             $data->delete();
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'delete',
+                'tabel' => 'pemiliks',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
     }
 }

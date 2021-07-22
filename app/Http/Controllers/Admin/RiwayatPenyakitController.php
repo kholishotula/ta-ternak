@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Ternak;
 use App\RiwayatPenyakit;
+use App\Log;
 use Carbon\Carbon;
 use App\DataTables\RiwayatDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\Datatables\Datatables;
 use Validator;
 
@@ -66,7 +68,14 @@ class RiwayatPenyakitController extends Controller
             'keterangan' => $request->keterangan,
         );
 
-        RiwayatPenyakit::create($form_data);
+        $riwayat = RiwayatPenyakit::create($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'riwayat_penyakits',
+            'pk_tabel' => $riwayat->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -127,6 +136,13 @@ class RiwayatPenyakitController extends Controller
         );
 
         RiwayatPenyakit::whereId($id)->update($form_data);
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'riwayat_penyakits',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
@@ -141,5 +157,12 @@ class RiwayatPenyakitController extends Controller
     {
         $data = RiwayatPenyakit::findOrFail($id);
         $data->delete();
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'delete',
+            'tabel' => 'riwayat_penyakits',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 }

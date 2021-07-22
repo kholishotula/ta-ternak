@@ -44,12 +44,12 @@
 			Route::post('password/change', 'ProfileController@postChangePassword')->name('password.update');
 
 			//data
-			Route::resource('ternak', 'TernakController')->except(['create']);
-			Route::get('ternaktrash', 'TernakController@trash')->name('ternak.trash');
-			Route::get('ternak/restore/{id}', 'TernakController@restore')->name('ternak.restore');
-			Route::get('ternakrestore', 'TernakController@restoreAll')->name('ternak.restoreAll');
-			Route::delete('ternak/fdelete/{id}', 'TernakController@fdelete')->name('ternak.fdelete');
-			Route::delete('ternakfdelete', 'TernakController@fdeleteAll')->name('ternak.fdeleteAll');
+			Route::resource('ternak', 'TernakController')->except(['create', 'destroy']);
+			// Route::get('ternaktrash', 'TernakController@trash')->name('ternak.trash');
+			// Route::get('ternak/restore/{id}', 'TernakController@restore')->name('ternak.restore');
+			// Route::get('ternakrestore', 'TernakController@restoreAll')->name('ternak.restoreAll');
+			// Route::delete('ternak/fdelete/{id}', 'TernakController@fdelete')->name('ternak.fdelete');
+			// Route::delete('ternakfdelete', 'TernakController@fdeleteAll')->name('ternak.fdeleteAll');
 			Route::resource('ras', 'RasController')->except(['create', 'show']);
 			Route::resource('riwayat', 'RiwayatPenyakitController')->except(['create', 'show']);
 			Route::resource('kematian', 'KematianController')->except(['create', 'show']);

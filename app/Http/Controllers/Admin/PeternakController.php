@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\GrupPeternak;
 use App\Ternak;
 use App\User;
+use App\Log;
 use Carbon\Carbon;
 use App\DataTables\PeternakDataTable;
 use App\Http\Controllers\Controller;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class PeternakController extends Controller
@@ -89,7 +91,15 @@ class PeternakController extends Controller
             'role' => $request->role,
         );
 
-        User::create($form_data);
+        $user = User::create($form_data);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'users',
+            'pk_tabel' => $user->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -160,6 +170,14 @@ class PeternakController extends Controller
 
         $user = User::whereId($id)->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'users',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
 
@@ -179,6 +197,13 @@ class PeternakController extends Controller
         }
         else{
             $data->delete();
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'delete',
+                'tabel' => 'users',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
     }
 }

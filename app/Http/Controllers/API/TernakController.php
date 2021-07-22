@@ -9,7 +9,9 @@ use App\Kematian;
 use App\Perkembangan;
 use App\Penjualan;
 use App\User;
+use App\Log;
 use Validator;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -88,6 +90,14 @@ class TernakController extends Controller
 
         $ternak = Ternak::create($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $ternak->necktag,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json([
             'status' => 'success',
             'ternak' => $ternak,
@@ -162,6 +172,14 @@ class TernakController extends Controller
 
         Ternak::where('necktag',$id)->update($form_data);
         $ternak = Ternak::find($id);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
         
         return response()->json([
             'status' => 'success',
@@ -191,6 +209,14 @@ class TernakController extends Controller
         }
         else{
             $data->delete();
+
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'soft delete',
+                'tabel' => 'ternaks',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
 
         return response()->json([
@@ -236,6 +262,14 @@ class TernakController extends Controller
         $ternak = Ternak::onlyTrashed()->where('necktag',$id);
         $ternak->restore();
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'restore',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json([
             'status' => 'success',
             'message' => "Data ternak id ". $id ." telah berhasil dikembalikan.",
@@ -246,11 +280,31 @@ class TernakController extends Controller
     {
         if(Auth::user()->role == 'admin'){
             $ternak = Ternak::onlyTrashed();
+            $ternak_ids = Ternak::onlyTrashed()->pluck('necktag')->toArray();
             $ternak->restore();
+            foreach ($ternak_ids as $id) {
+                Log::create([
+                    'user_id' => Auth::id(),
+                    'aktivitas' => 'restore',
+                    'tabel' => 'ternaks',
+                    'pk_tabel' => $id,
+                    'waktu' => Carbon::now()
+                ]);
+            }
         }
         else{
             $ternak = Ternak::onlyTrashed()->where('user_id', Auth::id());
+            $ternak_ids = Ternak::onlyTrashed()->where('user_id', Auth::id())->pluck('necktag')->toArray();
             $ternak->restore();
+            foreach ($ternak_ids as $id) {
+                Log::create([
+                    'user_id' => Auth::id(),
+                    'aktivitas' => 'restore',
+                    'tabel' => 'ternaks',
+                    'pk_tabel' => $id,
+                    'waktu' => Carbon::now()
+                ]);
+            }
         }
 
         return response()->json([
@@ -265,6 +319,14 @@ class TernakController extends Controller
         $ternak = Ternak::onlyTrashed()->where('necktag',$id);
         $ternak->forceDelete();
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'force delete',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json([
             'status' => 'success',
             'message' => "Data ternak id ". $id ." telah berhasil dihapus permanen.",
@@ -275,11 +337,31 @@ class TernakController extends Controller
     {
         if(Auth::user()->role == 'admin'){
             $ternak = Ternak::onlyTrashed();
+            $ternak_ids = Ternak::onlyTrashed()->pluck('necktag')->toArray();
             $ternak->forceDelete();
+            foreach ($ternak_ids as $id) {
+                Log::create([
+                    'user_id' => Auth::id(),
+                    'aktivitas' => 'force delete',
+                    'tabel' => 'ternaks',
+                    'pk_tabel' => $id,
+                    'waktu' => Carbon::now()
+                ]);
+            }
         }
         else{
             $ternak = Ternak::onlyTrashed()->where('user_id', Auth::id());
+            $ternak_ids = Ternak::onlyTrashed()->where('user_id', Auth::id())->pluck('necktag')->toArray();
             $ternak->forceDelete();
+            foreach ($ternak_ids as $id) {
+                Log::create([
+                    'user_id' => Auth::id(),
+                    'aktivitas' => 'force delete',
+                    'tabel' => 'ternaks',
+                    'pk_tabel' => $id,
+                    'waktu' => Carbon::now()
+                ]);
+            }
         }
 
         return response()->json([

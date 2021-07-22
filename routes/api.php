@@ -65,6 +65,9 @@ Route::prefix('v2')->namespace('API')->group(function(){
 		//for select option
 		Route::get('options', 'OptionsController@index');
 
+		//for logs table
+		Route::get('log', 'LogController@index');
+
 	});
 
 });

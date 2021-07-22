@@ -11,6 +11,7 @@ use App\RiwayatPenyakit;
 use App\Kematian;
 use App\Perkembangan;
 use App\Penjualan;
+use App\Log;
 use App\DataTables\TernakDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 use Validator;
+use Carbon\Carbon;
 
 class TernakController extends Controller
 {
@@ -31,8 +33,6 @@ class TernakController extends Controller
     {
         $title = 'TERNAK';
         $page = 'Ternak';
-        // $pemilik_ids = Ternak::where('user_id', Auth::id())->distinct()->pluck('pemilik_id')->toArray();
-        // $pemilik = Pemilik::whereIn('id', $pemilik_ids)->get();
         $pemilik = Pemilik::all();
         $ras = Ras::all();
         $peternak = User::where('id', Auth::id())->get();
@@ -104,7 +104,15 @@ class TernakController extends Controller
             'status_ada' => $request->status_ada,
         );
 
-        Ternak::create($form_data);
+        $ternak = Ternak::create($form_data);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $ternak->necktag,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -228,6 +236,14 @@ class TernakController extends Controller
 
         Ternak::where('necktag',$id)->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
 
@@ -251,6 +267,14 @@ class TernakController extends Controller
         }
         else{
             $data->delete();
+
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'soft delete',
+                'tabel' => 'ternaks',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
         }
     }
 
@@ -276,12 +300,31 @@ class TernakController extends Controller
     {
         $ternak = Ternak::onlyTrashed()->where('necktag',$id);
         $ternak->restore();
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'restore',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 
     public function restoreAll()
     {
         $ternak = Ternak::where('user_id', Auth::id())->onlyTrashed();
+        $ternak_ids = Ternak::onlyTrashed()->where('user_id', Auth::id())->pluck('necktag')->toArray();
         $ternak->restore();
+
+        foreach ($ternak_ids as $id) {
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'restore',
+                'tabel' => 'ternaks',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
+        }
     }
 
     //force delete
@@ -289,11 +332,30 @@ class TernakController extends Controller
     {
         $ternak = Ternak::onlyTrashed()->where('necktag',$id);
         $ternak->forceDelete();
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'force delete',
+            'tabel' => 'ternaks',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 
     public function fdeleteAll()
     {
         $ternak = Ternak::where('user_id', Auth::id())->onlyTrashed();
+        $ternak_ids = Ternak::onlyTrashed()->where('user_id', Auth::id())->pluck('necktag')->toArray();
         $ternak->forceDelete();
+
+        foreach ($ternak_ids as $id) {
+            Log::create([
+                'user_id' => Auth::id(),
+                'aktivitas' => 'force delete',
+                'tabel' => 'ternaks',
+                'pk_tabel' => $id,
+                'waktu' => Carbon::now()
+            ]);
+        }
     }
 }

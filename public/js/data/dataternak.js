@@ -372,7 +372,7 @@ $(document).on('click', '.fdelete', function(){
                     text : data.message,
                     type : 'error',
                     timer : '1500'
-                })
+                });
             }
         });
     });

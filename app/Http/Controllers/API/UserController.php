@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth; 
 use Symfony\Component\HttpFoundation\Response;
 use App\User; 
+use App\Log;
 use Validator;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -67,7 +69,15 @@ class UserController extends Controller
 	    $data = $request->all(); 
 	    $data['password'] = Hash::make($data['password']);
 
-	    $user = User::create($data); 
+	    $user = User::create($data);
+
+		Log::create([
+			'user_id' => $user->id,
+			'aktivitas' => 'insert',
+			'tabel' => 'users',
+			'pk_tabel' => $user->id,
+			'waktu' => Carbon::now()
+		]);
 
 	    $success['token'] = $this->get_user_token($user, "appToken");
 	    $success['name'] = $user->name;

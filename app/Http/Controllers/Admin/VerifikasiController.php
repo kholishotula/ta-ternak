@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\User;
+use App\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
 
@@ -39,6 +41,14 @@ class VerifikasiController extends Controller
 
     public function verifyUser($id){
         $user = User::where('id', $id)->update(['verified_at' => Carbon::now()]);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'users',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
 
         return redirect('admin/verifikasi');
     }

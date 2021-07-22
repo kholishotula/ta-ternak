@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Ternak;
 use App\Perkawinan;
+use App\Log;
 use Validator;
+use Carbon\Carbon;
 
 class PerkawinanController extends Controller
 {
@@ -68,7 +70,15 @@ class PerkawinanController extends Controller
             'tgl_kawin' => $request->tgl
         );
 
-        Perkawinan::create($form_data);
+        $perkawinan = Perkawinan::create($form_data);
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'insert',
+            'tabel' => 'perkawinans',
+            'pk_tabel' => $perkawinan->id,
+            'waktu' => Carbon::now()
+        ]);
 
         return response()->json(['success' => 'Data telah berhasil ditambahkan.']);
     }
@@ -79,10 +89,10 @@ class PerkawinanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    // public function show($id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -126,6 +136,14 @@ class PerkawinanController extends Controller
 
         Perkawinan::whereId($id)->update($form_data);
 
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'update',
+            'tabel' => 'perkawinans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
+
         return response()->json(['success' => 'Data telah berhasil diubah.']);
     }
 
@@ -139,6 +157,14 @@ class PerkawinanController extends Controller
     {
         $data = Perkawinan::findOrFail($id);
         $data->delete();
+
+        Log::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'delete',
+            'tabel' => 'perkawinans',
+            'pk_tabel' => $id,
+            'waktu' => Carbon::now()
+        ]);
     }
 
     // necktag pasangan - dependent dropdown
