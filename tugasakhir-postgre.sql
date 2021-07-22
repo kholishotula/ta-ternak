@@ -6,27 +6,27 @@ RETURNS TABLE (necktag char, jenis_kelamin varchar,
 			  peternak varchar, ayah char, ibu char) AS $$
 BEGIN
 	RETURN QUERY
-	SELECT t1.necktag, t1.jenis_kelamin, ras.jenis_ras, 
-		t1.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
-		t1.necktag_ayah as ayah, t1.necktag_ibu as ibu 
-	FROM public.ternaks AS t1, public.ras, public.pemiliks as pml, public.users as ptk
-	WHERE t1.necktag = val and ras.id = t1.ras_id and pml.id = t1.pemilik_id and ptk.id = t1.user_id;
+	SELECT tI.necktag, tI.jenis_kelamin, ras.jenis_ras, 
+		tI.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
+		tI.necktag_ayah as ayah, tI.necktag_ibu as ibu 
+	FROM public.ternaks AS tI, public.ras, public.pemiliks as pml, public.users as ptk
+	WHERE tI.necktag = val and ras.id = tI.ras_id and pml.id = tI.pemilik_id and ptk.id = tI.user_id;
 END; $$
 LANGUAGE PLPGSQL;
 
--- spouse
+--spouse
 CREATE OR REPLACE FUNCTION search_spouse(val char) 
 RETURNS TABLE (necktag char, jenis_kelamin varchar,
 			  jenis_ras varchar, tgl_lahir date, pemilik varchar,
 			  peternak varchar, ayah char, ibu char) AS $$
 BEGIN
 	RETURN QUERY
-	SELECT t1.necktag, t1.jenis_kelamin, ras.jenis_ras, 
-		t1.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
-		t1.necktag_ayah as ayah, t1.necktag_ibu as ibu 
-	FROM public.ternaks AS t1, public.ras, public.pemiliks as pml, public.users as ptk, 
+	SELECT tSp.necktag, tSp.jenis_kelamin, ras.jenis_ras, 
+		tSp.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
+		tSp.necktag_ayah as ayah, tSp.necktag_ibu as ibu 
+	FROM public.ternaks AS tSp, public.ras, public.pemiliks as pml, public.users as ptk, 
 		(SELECT necktag_psg FROM public.perkawinans as kwn WHERE kwn.necktag = val) as psg
-	WHERE t1.necktag = psg.necktag_psg and ras.id = t1.ras_id and pml.id = t1.pemilik_id and ptk.id = t1.user_id;
+	WHERE tSp.necktag = psg.necktag_psg and ras.id = tSp.ras_id and pml.id = tSp.pemilik_id and ptk.id = tSp.user_id;
 END; $$
 LANGUAGE PLPGSQL;
 
@@ -37,11 +37,11 @@ RETURNS TABLE (necktag char, jenis_kelamin varchar,
 			  peternak varchar, ayah char, ibu char) AS $$
 BEGIN
 	RETURN QUERY
-	SELECT t1.necktag, t1.jenis_kelamin, ras.jenis_ras, 
-		t1.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
-		t1.necktag_ayah as ayah, t1.necktag_ibu as ibu  
-	FROM public.ternaks AS t1, public.ras, public.pemiliks as pml, public.users as ptk
-	WHERE ras.id = t1.ras_id AND (t1.necktag = n1 OR t1.necktag = n2) and pml.id = t1.pemilik_id and ptk.id = t1.user_id;
+	SELECT tP.necktag, tP.jenis_kelamin, ras.jenis_ras, 
+		tP.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
+		tP.necktag_ayah as ayah, tP.necktag_ibu as ibu  
+	FROM public.ternaks AS tP, public.ras, public.pemiliks as pml, public.users as ptk
+	WHERE ras.id = tP.ras_id AND (tP.necktag = n1 OR tP.necktag = n2) and pml.id = tP.pemilik_id and ptk.id = tP.user_id;
 END; $$
 LANGUAGE PLPGSQL;
 
@@ -52,12 +52,12 @@ RETURNS TABLE (necktag char, jenis_kelamin varchar,
 			  peternak varchar, ayah char, ibu char) AS $$
 BEGIN
 	RETURN QUERY
-	select t2.necktag, t2.jenis_kelamin, ras.jenis_ras, t2.tgl_lahir,
+	select tSi.necktag, tSi.jenis_kelamin, ras.jenis_ras, tSi.tgl_lahir,
 		pml.nama_pemilik as pemilik, ptk.name as peternak,
-		t2.necktag_ayah as ayah, t2.necktag_ibu as ibu
-	from public.ternaks as t2, public.ras, public.pemiliks as pml, public.users as ptk
-	where (t2.necktag_ayah = n1 or t2.necktag_ibu = n2)
-	and ras.id = t2.ras_id and t2.necktag != val and pml.id = t2.pemilik_id and ptk.id = t2.user_id;
+		tSi.necktag_ayah as ayah, tSi.necktag_ibu as ibu
+	from public.ternaks as tSi, public.ras, public.pemiliks as pml, public.users as ptk
+	where (tSi.necktag_ayah = n1 or tSi.necktag_ibu = n2)
+	and ras.id = tSi.ras_id and tSi.necktag != val and pml.id = tSi.pemilik_id and ptk.id = tSi.user_id;
 END; $$
 LANGUAGE PLPGSQL;
 
@@ -68,14 +68,14 @@ RETURNS TABLE (necktag char, jenis_kelamin varchar,
 			  peternak varchar, ayah char, ibu char) AS $$
 BEGIN
 	RETURN QUERY
-	select tx.necktag, tx.jenis_kelamin, ras.jenis_ras, tx.tgl_lahir, 
+	select tC.necktag, tC.jenis_kelamin, ras.jenis_ras, tC.tgl_lahir, 
 		pml.nama_pemilik, ptk.name,
-		tx.necktag_ayah, tx.necktag_ibu
-	from public.ternaks as tx
-	join public.ras on ras.id = tx.ras_id
-	join public.pemiliks as pml on pml.id = tx.pemilik_id
-	join public.users as ptk on ptk.id = tx.user_id
-	where (tx.necktag_ayah = val or tx.necktag_ibu = val);
+		tC.necktag_ayah, tC.necktag_ibu
+	from public.ternaks as tC
+	join public.ras on ras.id = tC.ras_id
+	join public.pemiliks as pml on pml.id = tC.pemilik_id
+	join public.users as ptk on ptk.id = tC.user_id
+	where (tC.necktag_ayah = val or tC.necktag_ibu = val);
 END; $$
 LANGUAGE PLPGSQL;
 
@@ -86,18 +86,18 @@ RETURNS TABLE (necktag char, jenis_kelamin varchar,
 			  peternak varchar, ayah char, ibu char) AS $$
 BEGIN
 	RETURN QUERY
-	select distinct ty.necktag, ty.jenis_kelamin, ras.jenis_ras,
-		ty.tgl_lahir, pml.nama_pemilik, ptk.name,
-		ty.necktag_ayah as ayah, ty.necktag_ibu as ibu 
-	from public.ternaks as ty,
+	select distinct tGP.necktag, tGP.jenis_kelamin, ras.jenis_ras,
+		tGP.tgl_lahir, pml.nama_pemilik, ptk.name,
+		tGP.necktag_ayah as ayah, tGP.necktag_ibu as ibu 
+	from public.ternaks as tGP,
 		(SELECT t1.necktag_ayah as ayah, t1.necktag_ibu as ibu  
 			FROM public.ternaks AS t1
 			WHERE t1.necktag = n1 OR t1.necktag = n2) as tq,
 		public.ras,
 		public.pemiliks as pml,
 		public.users as ptk
-	where (ty.necktag = tq.ayah or ty.necktag = tq.ibu)
-	and ras.id = ty.ras_id and pml.id = ty.pemilik_id and ptk.id = ty.user_id;
+	where (tGP.necktag = tq.ayah or tGP.necktag = tq.ibu)
+	and ras.id = tGP.ras_id and pml.id = tGP.pemilik_id and ptk.id = tGP.user_id;
 END; $$
 LANGUAGE PLPGSQL;
 
@@ -108,19 +108,19 @@ RETURNS TABLE (necktag char, jenis_kelamin varchar,
 			  peternak varchar, ayah char, ibu char) AS $$
 BEGIN
 	RETURN QUERY
-	select distinct tr.necktag, tr.jenis_kelamin, ras.jenis_ras,
-		tr.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
-		tr.necktag_ayah as ayah, tr.necktag_ibu as ibu
-	from public.ternaks as tr, 
+	select distinct tGC.necktag, tGC.jenis_kelamin, ras.jenis_ras,
+		tGC.tgl_lahir, pml.nama_pemilik as pemilik, ptk.name as peternak,
+		tGC.necktag_ayah as ayah, tGC.necktag_ibu as ibu
+	from public.ternaks as tGC, 
 		(select tx.necktag
 			from public.ternaks as tx
 			where tx.necktag_ayah = val or tx.necktag_ibu = val) as tq,
 		public.ras,
 		public.pemiliks as pml,
 		public.users as ptk 
-	where ras.id = tr.ras_id
-	and (tr.necktag_ayah = tq.necktag or tr.necktag_ibu = tq.necktag)
-	and pml.id = tr.pemilik_id and ptk.id = tr.user_id;
+	where ras.id = tGC.ras_id
+	and (tGC.necktag_ayah = tq.necktag or tGC.necktag_ibu = tq.necktag)
+	and pml.id = tGC.pemilik_id and ptk.id = tGC.user_id;
 END; $$
 LANGUAGE PLPGSQL;
 
@@ -403,3 +403,539 @@ CREATE TRIGGER delete_from_penjualan
   	ON public.penjualans
   	FOR EACH ROW
   	EXECUTE PROCEDURE f_delete_from_penjualan();
+
+-- LOG
+
+-- Penjualan
+-- after insert
+CREATE OR REPLACE FUNCTION f_log_ins_penjualan()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'insert', 'penjualans', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_ins_penjualan 
+ON public.penjualans;
+
+CREATE TRIGGER log_ins_penjualan
+  	AFTER INSERT
+  	ON public.penjualans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_ins_penjualan();
+
+-- after update
+CREATE OR REPLACE FUNCTION f_log_upd_penjualan()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'update', 'penjualans', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_upd_penjualan 
+ON public.penjualans;
+
+CREATE TRIGGER log_upd_penjualan
+  	AFTER UPDATE
+  	ON public.penjualans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_upd_penjualan();
+
+-- after delete
+CREATE OR REPLACE FUNCTION f_log_del_penjualan()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	OPEN cur_user(OLD.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'delete', 'penjualans', OLD.id, CURRENT_TIMESTAMP);
+
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_del_penjualan 
+ON public.penjualans;
+
+CREATE TRIGGER log_del_penjualan
+  	AFTER DELETE
+  	ON public.penjualans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_del_penjualan();
+
+-- Kematian
+-- after insert
+CREATE OR REPLACE FUNCTION f_log_ins_kematian()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'insert', 'kematians', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_ins_kematian 
+ON public.kematians;
+
+CREATE TRIGGER log_ins_kematian
+  	AFTER INSERT
+  	ON public.kematians
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_ins_kematian();
+
+-- after update
+CREATE OR REPLACE FUNCTION f_log_upd_kematian()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'update', 'kematians', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_upd_kematian 
+ON public.kematians;
+
+CREATE TRIGGER log_upd_kematian
+  	AFTER UPDATE
+  	ON public.kematians
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_upd_kematian();
+
+-- after delete
+CREATE OR REPLACE FUNCTION f_log_del_kematian()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	OPEN cur_user(OLD.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'delete', 'kematians', OLD.id, CURRENT_TIMESTAMP);
+
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_del_kematian 
+ON public.kematians;
+
+CREATE TRIGGER log_del_kematian
+  	AFTER DELETE
+  	ON public.kematians
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_del_kematian();
+
+-- Perkembangan
+-- after insert
+CREATE OR REPLACE FUNCTION f_log_ins_perkembangan()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'insert', 'perkembangans', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_ins_perkembangan 
+ON public.perkembangans;
+
+CREATE TRIGGER log_ins_perkembangan
+  	AFTER INSERT
+  	ON public.perkembangans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_ins_perkembangan();
+
+-- after update
+CREATE OR REPLACE FUNCTION f_log_upd_perkembangan()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'update', 'perkembangans', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_upd_perkembangan 
+ON public.perkembangans;
+
+CREATE TRIGGER log_upd_perkembangan
+  	AFTER UPDATE
+  	ON public.perkembangans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_upd_perkembangan();
+
+-- after delete
+CREATE OR REPLACE FUNCTION f_log_del_perkembangan()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	OPEN cur_user(OLD.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'delete', 'perkembangans', OLD.id, CURRENT_TIMESTAMP);
+
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_del_perkembangan 
+ON public.perkembangans;
+
+CREATE TRIGGER log_del_perkembangan
+  	AFTER DELETE
+  	ON public.perkembangans
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_del_perkembangan();
+
+-- Riwayat Penyakit
+-- after insert
+CREATE OR REPLACE FUNCTION f_log_ins_riwayat_penyakit()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'insert', 'riwayat_penyakits', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_ins_riwayat_penyakit 
+ON public.riwayat_penyakits;
+
+CREATE TRIGGER log_ins_riwayat_penyakit
+  	AFTER INSERT
+  	ON public.riwayat_penyakits
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_ins_riwayat_penyakit();
+
+-- after update
+CREATE OR REPLACE FUNCTION f_log_upd_riwayat_penyakit()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	OPEN cur_user(NEW.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'update', 'riwayat_penyakits', NEW.id, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_upd_riwayat_penyakit 
+ON public.riwayat_penyakits;
+
+CREATE TRIGGER log_upd_riwayat_penyakit
+  	AFTER UPDATE
+  	ON public.riwayat_penyakits
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_upd_riwayat_penyakit();
+
+-- after delete
+CREATE OR REPLACE FUNCTION f_log_del_riwayat_penyakit()
+	RETURNS trigger AS $$
+DECLARE
+	id_user integer;
+	rec_user record;
+	cur_user cursor (id char(6)) FOR
+		SELECT user_id
+		FROM public.ternaks
+		WHERE necktag = id;
+BEGIN
+	OPEN cur_user(OLD.necktag);
+	LOOP
+		FETCH cur_user into rec_user;
+		EXIT WHEN NOT FOUND;
+		id_user := rec_user.user_id;
+	END LOOP;
+	CLOSE cur_user;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (id_user, 'delete', 'riwayat_penyakits', OLD.id, CURRENT_TIMESTAMP);
+
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_del_riwayat_penyakit 
+ON public.riwayat_penyakits;
+
+CREATE TRIGGER log_del_riwayat_penyakit
+  	AFTER DELETE
+  	ON public.riwayat_penyakits
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_del_riwayat_penyakit();
+
+-- Ternak
+-- after insert
+CREATE OR REPLACE FUNCTION f_log_ins_ternak()
+	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (NEW.user_id, 'insert', 'ternaks', NEW.necktag, CURRENT_TIMESTAMP);
+
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_ins_ternak 
+ON public.ternaks;
+
+CREATE TRIGGER log_ins_ternak
+  	AFTER INSERT
+  	ON public.ternaks
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_ins_ternak();
+
+-- after update
+CREATE OR REPLACE FUNCTION f_log_upd_ternak()
+	RETURNS trigger AS $$
+BEGIN
+	IF pg_trigger_depth() <> 1 THEN
+        RETURN NEW;
+    END IF;
+
+	IF OLD.deleted_at IS NOT NULL THEN
+		INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+		VALUES (NEW.user_id, 'restore', 'ternaks', NEW.necktag, CURRENT_TIMESTAMP);
+		RETURN NEW;
+	ELSIF NEW.deleted_at IS NOT NULL THEN
+		INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+		VALUES (NEW.user_id, 'soft delete', 'ternaks', NEW.necktag, CURRENT_TIMESTAMP);
+		RETURN NEW;
+	ELSE
+		INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+		VALUES (NEW.user_id, 'update', 'ternaks', NEW.necktag, CURRENT_TIMESTAMP);
+		RETURN NEW;
+	END IF;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_upd_ternak 
+ON public.ternaks;
+
+CREATE TRIGGER log_upd_ternak
+  	AFTER UPDATE
+  	ON public.ternaks
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_upd_ternak();
+
+-- after delete
+CREATE OR REPLACE FUNCTION f_log_del_ternak()
+	RETURNS trigger AS $$
+BEGIN
+	INSERT INTO public.logs(user_id, aktivitas, tabel, pk_tabel, waktu)
+	VALUES (OLD.user_id, 'force delete', 'ternaks', OLD.necktag, CURRENT_TIMESTAMP);
+
+	RETURN OLD;
+END; $$
+LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS log_del_ternak 
+ON public.ternaks;
+
+CREATE TRIGGER log_del_ternak
+  	AFTER DELETE
+  	ON public.ternaks
+  	FOR EACH ROW
+  	EXECUTE PROCEDURE f_log_del_ternak();
