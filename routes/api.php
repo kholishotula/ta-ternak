@@ -68,7 +68,8 @@ Route::prefix('v2')->namespace('API')->group(function(){
 		//for logs table
 		Route::get('log', 'LogController@index');
 		Route::get('log/time', 'LogController@getLogBeforeTime');
-		Route::get('log/timeActivity', 'LogController@getLogBaseTimeActivity');
+		Route::get('log/activity', 'LogController@getLogActivityBased');
+		Route::get('log/data', 'LogController@getLogDataBased');
 
 	});
 

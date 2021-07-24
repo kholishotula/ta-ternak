@@ -33,7 +33,7 @@ class LogController extends Controller
         ], 200);
     }
 
-    public function getLogBaseTimeActivity(Request $request)
+    public function getLogActivityBased(Request $request)
     {
         $waktu = DateTime::createFromFormat("Y-m-d H:i:s", $request->waktu);
         $tabel = $request->tabel;
@@ -49,6 +49,28 @@ class LogController extends Controller
         return response()->json([
             'status' => 'success',
             'logs' => $logs,
+        ], 200);
+    }
+
+    public function getLogDataBased(Request $request)
+    {
+        $waktu = DateTime::createFromFormat("Y-m-d H:i:s", $request->waktu);
+        $tabel = $request->tabel;
+        $pk_tabel = $request->pk_tabel;
+        $aktivitas = $request->aktivitas;
+
+        $log = Log::where([
+                        ['waktu', '>', $waktu],
+                        ['tabel', '=', $tabel],
+                        ['pk_tabel', '=', $pk_tabel],
+                        ['aktivitas', '=', $aktivitas]
+                    ])
+                    ->orderBy('waktu', 'desc')
+                    ->first();
+        
+        return response()->json([
+            'status' => 'success',
+            'log' => $log,
         ], 200);
     }
 }
